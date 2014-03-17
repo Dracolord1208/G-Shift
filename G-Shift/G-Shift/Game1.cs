@@ -62,8 +62,8 @@ namespace G_Shift
         private bool paused = false;
         private bool pauseKeyDown = false;
         private bool pausedForGuide = false;
-
-        Interactable gMan;
+        Player gMan;
+        //Interactable gMan;
         Interactable handGunA;
 
         Texture2D gManTexture;
@@ -126,8 +126,8 @@ namespace G_Shift
             graphics.ApplyChanges();
 
             // Initialize Gallagher
-            gMan = new Interactable();
-            gMan.position = new Vector2(50, 250);
+            gMan = new Player();
+            gMan.Position = new Vector2(50, 250);
             gMan.motion = new Vector2(0f, 0f);
             gMan.Width = 100;
             gMan.Height = 250;
@@ -306,8 +306,8 @@ namespace G_Shift
         {
             // Move background texture 400 pixels each second 
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
-
-            gMan.position += gMan.motion;
+            gMan.Update(gameTime);
+            gMan.Position += gMan.motion;
             gMan.motion = new Vector2(0, 0);
 
             //////handGunA.position = new Vector2(gMan.position.X + 50, gMan.position.Y + 100);
@@ -338,24 +338,24 @@ namespace G_Shift
 
 
             // gMan y-boundaries
-            if (gMan.position.Y <= 200)
-                gMan.position = new Vector2(gMan.position.X, 200);
-            if (gMan.position.Y >= SCREEN_HEIGHT - 250)
-                gMan.position = new Vector2(gMan.position.X, SCREEN_HEIGHT - gMan.Height); //300);
+            if (gMan.Position.Y <= 200)
+                gMan.Position = new Vector2(gMan.Position.X, 200);
+            if (gMan.Position.Y >= SCREEN_HEIGHT - 250)
+                gMan.Position = new Vector2(gMan.Position.X, SCREEN_HEIGHT - gMan.Height); //300);
 
 
             // gMan x-boundaries
-            if (gMan.position.X <= 0)
-                gMan.position = new Vector2(0, gMan.position.Y);
-            if (gMan.position.X >= SCREEN_WIDTH - gMan.Width)
-                gMan.position = new Vector2(SCREEN_WIDTH - gMan.Width, gMan.position.Y);
+            if (gMan.Position.X <= 0)
+                gMan.Position = new Vector2(0, gMan.Position.Y);
+            if (gMan.Position.X >= SCREEN_WIDTH - gMan.Width)
+                gMan.Position = new Vector2(SCREEN_WIDTH - gMan.Width, gMan.Position.Y);
 
 
-            if (gMan.position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.33f)))
+            if (gMan.Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.33f)))
             {
                 gMan.depth = 1;  // foreground
             }
-            else if (gMan.position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.66f)))
+            else if (gMan.Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.66f)))
             {
                 gMan.depth = 3;  // rear-ground
             }
@@ -604,7 +604,7 @@ namespace G_Shift
                 }
             }
             
-            spriteBatch.Draw(gManTexture, gMan.position, Color.White);
+            spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
 
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
            // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
