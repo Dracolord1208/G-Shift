@@ -22,6 +22,10 @@ namespace G_Shift_Level_Editor
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
+
             Content.RootDirectory = "Content";
         }
 
@@ -69,6 +73,8 @@ namespace G_Shift_Level_Editor
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
+
 
             // TODO: Add your update logic here
 
