@@ -71,7 +71,7 @@ namespace G_Shift
         Texture2D enemyATexture;
         Texture2D bulletATexture;
 
-
+        float playerMoveSpeed = 5f;
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
@@ -307,7 +307,7 @@ namespace G_Shift
             // Move background texture 400 pixels each second 
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             gMan.Update(gameTime);
-            gMan.Position += gMan.motion;
+          //  gMan.Position += gMan.motion;
             gMan.motion = new Vector2(0, 0);
 
             //////handGunA.position = new Vector2(gMan.position.X + 50, gMan.position.Y + 100);
@@ -315,21 +315,24 @@ namespace G_Shift
             // Keyboard input
             if (currentKeyboardState.IsKeyDown(Keys.S))
             {
-                gMan.motion = new Vector2(0, 5);
+                
+                gMan.Position.Y += playerMoveSpeed;
             }
             if (currentKeyboardState.IsKeyDown(Keys.W))
             {
-                gMan.motion = new Vector2(0, -5);
+                //gMan.motion = new Vector2(0, -5);
+                gMan.Position.Y -= playerMoveSpeed;
             }
             if (currentKeyboardState.IsKeyDown(Keys.A))
             {
-                gMan.motion = new Vector2(-5, 0);
+                gMan.Position.X -= playerMoveSpeed;
             }
             if (currentKeyboardState.IsKeyDown(Keys.D))
             {
                 scrollPosition += moveFactorPerSecond;
                 //far_scrollPosition += far_moveFactorPerSecond;
-                gMan.motion = new Vector2(5, 0);
+                //gMan.motion = new Vector2(5, 0);
+                gMan.Position.X += playerMoveSpeed;
             }
 
             // Allows the game to exit            
