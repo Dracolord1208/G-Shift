@@ -1,6 +1,4 @@
-﻿//testing edits
-
-using System;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -72,14 +70,19 @@ namespace G_Shift
             currentFrame = 0;
 
             // Set the Animation to active by default
+            // why active by default?
             Active = true;
         }
+
+        //I don't think this is necessary for us now
         public void colorupdate(int num) {
             if (num == 1) { color = Color.Red; }
             if (num == 2) { color = Color.LimeGreen; }
             if (num == 3) { color = Color.Thistle; }
             if (num == 4) { color = Color.White; }
         }
+
+
         public void Update(GameTime gameTime)
         {
             // Do not update the game if we are not active
