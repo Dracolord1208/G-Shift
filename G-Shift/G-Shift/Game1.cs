@@ -65,7 +65,7 @@ namespace G_Shift
         Player gMan;
         //Interactable gMan;
         Interactable handGunA;
-
+        Texture2D gManTest;
         Texture2D gManTexture;
         Texture2D gunATexture;
         Texture2D enemyATexture;
@@ -131,7 +131,7 @@ namespace G_Shift
             gMan.motion = new Vector2(0f, 0f);
             gMan.Width = 100;
             gMan.Height = 250;
-
+            
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -183,7 +183,8 @@ namespace G_Shift
             // TODO: use this.Content to load your game content here
             backgroundTexture = Content.Load<Texture2D>("backgroundA");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
-
+            gManTest=  Content.Load<Texture2D>("gspritesheattest");
+            gMan.Initialize(gManTest, Vector2.Zero);
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
 
@@ -266,6 +267,9 @@ namespace G_Shift
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+            // Allows the game to exit            
+            if (currentKeyboardState.IsKeyDown(Keys.Escape))
+                this.Exit();
 
 
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
@@ -281,7 +285,8 @@ namespace G_Shift
                 {
                     //      MediaPlayer.Resume();
                     //Update the player
-                    UpdatePlayer(gameTime);
+                    //UpdatePlayer(gameTime);
+                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState);
                     // Update the gravies
                     UpdateEnemies(gameTime);
                     // Update the collision
@@ -302,86 +307,7 @@ namespace G_Shift
         }
 
 
-        private void UpdatePlayer(GameTime gameTime)
-        {
-            // Move background texture 400 pixels each second 
-            float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
-            gMan.Update(gameTime);
-          //  gMan.Position += gMan.motion;
-            gMan.motion = new Vector2(0, 0);
-
-            //////handGunA.position = new Vector2(gMan.position.X + 50, gMan.position.Y + 100);
-
-            // Keyboard input
-            if (currentKeyboardState.IsKeyDown(Keys.S))
-            {
-                
-                gMan.Position.Y += playerMoveSpeed;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.W))
-            {
-                //gMan.motion = new Vector2(0, -5);
-                gMan.Position.Y -= playerMoveSpeed;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.A))
-            {
-                gMan.Position.X -= playerMoveSpeed;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.D))
-            {
-                scrollPosition += moveFactorPerSecond;
-                //far_scrollPosition += far_moveFactorPerSecond;
-                //gMan.motion = new Vector2(5, 0);
-                gMan.Position.X += playerMoveSpeed;
-            }
-
-            // Allows the game to exit            
-            if (currentKeyboardState.IsKeyDown(Keys.Escape))
-                this.Exit();
-
-
-            // gMan y-boundaries
-            if (gMan.Position.Y <= 200)
-                gMan.Position = new Vector2(gMan.Position.X, 200);
-            if (gMan.Position.Y >= SCREEN_HEIGHT - 250)
-                gMan.Position = new Vector2(gMan.Position.X, SCREEN_HEIGHT - gMan.Height); //300);
-
-
-            // gMan x-boundaries
-            if (gMan.Position.X <= 0)
-                gMan.Position = new Vector2(0, gMan.Position.Y);
-            if (gMan.Position.X >= SCREEN_WIDTH - gMan.Width)
-                gMan.Position = new Vector2(SCREEN_WIDTH - gMan.Width, gMan.Position.Y);
-
-
-            if (gMan.Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.33f)))
-            {
-                gMan.depth = 1;  // foreground
-            }
-            else if (gMan.Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.66f)))
-            {
-                gMan.depth = 3;  // rear-ground
-            }
-            else
-            {
-                gMan.depth = 2;  // middle depth
-            }
-
-
-            if (currentKeyboardState.IsKeyDown(Keys.Space) ||
-    currentGamePadState.Buttons.A == ButtonState.Pressed)
-            {
-
-                    if (gameTime.TotalGameTime - previousFireTime > fireTime)
-                    {
-                        // Reset our current time
-                        previousFireTime = gameTime.TotalGameTime;
-
-                        // Add the projectile, but add it to the front and center of the player
-
-                    }
-                }
-        }
+           
 
         private void Addenemy()
         {
