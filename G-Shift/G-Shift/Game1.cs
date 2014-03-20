@@ -71,6 +71,8 @@ namespace G_Shift
         Texture2D enemyATexture;
         Texture2D bulletATexture;
 
+        Item aCrate;
+
         float playerMoveSpeed = 5f;
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
@@ -131,7 +133,9 @@ namespace G_Shift
             gMan.motion = new Vector2(0f, 0f);
             gMan.Width = 100;
             gMan.Height = 250;
-            
+
+            aCrate = new Item();
+            aCrate.initialize(Content);
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -287,6 +291,8 @@ namespace G_Shift
                     //Update the player
                     //UpdatePlayer(gameTime);
                     gMan.Update(gameTime,currentKeyboardState,currentGamePadState);
+
+                    aCrate.Update(gMan);
                     // Update the gravies
                     UpdateEnemies(gameTime);
                     // Update the collision
@@ -534,7 +540,7 @@ namespace G_Shift
             }
             
             spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
-
+            aCrate.Draw(spriteBatch);
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
            // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
          //   spriteBatch.Draw(gunATexture, handGunA.position, sourceRectangle, Color.White, gunAngle, gunOrigin, 1.0f, SpriteEffects.None, 1);
