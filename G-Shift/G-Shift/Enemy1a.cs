@@ -57,7 +57,8 @@ namespace G_Shift
             rect = new Rectangle((int)position.X, (int)position.Y, (int)Width, (int)Height);
 
             color = Color.White;
-            ttl = 160;
+            //ttl = 160;
+            ttl = 320;
 
         }
 

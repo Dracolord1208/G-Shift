@@ -99,6 +99,9 @@ namespace G_Shift
         public float far_scrollPosition = 0;
 
         public List<Enemy1a> badGuys;  // enemies
+        public TimeSpan badGuyspawnTime;      // **** NEWLY ADDED *****!!!!
+        public TimeSpan badGuycheckpoint;     // **** NEWLY ADDED *****!!!!
+        public Random badGuyrandom;           // **** NEWLY ADDED *****!!!!
 
 
         public Game1()
@@ -172,6 +175,13 @@ namespace G_Shift
             gunOrigin = new Vector2(handGunA.position.X + 10, handGunA.position.Y + 10);
             */
 
+            badGuys = new List<Enemy1a>();  // maybe new****!!!!
+            badGuyspawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
+            badGuyspawnTime = TimeSpan.FromSeconds(5.0f);  // spawn within 5 seconds
+            badGuycheckpoint = new TimeSpan();
+            badGuycheckpoint = TimeSpan.FromSeconds(0.0);
+            badGuyrandom = new Random();
+
             base.Initialize();
         }
 
@@ -199,7 +209,7 @@ namespace G_Shift
             // Load the laser and explosion sound effect
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
 
-
+            enemyATexture = Content.Load<Texture2D>("gunEnemy 1a");
 
             //EnemyTexture = Content.Load<Texture2D>("Enemy 1a");
             //BulletTexture = Content.Load<Texture2D>("Bullet 1a");
@@ -216,6 +226,7 @@ namespace G_Shift
         {
             // TODO: Unload any non ContentManager content here
         }
+
         private void BeginPause(bool UserInitiated)
         {
             paused = true;
@@ -224,6 +235,7 @@ namespace G_Shift
             MediaPlayer.Pause();
             //TODO: Pause controller vibration
         }
+
         private void EndPause()
         {
             //TODO: Resume audio
@@ -303,7 +315,40 @@ namespace G_Shift
                     UpdateEnemyProjectiles();
                 }
             }
-          
+
+
+            //*********************
+            // Update badGuys
+            // (check if beaten?)
+            //
+            for (int i = 0; i < badGuys.Count; i++)
+            {
+                badGuys[i].Update();
+
+                if (badGuys[i].ttl <= 0)
+                {
+                    badGuys.RemoveAt(i);
+                    i--;
+                    //scream_male.Play();
+                }
+            }
+
+
+            // gunEnemy spawn on random time interval
+            if (gameTime.TotalGameTime - badGuycheckpoint > badGuyspawnTime && badGuys.Count <= 4)
+            {
+                Vector2 eMotion = new Vector2(-2.5f, 0f);
+
+                float tempX = (float)badGuyrandom.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempY = (float)badGuyrandom.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+
+                Vector2 startPos = new Vector2(tempX, tempY);
+
+                badGuys.Add(new Enemy1a(72, 72, startPos, eMotion, enemyATexture, 0f, 0f));
+                badGuycheckpoint = gameTime.TotalGameTime;
+
+                badGuyspawnTime = TimeSpan.FromSeconds((float)badGuyrandom.Next(1, 5));
+            } 
 
 
                         
@@ -541,6 +586,7 @@ namespace G_Shift
             
             spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
             aCrate.Draw(spriteBatch);
+
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
            // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
          //   spriteBatch.Draw(gunATexture, handGunA.position, sourceRectangle, Color.White, gunAngle, gunOrigin, 1.0f, SpriteEffects.None, 1);
@@ -548,6 +594,7 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
+                /*
                 // Draw the Player
                 //                player.Draw(spriteBatch);
                 // Draw the Enemies
@@ -567,13 +614,21 @@ namespace G_Shift
                 {
                     enemyProjectiles[i].Draw(spriteBatch);
                 }
+                */
 
+                // draw badGuys
+                for (int i = 0; i < badGuys.Count; i++)
+                {
+                    badGuys[i].Draw(spriteBatch);
+                }
 
             }
 
 
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);
+
+            
 
             spriteBatch.End();
 
