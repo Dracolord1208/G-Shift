@@ -131,7 +131,7 @@ namespace G_Shift
             graphics.ApplyChanges();
 
             // Initialize Gallagher
-            gMan = new Player();
+            gMan = new Player ();
             gMan.Position = new Vector2(50, 250);
             gMan.motion = new Vector2(0f, 0f);
             gMan.Width = 100;
@@ -193,7 +193,7 @@ namespace G_Shift
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            gMan.LoadContent(Content);
             // TODO: use this.Content to load your game content here
             backgroundTexture = Content.Load<Texture2D>("backgroundA");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
@@ -287,7 +287,7 @@ namespace G_Shift
             if (currentKeyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
 
-
+            float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
             previousGamePadState = currentGamePadState;
             previousKeyboardState = currentKeyboardState;
@@ -299,6 +299,30 @@ namespace G_Shift
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
+                    if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
+                        currentGamePadState.DPad.Left == ButtonState.Pressed)
+                    {
+                        scrollPosition -= moveFactorPerSecond;
+                    }
+                    if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
+                    currentGamePadState.DPad.Right == ButtonState.Pressed)
+                    {
+                        scrollPosition += moveFactorPerSecond;
+                    }
+                    if (currentKeyboardState.IsKeyDown(Keys.Space) ||
+                     currentGamePadState.Buttons.A == ButtonState.Pressed)
+                    {
+
+                        if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                        {
+                            // Reset our current time
+                            previousFireTime = gameTime.TotalGameTime;
+
+                            // Add the projectile, but add it to the front and center of the player
+                                // Add the projectile, but add it to the front and center of the player
+                                AddProjectile(gMan.Position + new Vector2(gMan.Width / 2, 0));
+                        }
+                    }
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -584,7 +608,7 @@ namespace G_Shift
                 }
             }
             
-            spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
+           // spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
             aCrate.Draw(spriteBatch);
 
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
@@ -605,17 +629,18 @@ namespace G_Shift
                 }
                 // Draw the gravies
                 // Draw the Projectiles
-                for (int i = 0; i < projectiles.Count; i++)
-                {
-                    projectiles[i].Draw(spriteBatch);
-                }
+
                 // Draw the Projectiles
                 for (int i = 0; i < enemyProjectiles.Count; i++)
                 {
                     enemyProjectiles[i].Draw(spriteBatch);
                 }
                 */
-
+                gMan.Draw(spriteBatch);
+                for (int i = 0; i < projectiles.Count; i++)
+                {
+                    projectiles[i].Draw(spriteBatch);
+                }
                 // draw badGuys
                 for (int i = 0; i < badGuys.Count; i++)
                 {
