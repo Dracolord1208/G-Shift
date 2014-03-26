@@ -151,7 +151,8 @@ namespace G_Shift
             gMan.Height = 250;
 
             aCrate = new Item();
-            aCrate.initialize(Content);
+            aCrate.initialize(Content, "crate");
+            aCrate.setItemPosition(new Rectangle(250, 300, 50, 100));
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -358,7 +359,7 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState);
+                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove());
 
                     aCrate.Update(gMan);
                     // Update the gravies
