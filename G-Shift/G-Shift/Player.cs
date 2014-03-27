@@ -85,7 +85,7 @@ namespace G_Shift
         }
 
         // Update the player animation
-        public void Update(GameTime gameTime, KeyboardState currentKeyboardState,GamePadState currentGamePadState)
+        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown)
         {
             PlayerAnimation.Position = Position;
             PlayerAnimation.Update(gameTime);
@@ -114,13 +114,15 @@ namespace G_Shift
                 playerStance = Stance.Right;
                 //playerAnimation.Initialize(gManTest3, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, true);
             }
-            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
-            currentGamePadState.DPad.Up == ButtonState.Pressed)
+            if (canMoveUp && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
+            currentGamePadState.DPad.Up == ButtonState.Pressed))
+            //if (canMoveUp && currentKeyboardState.IsKeyDown(Keys.W))
             {
                 Position.Y -= playerMoveSpeed;
             }
-            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
-            currentGamePadState.DPad.Down == ButtonState.Pressed)
+            if (canMoveDown && (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
+            currentGamePadState.DPad.Down == ButtonState.Pressed))
+            //if (canMoveDown && currentKeyboardState.IsKeyDown(Keys.S))
             {
                 Position.Y += playerMoveSpeed;
             }
