@@ -107,14 +107,16 @@ namespace G_Shift
         public Random badGuyrandom;           
 
         public List<Enemy2a> badGuys2;  // enemies
-        public TimeSpan badGuy2spawnTime;      // **** NEWLY ADDED *****!!!!
-        public TimeSpan badGuy2checkpoint;     // **** NEWLY ADDED *****!!!!
-        public Random badGuy2random;           // **** NEWLY ADDED *****!!!!
+        public TimeSpan badGuy2spawnTime;      
+        public TimeSpan badGuy2checkpoint;     
+        public Random badGuy2random;           
 
-        public List<Enemy2a> badGuys3;  // enemies
-        public TimeSpan badGuy3spawnTime;      // **** NEWLY ADDED *****!!!!
-        public TimeSpan badGuy3checkpoint;     // **** NEWLY ADDED *****!!!!
-        public Random badGu32random;           // **** NEWLY ADDED *****!!!!
+        public List<Enemy3a> badGuys3;  // enemies
+        public TimeSpan badGuy3spawnTime;      
+        public TimeSpan badGuy3checkpoint;     
+        public Random badGuy3random;           
+        public TimeSpan badGuy3jumpTime;
+        public TimeSpan badGuy3jumpcheckpoint;
 
 
         public Game1()
@@ -202,14 +204,18 @@ namespace G_Shift
             badGuy2checkpoint = TimeSpan.FromSeconds(0.0);
             badGuy2random = new Random();
 
-            /*
-            badGuys2 = new List<Enemy2a>();  // maybe new****!!!!
-            badGuy2spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
-            badGuy2spawnTime = TimeSpan.FromSeconds(4.0f);  // spawn within 5 seconds
-            badGuy2checkpoint = new TimeSpan();
-            badGuy2checkpoint = TimeSpan.FromSeconds(0.0);
-            badGuy2random = new Random();
-            */
+            
+            badGuys3 = new List<Enemy3a>();  // maybe new****!!!!
+            badGuy3spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
+            badGuy3spawnTime = TimeSpan.FromSeconds(3.0f);  // spawn within 5 seconds
+            badGuy3checkpoint = new TimeSpan();
+            badGuy3checkpoint = TimeSpan.FromSeconds(0.0);
+            badGuy3random = new Random();
+
+            badGuy3jumpTime = new TimeSpan();
+            badGuy3jumpTime = TimeSpan.FromSeconds(2.0f);
+            badGuy3jumpcheckpoint = new TimeSpan();
+            
 
             base.Initialize();
         }
@@ -238,10 +244,18 @@ namespace G_Shift
             // Load the laser and explosion sound effect
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
 
+            /*
             enemyATexture = Content.Load<Texture2D>("gunEnemy 1a");
             enemyBTexture = Content.Load<Texture2D>("gunEnemy 2a");
             enemy2bTexture = Content.Load<Texture2D>("gunEnemy 2b");
-            enemyCTexture = Content.Load<Texture2D>("gunEnemy 2a");
+            enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
+            */
+
+            enemyATexture = Content.Load<Texture2D>("smallRobot1a");
+            enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
+            enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
+            //enemyCTexture = Content.Load<Texture2D>("Boss1a");
+            enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
 
             //EnemyTexture = Content.Load<Texture2D>("Enemy 1a");
             //BulletTexture = Content.Load<Texture2D>("Bullet 1a");
@@ -394,17 +408,38 @@ namespace G_Shift
                 */
 
                 // 2nd try  // will work as temp
+                /*
                 if (badGuys[i].position.X > gMan.Position.X + badGuys[i].Width)
                     badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
                 else if (badGuys[i].position.X <= gMan.Position.X + badGuys[i].Width && badGuys[i].position.X >= gMan.Position.X - badGuys[i].Width)
                     badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
                 else if (badGuys[i].position.X < gMan.Position.X - badGuys[i].Width)
                     badGuys[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
+                */
 
+                // 3rd try
+                if (badGuys[i].position.X <= gMan.Position.X + badGuys[i].Width && badGuys[i].position.X >= gMan.Position.X + gMan.Width)
+                    badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
+                else if (badGuys[i].position.X > gMan.Position.X + badGuys[i].Width)
+                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);                
+                else if (badGuys[i].position.X < gMan.Position.X + gMan.Width)
+                    badGuys[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
+
+
+                /*
                 if (badGuys[i].position.Y > gMan.Position.Y)
                     badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
                 else if (badGuys[i].position.Y <= gMan.Position.Y)
                     badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
+                */
+
+                if (badGuys[i].position.Y > gMan.Position.Y - 10 && badGuys[i].position.Y < gMan.Position.Y + 10)
+                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
+                if (badGuys[i].position.Y > gMan.Position.Y + 10)
+                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
+                else if (badGuys[i].position.Y < gMan.Position.Y - 10)
+                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 2f);
+
 
                 if (badGuys[i].health <= 0)
                 {
@@ -473,6 +508,44 @@ namespace G_Shift
                 }
             }
 
+            //*********************
+            // Update badGuys3
+            // (check if beaten?)
+            //
+            for (int i = 0; i < badGuys3.Count; i++)
+            {
+                badGuys3[i].Update();
+
+                Vector2 tempPos = badGuys3[i].position;
+                if (badGuys3[i].position.X <= gMan.Position.X + badGuys3[i].Width * 4)
+                {
+                    //Vector2 tempPos = new Vector2(badGuys3[i].position.X, badGuys3[i].position.Y);
+                    //Vector2 tempPos = badGuys3[i].position;
+                    tempPos = badGuys3[i].position;
+
+                    badGuy3jumpcheckpoint = gameTime.TotalGameTime;
+                    badGuys3[i].jumpFlag = true;
+                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, -50f);
+
+                }
+
+                if(gameTime.TotalGameTime - badGuy3jumpcheckpoint >= badGuy3jumpTime)
+                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
+                //badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
+
+                if (badGuys3[i].position.Y <= tempPos.Y)
+                {
+                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
+                }
+
+
+                if (badGuys3[i].ttl <= 0)
+                {
+                    badGuys3.RemoveAt(i);
+                    i--;
+                }
+            }
+
 
             // badGuys spawn on random time interval
             if (gameTime.TotalGameTime - badGuycheckpoint > badGuyspawnTime && badGuys.Count <= 4)
@@ -484,7 +557,8 @@ namespace G_Shift
 
                 Vector2 startPos = new Vector2(tempX, tempY);
 
-                badGuys.Add(new Enemy1a(72, 72, startPos, eMotion, enemyATexture, 0f, 0f));
+                //badGuys.Add(new Enemy1a(72, 72, startPos, eMotion, enemyATexture, 0f, 0f));   // old placehoder size
+                badGuys.Add(new Enemy1a(158,87, startPos, eMotion, enemyATexture, 0f, 0f));
                 badGuycheckpoint = gameTime.TotalGameTime;
 
                 badGuyspawnTime = TimeSpan.FromSeconds((float)badGuyrandom.Next(1, 5));
@@ -500,10 +574,27 @@ namespace G_Shift
 
                 Vector2 startPos = new Vector2(tempX, tempY);
 
-                badGuys2.Add(new Enemy2a(72, 72, startPos, eMotion, enemyBTexture, 0f, 0f));
+                //badGuys2.Add(new Enemy2a(72, 72, startPos, eMotion, enemyBTexture, 0f, 0f));
+                badGuys2.Add(new Enemy2a(173, 207, startPos, eMotion, enemyBTexture, 0f, 0f));
                 badGuy2checkpoint = gameTime.TotalGameTime;
 
                 badGuy2spawnTime = TimeSpan.FromSeconds((float)badGuy2random.Next(1, 5));
+            }
+
+            // badGuys3 spawn on random time interval
+            if (gameTime.TotalGameTime - badGuy3checkpoint > badGuy3spawnTime && badGuys3.Count <= 4)
+            {
+                Vector2 eMotion = new Vector2(-2.5f, 0f);
+
+                float tempX = (float)badGuy3random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempY = (float)badGuy3random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+
+                Vector2 startPos = new Vector2(tempX, tempY);
+
+                badGuys3.Add(new Enemy3a(72, 72, startPos, eMotion, enemyCTexture, 0f, 0f));
+                badGuy3checkpoint = gameTime.TotalGameTime;
+
+                badGuy3spawnTime = TimeSpan.FromSeconds((float)badGuy3random.Next(1, 5));
             }
             
                         
@@ -778,10 +869,15 @@ namespace G_Shift
                 {
                     badGuys[i].Draw(spriteBatch);
                 }
-                // draw badGuys
+                // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
                     badGuys2[i].Draw(spriteBatch);
+                }
+                // draw badGuys3
+                for (int i = 0; i < badGuys3.Count; i++)
+                {
+                    badGuys3[i].Draw(spriteBatch);
                 }
 
             }

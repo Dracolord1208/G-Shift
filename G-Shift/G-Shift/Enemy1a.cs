@@ -44,7 +44,7 @@ namespace G_Shift
         }
 
 
-        public Enemy1a(int height, int width, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
+        public Enemy1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
             health = 10;
             Height = height;

@@ -8,11 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace G_Shift
 {
-    //class Enemy2a
-    //{
-    //}
-
-    public class Enemy2a
+    public class Enemy3a
     {
         public int Height { get; set; }
         public int Width { get; set; }
@@ -27,8 +23,10 @@ namespace G_Shift
         public int ttl { get; set; }
         //public int health;
         public int health { get; set; }
-
         public int depth { get; set; }
+
+        public bool jumpFlag { get; set; }
+        public float gravity;
 
         public Rectangle rect
         {
@@ -44,7 +42,7 @@ namespace G_Shift
         }
 
 
-        public Enemy2a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
+        public Enemy3a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
             health = 10;
             Height = height;
@@ -60,17 +58,24 @@ namespace G_Shift
             //ttl = 160;
             ttl = 320;
 
+            jumpFlag = false;
+            gravity = 10f;
+
         }
 
         public void Update()
         {
             ttl--;
+            if (jumpFlag == true)
+                velocity = new Vector2(velocity.X, velocity.Y + gravity);
             position += velocity;
 
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            //Rectangle sourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
+            //Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
             Rectangle sourceRectangle = new Rectangle(0, 0, Width, Height);
             Vector2 origin = new Vector2(Width / 2, Height / 2);  // .. rotating in place
 
