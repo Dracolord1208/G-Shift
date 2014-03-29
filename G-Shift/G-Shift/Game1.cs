@@ -69,6 +69,7 @@ namespace G_Shift
         Texture2D gManTexture;
         Texture2D gunATexture;
         Texture2D enemyATexture;
+        Texture2D enemy1bTexture;
         Texture2D enemyBTexture;
         Texture2D enemy2bTexture;
         Texture2D enemyCTexture;
@@ -117,6 +118,8 @@ namespace G_Shift
         public Random badGuy3random;           
         public TimeSpan badGuy3jumpTime;
         public TimeSpan badGuy3jumpcheckpoint;
+        //public TimeSpan badGuy3decisionTime;
+        //public TimeSpan badGuy3lastDecisionTime;
 
 
         public Game1()
@@ -216,6 +219,10 @@ namespace G_Shift
             badGuy3jumpTime = new TimeSpan();
             badGuy3jumpTime = TimeSpan.FromSeconds(2.0f);
             badGuy3jumpcheckpoint = new TimeSpan();
+
+            //badGuy3decisionTime = new TimeSpan();
+            //badGuy3decisionTime = TimeSpan.FromSeconds(0.0f);
+            //badGuy3lastDecisionTime = new TimeSpan();
             
 
             base.Initialize();
@@ -253,6 +260,7 @@ namespace G_Shift
             */
 
             enemyATexture = Content.Load<Texture2D>("smallRobot1a");
+            enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
             enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
             //enemyCTexture = Content.Load<Texture2D>("Boss1a");
@@ -377,13 +385,13 @@ namespace G_Shift
 
                     aCrate.Update(gMan);
                     // Update the gravies
-                    UpdateEnemies(gameTime);
+                    //UpdateEnemies(gameTime);
                     // Update the collision
                     //UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
                     // Update the enemy projectiles
-                    UpdateEnemyProjectiles();
+                    //UpdateEnemyProjectiles();
                 }
             }
 
@@ -484,15 +492,15 @@ namespace G_Shift
                     if (badGuys2[i].position.Y > gMan.Position.Y - 10 && badGuys2[i].position.Y < gMan.Position.Y + 10)
                         badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, 0f);
                     if (badGuys2[i].position.Y > gMan.Position.Y+10)
-                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, -2f);
+                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, -5f);
                     else if (badGuys2[i].position.Y < gMan.Position.Y-10)
-                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, 2f);
+                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, 5f);
                 }
                 else if (badGuys2[i].position.X < gMan.Position.X - (badGuys2[i].Width + 10))
                 {
                     //enemyBTexture = Content.Load<Texture2D>("gunEnemy 2b");
                     badGuys2[i].texture = enemy2bTexture;
-                    badGuys2[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
+                    badGuys2[i].velocity = new Vector2(5f, badGuys2[i].velocity.Y);
                 }
                 /*
                 if (badGuys[i].position.Y > gMan.Position.Y)
@@ -518,27 +526,44 @@ namespace G_Shift
                 badGuys3[i].Update();
 
                 Vector2 tempPos = badGuys3[i].position;
-                if (badGuys3[i].position.X <= gMan.Position.X + badGuys3[i].Width * 4)
+
+                ///*
+                // decision making (on direction of movement)
+                if(gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].decisionTime)
                 {
-                    //Vector2 tempPos = new Vector2(badGuys3[i].position.X, badGuys3[i].position.Y);
-                    //Vector2 tempPos = badGuys3[i].position;
-                    tempPos = badGuys3[i].position;
-
-                    badGuy3jumpcheckpoint = gameTime.TotalGameTime;
-                    badGuys3[i].jumpFlag = true;
-                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, -50f);
-
+                    badGuys3[i].decisionTimeFlag = true;
+                    badGuys3[i].lastDecisionTime = gameTime.TotalGameTime;
                 }
 
-                if(gameTime.TotalGameTime - badGuy3jumpcheckpoint >= badGuy3jumpTime)
-                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
-                //badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
-
-                if (badGuys3[i].position.Y <= tempPos.Y)
+                if (badGuys3[i].decisionTimeFlag == true && gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].reverseDecisionTime)
                 {
-                    badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
+                    badGuys3[i].decisionTimeFlag = false;
                 }
+                //*/
 
+                // general movement rules
+                if (badGuys3[i].position.X > gMan.Position.X - badGuys3[i].Width)
+                {
+                    badGuys3[i].velocity = new Vector2(-5f, badGuys3[i].velocity.Y);
+                }
+                else if (badGuys3[i].position.X <= gMan.Position.X - (badGuys3[i].Width * .8f) && badGuys3[i].position.X >= gMan.Position.X - (badGuys3[i].Width + 10))
+                {
+                    badGuys3[i].texture = enemy1bTexture;
+                    badGuys3[i].velocity = new Vector2(0f, badGuys3[i].velocity.Y);
+
+                    if (badGuys3[i].position.Y > gMan.Position.Y - 10 && badGuys3[i].position.Y < gMan.Position.Y + 10)
+                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
+                    if (badGuys3[i].position.Y > gMan.Position.Y + 10)
+                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, -5f);
+                    else if (badGuys3[i].position.Y < gMan.Position.Y - 10)
+                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 5f);
+                }
+                else if (badGuys3[i].position.X < gMan.Position.X - (badGuys3[i].Width + 10))
+                {
+                    //enemyBTexture = Content.Load<Texture2D>("gunEnemy 2b");
+                    badGuys3[i].texture = enemy1bTexture;
+                    badGuys3[i].velocity = new Vector2(5f, badGuys3[i].velocity.Y);
+                }
 
                 if (badGuys3[i].ttl <= 0)
                 {
@@ -592,7 +617,8 @@ namespace G_Shift
 
                 Vector2 startPos = new Vector2(tempX, tempY);
 
-                badGuys3.Add(new Enemy3a(72, 72, startPos, eMotion, enemyCTexture, 0f, 0f));
+                //badGuys3.Add(new Enemy3a(72, 72, startPos, eMotion, enemyCTexture, 0f, 0f));
+                badGuys3.Add(new Enemy3a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
                 badGuy3checkpoint = gameTime.TotalGameTime;
 
                 badGuy3spawnTime = TimeSpan.FromSeconds((float)badGuy3random.Next(1, 5));
@@ -606,7 +632,7 @@ namespace G_Shift
 
 
            
-
+        /*
         private void Addenemy()
         {
             // Create the animation object
@@ -675,6 +701,8 @@ namespace G_Shift
 
             }
         }
+        */
+
         private void UpdateProjectiles()
         {
             // Update the Projectiles
@@ -697,6 +725,7 @@ namespace G_Shift
             projectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
             projectiles.Add(projectile);
         }
+        /*
         private void UpdateEnemyProjectiles()
         {
             // Update the Projectiles
@@ -718,7 +747,7 @@ namespace G_Shift
             enemyProjectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
             enemyProjectiles.Add(enemyProjectile);
         }
-
+        */
 
 
 
@@ -878,7 +907,7 @@ namespace G_Shift
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)
                 {
-                    badGuys3[i].Draw(spriteBatch);
+                    //badGuys3[i].Draw(spriteBatch);
                 }
 
             }

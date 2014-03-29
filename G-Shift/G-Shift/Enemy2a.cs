@@ -30,6 +30,11 @@ namespace G_Shift
 
         public int depth { get; set; }
 
+        public TimeSpan chargeTime { get; set; }
+        public TimeSpan chargeCheckpoint { get; set; }
+
+        public bool chargeFlag { get; set; }
+
         public Rectangle rect
         {
             get
@@ -59,6 +64,11 @@ namespace G_Shift
             color = Color.White;
             //ttl = 160;
             ttl = 320;
+
+
+            chargeTime = new TimeSpan();
+            chargeTime = TimeSpan.FromSeconds(8.0f);
+            chargeCheckpoint = new TimeSpan();
 
         }
 

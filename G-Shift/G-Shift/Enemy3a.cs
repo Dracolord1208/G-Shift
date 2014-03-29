@@ -41,6 +41,13 @@ namespace G_Shift
             }
         }
 
+        public bool decisionTimeFlag { get; set; }
+
+        public TimeSpan decisionTime { get; set; }
+        public TimeSpan lastDecisionTime { get; set; }
+        //badGuy3decisionTime = new TimeSpan();
+        public TimeSpan reverseDecisionTime { get; set; }
+        
 
         public Enemy3a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
@@ -54,21 +61,38 @@ namespace G_Shift
             angularVelocity = thetaV;
             rect = new Rectangle((int)position.X, (int)position.Y, (int)Width, (int)Height);
 
-            color = Color.White;
+            //color = Color.White;
+            color = new Color(255,100,100);
             //ttl = 160;
-            ttl = 320;
+            //ttl = 320;
+            ttl = 960;
 
             jumpFlag = false;
             gravity = 10f;
 
+            decisionTimeFlag = false;
+
+            decisionTime = TimeSpan.FromSeconds(5.0f);
+            //lastDecisionTime = new TimeSpan();
+            lastDecisionTime = TimeSpan.FromSeconds(0.0f);
+            reverseDecisionTime = TimeSpan.FromSeconds(1.0f);
         }
 
         public void Update()
         {
             ttl--;
-            if (jumpFlag == true)
-                velocity = new Vector2(velocity.X, velocity.Y + gravity);
-            position += velocity;
+            //if (jumpFlag == true)
+            //    velocity = new Vector2(velocity.X, velocity.Y + gravity);
+            //position += velocity;
+
+            if (decisionTimeFlag == true)
+            {
+                position -= velocity;
+            }
+            else
+            {
+                position += velocity;
+            }
 
         }
 
