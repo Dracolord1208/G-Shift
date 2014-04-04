@@ -29,7 +29,7 @@ namespace G_Shift
        public Animation PlayerAnimation;
         // Position of the Player relative to the upper left side of the screen
         public Vector2 Position;
-
+        public bool hasBeenHit = false;
         // State of the player
         public bool Active;
         public int Height { get; set; }
@@ -89,11 +89,9 @@ namespace G_Shift
         {
             PlayerAnimation.Position = Position;
             PlayerAnimation.Update(gameTime);
-         // Move background texture 400 pixels each second 
+           // Move background texture 400 pixels each second 
             StanceMoves();
             playerStance = Stance.Standing;
-            //Update(gameTime);
-            //  Position += motion;
             motion = new Vector2(0, 0);
             Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
             Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
@@ -105,42 +103,36 @@ namespace G_Shift
             {
                 Position.X -= playerMoveSpeed;
                 playerStance = Stance.Left;
-                //playerAnimation.Initialize(gManTest2, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, true);
             }
             if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
             currentGamePadState.DPad.Right == ButtonState.Pressed)
             {
                 Position.X += playerMoveSpeed;
                 playerStance = Stance.Right;
-                //playerAnimation.Initialize(gManTest3, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, true);
             }
             if (canMoveUp && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
             currentGamePadState.DPad.Up == ButtonState.Pressed))
-            //if (canMoveUp && currentKeyboardState.IsKeyDown(Keys.W))
             {
                 Position.Y -= playerMoveSpeed;
             }
             if (canMoveDown && (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
             currentGamePadState.DPad.Down == ButtonState.Pressed))
-            //if (canMoveDown && currentKeyboardState.IsKeyDown(Keys.S))
             {
                 Position.Y += playerMoveSpeed;
             }
             if (currentKeyboardState.IsKeyDown(Keys.Z) || currentGamePadState.Buttons.X == ButtonState.Pressed)
             {
                 playerStance = Stance.lightAttack;
-                //playerAnimation.Initialize(gManTest4, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, true);
             }
             if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 playerStance = Stance.heavyAttack;
-                //playerAnimation.Initialize(gManTest5, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, true);
             }
             // gMan y-boundaries
-            if (Position.Y <= 200)
-                Position = new Vector2(Position.X, 200);
-            if (Position.Y >= SCREEN_HEIGHT - 250)
-                Position = new Vector2(Position.X, SCREEN_HEIGHT - Height); //300);
+            if (Position.Y <= 350)
+                Position = new Vector2(Position.X, 350);
+            if (Position.Y >= 450 )
+                Position = new Vector2(Position.X, 450); //300);
 
 
             // gMan x-boundaries
@@ -156,27 +148,22 @@ namespace G_Shift
         {
             if (playerStance == Stance.Standing)
             {
-               // playerAnimation.Initialize(gManTest1, Vector2.Zero, 82, 166, 3, 30, Color.White, 1f, true);
                 playerAnimation.change(gManTest1);
             }
             if (playerStance == Stance.Left)
             {
-               // playerAnimation.Initialize(gManTest2, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, false);
                 playerAnimation.change(gManTest2);
             }
             if (playerStance == Stance.Right)
             {
-             //   playerAnimation.Initialize(gManTest3, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, false);
                 playerAnimation.change(gManTest3);
             }
             if (playerStance == Stance.lightAttack)
             {
-            //    playerAnimation.Initialize(gManTest4, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, false);
                 playerAnimation.change(gManTest4);
             }
             if (playerStance == Stance.heavyAttack)
             {
-              //  playerAnimation.Initialize(gManTest5, Vector2.Zero, 82, 166, 7, 30, Color.White, 1f, false);
                 playerAnimation.change(gManTest5);
             }
         }

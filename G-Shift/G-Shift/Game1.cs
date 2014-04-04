@@ -238,10 +238,10 @@ namespace G_Shift
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gMan.LoadContent(Content);
             // TODO: use this.Content to load your game content here
-            backgroundTexture = Content.Load<Texture2D>("backgroundA");
+            backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            gMan.Initialize(gManTest, Vector2.Zero);
+            gMan.Initialize(gManTest, new Vector2(250,410));
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
 
@@ -364,20 +364,7 @@ namespace G_Shift
                     {
                         scrollPosition += moveFactorPerSecond;
                     }
-                    if (currentKeyboardState.IsKeyDown(Keys.Space) ||
-                     currentGamePadState.Buttons.A == ButtonState.Pressed)
-                    {
 
-                        if (gameTime.TotalGameTime - previousFireTime > fireTime)
-                        {
-                            // Reset our current time
-                            previousFireTime = gameTime.TotalGameTime;
-
-                            // Add the projectile, but add it to the front and center of the player
-                                // Add the projectile, but add it to the front and center of the player
-                                AddProjectile(gMan.Position + new Vector2(gMan.Width / 2, 0));
-                        }
-                    }
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -774,91 +761,92 @@ namespace G_Shift
             //spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
             int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
-            /*
-            for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            {
-                for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                {
-                    backgroundPos = new Vector2(x * backgroundTexture.Width +
-                        ((int)scrollPosition) % backgroundTexture.Width,
-                        y * backgroundTexture.Height);
-                    spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-                }
-            }
-             */
+            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            ///*
+            //for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //{
+            //    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //    {
+            //        backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //            ((int)scrollPosition) % backgroundTexture.Width,
+            //            y * backgroundTexture.Height);
+            //        spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            //    }
+            //}
+            // */
 
-            /*
-            if(scrollPosition<=2000)
-            {
-                for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-                {
-                    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                    {
-                        backgroundPos = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width+000,
-                            y * backgroundTexture.Height);
-                        spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-                    }
-                }
-            }
-            if(scrollPosition>=1001)
-            {
-                for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-                {
-                    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                    {
-                        backgroundPos = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width,
-                            y * backgroundTexture.Height);
-                        spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
-                    }
-                }
-            }
-             */
+            ///*
+            //if(scrollPosition<=2000)
+            //{
+            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //    {
+            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //        {
+            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width+000,
+            //                y * backgroundTexture.Height);
+            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            //        }
+            //    }
+            //}
+            //if(scrollPosition>=1001)
+            //{
+            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //    {
+            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //        {
+            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width,
+            //                y * backgroundTexture.Height);
+            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
+            //        }
+            //    }
+            //}
+            // */
 
-            if (scrollPosition <= 1000)
-            {
-                for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-                {
-                    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                    {
-                        backgroundPos = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width + 000,
-                            y * backgroundTexture.Height);
-                        spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-                    }
-                }
-            }
-            if (scrollPosition >= 1000 && scrollPosition <= 2000)
-            {
-                for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-                {
-                    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                    {
-                        backgroundPos = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width,
-                            y * backgroundTexture.Height);
-                        backgroundPos2 = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width+1000,
-                            y * backgroundTexture.Height);
-                        spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-                        spriteBatch.Draw(backgroundTexture2, -backgroundPos2, Color.White);
-                    }
-                }
-            }
-            if (scrollPosition >= 2000)
-            {
-                for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-                {
-                    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-                    {
-                        backgroundPos = new Vector2(x * backgroundTexture.Width +
-                            ((int)scrollPosition) % backgroundTexture.Width + 000,
-                            y * backgroundTexture.Height);
-                        spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
-                    }
-                }
-            }
+            //if (scrollPosition <= 1000)
+            //{
+            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //    {
+            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //        {
+            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width + 000,
+            //                y * backgroundTexture.Height);
+            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            //        }
+            //    }
+            //}
+            //if (scrollPosition >= 1000 && scrollPosition <= 2000)
+            //{
+            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //    {
+            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //        {
+            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width,
+            //                y * backgroundTexture.Height);
+            //            backgroundPos2 = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width+1000,
+            //                y * backgroundTexture.Height);
+            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos2, Color.White);
+            //        }
+            //    }
+            //}
+            //if (scrollPosition >= 2000)
+            //{
+            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
+            //    {
+            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
+            //        {
+            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
+            //                ((int)scrollPosition) % backgroundTexture.Width + 000,
+            //                y * backgroundTexture.Height);
+            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
+            //        }
+            //    }
+            //}
             
            // spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
             aCrate.Draw(spriteBatch);
