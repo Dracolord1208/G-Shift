@@ -19,12 +19,16 @@ namespace G_Shift_Level_Editor
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        List<Texture2D> mapTiles;
+
+        Vector2 translation;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
 
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1000;
 
             Content.RootDirectory = "Content";
         }
@@ -39,6 +43,11 @@ namespace G_Shift_Level_Editor
         {
             // TODO: Add your initialization logic here
 
+            mapTiles = new List<Texture2D>();
+            translation = new Vector2();
+
+            IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -50,6 +59,9 @@ namespace G_Shift_Level_Editor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //Texture2D temp = Content.Load<Texture2D>("MapTile1");
+            //mapTiles.Add(temp);
 
             // TODO: use this.Content to load your game content here
         }
@@ -74,9 +86,7 @@ namespace G_Shift_Level_Editor
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-
-
-            // TODO: Add your update logic here
+            MouseState mState = Mouse.GetState();
 
             base.Update(gameTime);
         }
@@ -89,7 +99,12 @@ namespace G_Shift_Level_Editor
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null,
+                Matrix.CreateTranslation(translation.X, translation.Y, 0));
+
+            //spriteBatch.Draw(mapTiles[0], new Vector2(0, 0), Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
