@@ -89,14 +89,14 @@ namespace G_Shift_Level_Editor
             MouseState mState = Mouse.GetState();
 
             if (mState.X < 40)
-                translation.X += 2;
-            else if (mState.X > 960)
                 translation.X -= 2;
+            else if (mState.X > 960)
+                translation.X += 2;
 
             if (mState.Y < 40)
-                translation.Y += 2;
-            else if (mState.Y > 560)
                 translation.Y -= 2;
+            else if (mState.Y > 560)
+                translation.Y += 2;
 
             base.Update(gameTime);
         }
@@ -110,7 +110,7 @@ namespace G_Shift_Level_Editor
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null,
-                Matrix.CreateTranslation(translation.X, translation.Y, 0));
+                Matrix.CreateTranslation(-translation.X, -translation.Y, 0));
 
             spriteBatch.Draw(mapTiles[0], new Vector2(0, 0), Color.White);
 
