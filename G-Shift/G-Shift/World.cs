@@ -38,6 +38,11 @@ namespace G_Shift
 
                     level.Add(rect);
                 }
+
+                if (data[x] == "/*")
+                {
+                    while (data[++x] != "*/") ;
+                }
             }
         }
     }

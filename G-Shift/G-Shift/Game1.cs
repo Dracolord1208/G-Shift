@@ -77,6 +77,8 @@ namespace G_Shift
 
         Item aCrate;
 
+        World level;
+
         float playerMoveSpeed = 5f;
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
@@ -142,6 +144,9 @@ namespace G_Shift
         {
             // TODO: Add your initialization logic here
 
+            //world declaration
+            level = new World(0);
+
             // Setup window dimensions.
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
@@ -150,7 +155,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-            gMan.Position = new Vector2(50, 250);
+            //gMan.Position = new Vector2(50, 250);
             gMan.motion = new Vector2(0f, 0f);
             gMan.Width = 100;
             gMan.Height = 250;
@@ -241,7 +246,7 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            gMan.Initialize(gManTest, new Vector2(250,410));
+            gMan.Initialize(gManTest, new Vector2(41,166));
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
 
@@ -368,7 +373,7 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove());
+                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
                     aCrate.Update(gMan);
                     // Update the gravies
@@ -761,7 +766,8 @@ namespace G_Shift
             //spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
             int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
-            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            for(int x = 0; x < level.level.Count; x++)
+                spriteBatch.Draw(backgroundTexture, level.level[x], Color.White);
             ///*
             //for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
             //{

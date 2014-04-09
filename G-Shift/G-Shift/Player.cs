@@ -85,7 +85,7 @@ namespace G_Shift
         }
 
         // Update the player animation
-        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown)
+        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown, World level)
         {
             PlayerAnimation.Position = Position;
             PlayerAnimation.Update(gameTime);
@@ -129,17 +129,17 @@ namespace G_Shift
                 playerStance = Stance.heavyAttack;
             }
             // gMan y-boundaries
-            if (Position.Y <= 350)
-                Position = new Vector2(Position.X, 350);
-            if (Position.Y >= 450 )
-                Position = new Vector2(Position.X, 450); //300);
+            if (Position.Y <= level.level[0].Y)
+                Position = new Vector2(Position.X, level.level[0].Y );
+            if (Position.Y >= level.level[0].Y + level.level[0].Height)
+                Position = new Vector2(Position.X, level.level[0].Y + level.level[0].Height); //300);
 
 
             // gMan x-boundaries
-            if (Position.X <= 0)
-                Position = new Vector2(0, Position.Y);
-            if (Position.X >= SCREEN_WIDTH - Width)
-                Position = new Vector2(SCREEN_WIDTH - Width, Position.Y);
+            if (Position.X <= level.level[0].X)
+                Position = new Vector2(level.level[0].X, Position.Y);
+            if (Position.X >= level.level[0].X + level.level[0].Width)
+                Position = new Vector2(level.level[0].X + level.level[0].Width, Position.Y);
            
             
         }
