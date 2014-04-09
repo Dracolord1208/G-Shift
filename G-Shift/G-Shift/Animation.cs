@@ -113,7 +113,7 @@ namespace G_Shift
 
             // Grab the correct frame in the image strip by multiplying the currentFrame index by the frame width
             destinationRect = new Rectangle((int)Position.X - (int)(FrameWidth * scale) / 2,
-            (int)Position.Y - (int)(FrameHeight * scale) / 2,
+            (int)Position.Y - (int)(FrameHeight * scale), // 2,
             (int)(FrameWidth * scale),
             (int)(FrameHeight * scale));
         }

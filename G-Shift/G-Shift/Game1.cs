@@ -766,8 +766,10 @@ namespace G_Shift
             //spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
             int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
-            for(int x = 0; x < level.level.Count; x++)
-                spriteBatch.Draw(backgroundTexture, level.level[x], Color.White);
+
+            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            //spriteBatch.Draw(backgroundTexture2, level.level[0], Color.White);
+            
             ///*
             //for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
             //{

@@ -26,7 +26,7 @@ namespace G_Shift
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
-       public Animation PlayerAnimation;
+        public Animation PlayerAnimation;
         // Position of the Player relative to the upper left side of the screen
         public Vector2 Position;
         public bool hasBeenHit = false;
