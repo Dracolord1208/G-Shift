@@ -21,7 +21,7 @@ namespace G_Shift
         public World(int lvlNum)
         {
             level = new List<Rectangle>();
-            StreamReader file = new StreamReader("testlevel.txt");
+            StreamReader file = new StreamReader("level.txt");
 
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
