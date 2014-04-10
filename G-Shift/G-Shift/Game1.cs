@@ -145,7 +145,7 @@ namespace G_Shift
             // TODO: Add your initialization logic here
 
             //world declaration
-            level = new World(0);
+            level = new World(0, Content);
 
             // Setup window dimensions.
             graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
@@ -162,7 +162,7 @@ namespace G_Shift
 
             aCrate = new Item();
             aCrate.initialize(Content, "crate");
-            aCrate.setItemPosition(new Rectangle(250, 300, 50, 100));
+            aCrate.setItemPosition(new Vector2(250, 300));
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -857,8 +857,8 @@ namespace G_Shift
             //}
             
            // spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
-            aCrate.Draw(spriteBatch);
-
+            //aCrate.Draw(spriteBatch);
+            level.Draw(spriteBatch);
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
            // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
          //   spriteBatch.Draw(gunATexture, handGunA.position, sourceRectangle, Color.White, gunAngle, gunOrigin, 1.0f, SpriteEffects.None, 1);

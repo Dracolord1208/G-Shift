@@ -17,11 +17,13 @@ namespace G_Shift
     class World
     {
         public List<Rectangle> level;
+        public List<Item> items;
 
-        public World(int lvlNum)
+        public World(int lvlNum, ContentManager Content)
         {
             level = new List<Rectangle>();
-            StreamReader file = new StreamReader("level.txt");
+            items = new List<Item>();
+            StreamReader file = new StreamReader("testlevel.txt");
 
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -38,11 +40,30 @@ namespace G_Shift
 
                     level.Add(rect);
                 }
+                if (data[x] == "Item")
+                {
+                    Item item = new Item();
+                    Vector2 vec = new Vector2();
+                    vec.X = Convert.ToInt32(data[++x]);
+                    vec.Y = Convert.ToInt32(data[++x]);
 
+                    item.initialize(Content, data[++x]);
+                    item.setItemPosition(vec);
+
+                    items.Add(item);
+                }
                 if (data[x] == "/*")
                 {
                     while (data[++x] != "*/") ;
                 }
+            }
+        }
+
+        public void Draw(SpriteBatch sBatch)
+        {
+            foreach (Item item in items)
+            {
+                item.Draw(sBatch);
             }
         }
     }

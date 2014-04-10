@@ -56,8 +56,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LEVEL OUTSIDE copy.png">
-      <Name>LEVEL OUTSIDE copy</Name>
+    <Compile Include="Map.png">
+      <Name>Map</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

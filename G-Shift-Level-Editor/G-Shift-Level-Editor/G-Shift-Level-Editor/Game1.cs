@@ -70,8 +70,10 @@ namespace G_Shift_Level_Editor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            String s = "LEVEL OUTSIDE copy";
+            String s = "Map";
             Texture2D temp = Content.Load<Texture2D>(s);
+            mapTiles.Add(temp);
+             temp = Content.Load<Texture2D>(s);
             mapTiles.Add(temp);
 
             // TODO: use this.Content to load your game content here
@@ -101,9 +103,9 @@ namespace G_Shift_Level_Editor
             KeyboardState kState = Keyboard.GetState();
 
             if (mState.X < 40 && mState.X >= 0)
-                translation.X -= 2;
+                translation.X -= 5;
             else if (mState.X > 960 && mState.X <= 1000)
-                translation.X += 2;
+                translation.X += 5;
 
             if (mState.Y < 40 && mState.Y >= 0)
                 translation.Y -= 2;
@@ -168,6 +170,12 @@ namespace G_Shift_Level_Editor
                 Matrix.CreateTranslation(-translation.X, -translation.Y, 0));
 
             spriteBatch.Draw(mapTiles[0], new Vector2(0, 0), Color.White);
+            int prevXVal = 0;
+            for (int x = 1; x < mapTiles.Count; x++)
+            {
+                spriteBatch.Draw(mapTiles[x], new Vector2(prevXVal + mapTiles[x].Width, 0), Color.White);
+                prevXVal += mapTiles[x].Width;
+            }
 
             spriteBatch.End();
 

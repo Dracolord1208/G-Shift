@@ -42,7 +42,7 @@ namespace G_Shift
             font = Content.Load<SpriteFont>("test");
             throwable = Content.Load<Texture2D>(name);
             //baseRectangle = Content.Load<Texture2D>("Rectangle");
-            throwableHitbox = new Rectangle(0, 0, throwable.Width, throwable.Height);
+            throwableHitbox = new Rectangle(0, 0, 50, 100);
             bottomObjectHitbox = new Rectangle(throwableHitbox.X, throwableHitbox.Y + throwableHitbox.Height - 40, throwableHitbox.Width, 10);
             playerPosition = new Rectangle(0, 0, 50, 250);
             bottomPlayerHitbox = new Rectangle(playerPosition.X, playerPosition.Y + playerPosition.Height - 150, 70, 10);
@@ -60,9 +60,10 @@ namespace G_Shift
             canMoveUp = true;
         }
 
-        public void setItemPosition(Rectangle position)
+        public void setItemPosition(Vector2 position)
         {
-            throwableHitbox = position;
+            throwableHitbox.X = (int)position.X;
+            throwableHitbox.Y = (int)position.Y;
         }
 
         public bool getUpMove()
