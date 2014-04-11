@@ -34,6 +34,7 @@ namespace G_Shift
         public bool Active;
         public int Height { get; set; }
         public int Width { get; set; }
+        bool facing=true;//true==left false == right
         // Amount of hit points that player has
         public int Health;
         public Vector2 motion { get; set; }
@@ -53,19 +54,30 @@ namespace G_Shift
         // Initialize the player
         Animation playerAnimation;
         Stance playerStance;
-        Texture2D gManTest1;
-        Texture2D gManTest2;
-        Texture2D gManTest3;
-        Texture2D gManTest5;
-        Texture2D gManTest4;
+        Texture2D gManTest1; //standing
+        Texture2D gManTest2;   //if (playerStance == Stance.Left)
+        Texture2D gManTest3;//if (playerStance == Stance.Right)
+        Texture2D gManTest5l;  //if (playerStance == Stance.lightAttack)
+        Texture2D gManTest5r;  //if (playerStance == Stance.lightAttack)
+        Texture2D gManTest4;   //if (playerStance == Stance.heavyAttack
+        Texture2D gManTest6;//hit
+        Texture2D gManTest7;//death
+         
+            
+          
+         
         //Content.RootDirectory = "Content";
         public void LoadContent(ContentManager content) 
         {
-            gManTest1 = content.Load<Texture2D>("gst1");
-            gManTest2 = content.Load<Texture2D>("gst2");
-            gManTest3 = content.Load<Texture2D>("gst3");
+            gManTest1 = content.Load<Texture2D>("Galager/WALKING 2");
+            gManTest2 = content.Load<Texture2D>("Galager/WALKING 2");
+            gManTest3 = content.Load<Texture2D>("Galager/WALKING 2_2");
             gManTest4 = content.Load<Texture2D>("gst4");
-            gManTest5 = content.Load<Texture2D>("gst5");
+            gManTest5l = content.Load<Texture2D>("Galager/SHOOT 4");
+            gManTest5r = content.Load<Texture2D>("Galager/SHOOT 4r");
+            gManTest6 = content.Load<Texture2D>("Galager/6");
+            gManTest7 = content.Load<Texture2D>("Galager/DEATH 1");
+
         }
         public void Initialize(Texture2D playerTexture, Vector2 position)
         {
@@ -78,7 +90,7 @@ namespace G_Shift
             // Set the player to be active
             Active = true;
             playerStance = Stance.Standing; 
-            playerAnimation.Initialize(gManTest1, Vector2.Zero, 82, 166, 3, 30, Color.White, 1f, true);
+            playerAnimation.Initialize(gManTest1, Vector2.Zero, 157, 200, 1, 30, Color.White, 1f, true);
             PlayerAnimation = playerAnimation;
             // Set the player health
             Health = 100;
@@ -102,12 +114,14 @@ namespace G_Shift
             currentGamePadState.DPad.Left == ButtonState.Pressed)
             {
                 Position.X -= playerMoveSpeed;
+                facing = false;
                 playerStance = Stance.Left;
             }
             if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
             currentGamePadState.DPad.Right == ButtonState.Pressed)
             {
                 Position.X += playerMoveSpeed;
+                facing = true;
                 playerStance = Stance.Right;
             }
             if (canMoveUp && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
@@ -148,23 +162,38 @@ namespace G_Shift
         {
             if (playerStance == Stance.Standing)
             {
-                playerAnimation.change(gManTest1);
+                playerAnimation.change(gManTest1, 157, 200, 1, 30, Color.White, 1f, true);
+                if (facing)
+                {
+                    playerAnimation.change(gManTest3, 157, 200, 1, 30, Color.White, 1f, true);
+                }
+                else
+                {
+                    playerAnimation.change(gManTest1, 157, 200, 1, 30, Color.White, 1f, true);
+                }
             }
             if (playerStance == Stance.Left)
             {
-                playerAnimation.change(gManTest2);
+                playerAnimation.change(gManTest2, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.Right)
             {
-                playerAnimation.change(gManTest3);
+                playerAnimation.change(gManTest3, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.lightAttack)
             {
-                playerAnimation.change(gManTest4);
+                playerAnimation.change(gManTest4, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.heavyAttack)
             {
-                playerAnimation.change(gManTest5);
+                if (facing)
+                {
+                    playerAnimation.change(gManTest5r, 186, 207, 1, 30, Color.White, 1f, true);
+                }
+                else
+                {
+                      playerAnimation.change(gManTest5l, 186, 207, 1, 30, Color.White, 1f, true);
+                }
             }
         }
         // Draw the player

@@ -74,9 +74,21 @@ namespace G_Shift
             Active = true;
         }
 
-        public void change(Texture2D texture)
+        public void change(Texture2D texture,
+        int frameWidth, int frameHeight, int frameCount,
+        int frametime, Color color, float scale, bool looping)
         {
+            this.color = color;
+            this.FrameWidth = frameWidth;
+            this.FrameHeight = frameHeight;
+            this.frameCount = frameCount;
+            this.frameTime = frametime;
+            this.scale = scale;
+
+            Looping = looping;
+            
             spriteStrip = texture;
+
         }
 
         public void Update(GameTime gameTime)
