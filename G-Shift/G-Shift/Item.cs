@@ -22,8 +22,8 @@ namespace G_Shift
 
         public void initialize(ContentManager Content)
         {
-            font = Content.Load<SpriteFont>("test");
-            throwable = Content.Load<Texture2D>("crate");
+            font = Content.Load<SpriteFont>("gamefont");
+            //throwable = Content.Load<Texture2D>("crate");
             throwableHitbox = new Rectangle(200, 300, 50, 100);
             playerPosition = new Rectangle(0, 0, 50, 250);
         }
@@ -49,7 +49,7 @@ namespace G_Shift
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(throwable, throwableHitbox, Color.White);
+            //spriteBatch.Draw(throwable, throwableHitbox, Color.White);
             spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
             spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
         }

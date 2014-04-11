@@ -10,6 +10,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using System.Timers;
+using Microsoft.Xna.Framework.Net;
+using Microsoft.Xna.Framework.Storage;
+
+using XELibrary;
 
 // Test comment [by: Antonio]
 
@@ -41,21 +45,23 @@ namespace G_Shift
         // Gamepad states used to determine button presses
         GamePadState currentGamePadState;
         GamePadState previousGamePadState;
+        private CelAnimationManager cam;
         Texture2D enemyTexture;
         List<enemy> enemies;
-        TimeSpan enemySpawnTime;
-        TimeSpan previousSpawnTime;
+
         Random random;
         Texture2D projectileTexture;
         List<Projectile> projectiles;
         List<EnemyProjectile> enemyProjectiles;
-        TimeSpan fireTime;
-        TimeSpan previousFireTime;
+        TimeSpan enemySpawnTime;
+        TimeSpan previousSpawnTime;
         TimeSpan fireTimeEnemy;
         TimeSpan previousFireTimeEnemy;
+        TimeSpan previousFireTime;
+        TimeSpan fireTime;
         private GameState gameState;
-        private Thread backgroundThread;
-        private bool isLoading = false;
+     //   private Thread backgroundThread;
+      //  private bool isLoading = false;
         MouseState mouseState;
         MouseState previousMouseState;
         SpriteFont font;
@@ -64,30 +70,28 @@ namespace G_Shift
         private bool pausedForGuide = false;
         Player gMan;
         //Interactable gMan;
-        Interactable handGunA;
+       // Interactable handGunA;
         Texture2D gManTest;
         Texture2D gManTexture;
         Texture2D gunATexture;
-        Texture2D enemyATexture;
-        Texture2D bulletATexture;
+        //Texture2D enemyATexture;
+        //Texture2D bulletATexture;
 
         Item aCrate;
 
-        float playerMoveSpeed = 5f;
+       
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
 
-        private float gunAngle;
-        private Vector2 gunOrigin;
 
         //private Texture2D backgroundTexture;
 
         //************************
 
      //   private SpriteFont font;
-        private int score = 0;
-        private int lives = 3;
+//        private int score = 0;
+   //     private int lives = 3;
 
         public Texture2D backgroundTexture;
         public Texture2D backgroundTexture2;
@@ -105,10 +109,11 @@ namespace G_Shift
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            Components.Add(cam);
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = true; // default rate of 1/60 sec
-
+            cam = new CelAnimationManager(this, @"Content");
+            Components.Add(cam);
         }
 
         /// <summary>
@@ -129,10 +134,6 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player();
-            gMan.Position = new Vector2(50, 250);
-            gMan.motion = new Vector2(0f, 0f);
-            gMan.Width = 100;
-            gMan.Height = 250;
 
             aCrate = new Item();
             aCrate.initialize(Content);
@@ -141,7 +142,7 @@ namespace G_Shift
             enemyProjectiles = new List<EnemyProjectile>();
             // Set the laser to fire every quarter second
             fireTime = TimeSpan.FromSeconds(.15f);
-            fireTimeEnemy = TimeSpan.FromSeconds(.15f);
+           
             // Set a constant player move speed
             // Initialize the gravies list
             enemies = new List<enemy>();
@@ -149,6 +150,8 @@ namespace G_Shift
             previousSpawnTime = TimeSpan.Zero;
             // Used to determine how fast enemy respawns
             enemySpawnTime = TimeSpan.FromSeconds(2.0f);
+
+            fireTimeEnemy = TimeSpan.FromSeconds(.15f);
 
             // Initialize our random number generator
             random = new Random();
@@ -160,17 +163,7 @@ namespace G_Shift
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
            
-            /*
-            // Initialize Gun
-            handGunA = new Interactable();
-            handGunA.position = new Vector2(gMan.position.X + 50, gMan.position.Y + 100);
-            handGunA.motion = new Vector2(0f, 0f);
-            handGunA.Width = 150;
-            handGunA.Height = 55;
 
-            gunAngle = 0;
-            gunOrigin = new Vector2(handGunA.position.X + 10, handGunA.position.Y + 10);
-            */
 
             base.Initialize();
         }
@@ -274,6 +267,9 @@ namespace G_Shift
             // Allows the game to exit            
             if (currentKeyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
+            float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
+            //Update(gameTime);
+            //  Position += motion;
 
 
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
@@ -281,6 +277,26 @@ namespace G_Shift
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
+            // Keyboard input
+            if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
+            currentGamePadState.DPad.Left == ButtonState.Pressed)
+            {
+                scrollPosition -= moveFactorPerSecond;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
+            currentGamePadState.DPad.Right == ButtonState.Pressed)
+            {
+                scrollPosition += moveFactorPerSecond;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
+            currentGamePadState.DPad.Up == ButtonState.Pressed)
+            {
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
+            currentGamePadState.DPad.Down == ButtonState.Pressed)
+            { 
+            }
+
             checkPauseKey(currentKeyboardState, currentGamePadState);
             if (gameState == GameState.Playing)
             {
@@ -294,13 +310,23 @@ namespace G_Shift
 
                     aCrate.Update(gMan);
                     // Update the gravies
-                    UpdateEnemies(gameTime);
+                    if (currentKeyboardState.IsKeyDown(Keys.Space) ||
+                    currentGamePadState.Buttons.A == ButtonState.Pressed)
+                    {
+                        if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                        {
+                            previousFireTime = gameTime.TotalGameTime;
+                            // Add the projectile, but add it to the front and center of the player
+                            AddProjectile(gMan.Position + new Vector2(gMan.Width / 2, 0));
+                        }
+                    }
+                 //   UpdateEnemies(gameTime);
                     // Update the collision
                     //UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
                     // Update the enemy projectiles
-                    UpdateEnemyProjectiles();
+             //       UpdateEnemyProjectiles();
                 }
             }
           
@@ -313,7 +339,7 @@ namespace G_Shift
         }
 
 
-           
+
 
         private void Addenemy()
         {
@@ -338,15 +364,15 @@ namespace G_Shift
             // Spawn a new enemy enemy every 1.5 seconds
             //if (currentKeyboardState.IsKeyDown(Keys.Q))
             //{
-          
-                if (gameTime.TotalGameTime - previousSpawnTime > enemySpawnTime)
-                {
-                    previousSpawnTime = gameTime.TotalGameTime;
 
-                    // Add an enemy
-                    Addenemy();
-                }
-           
+            if (gameTime.TotalGameTime - previousSpawnTime > enemySpawnTime)
+            {
+                previousSpawnTime = gameTime.TotalGameTime;
+
+                // Add an enemy
+                Addenemy();
+            }
+
             // Update the Enemies
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
@@ -447,7 +473,7 @@ namespace G_Shift
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-
+           
             //spriteBatch.Draw(background, new Rectangle(0, 0, 1000, 600), Color.White);    // !!WORKING
 
             //spriteBatch.Draw(backgroundTexture, Vector2.Zero, Color.White);
@@ -539,7 +565,7 @@ namespace G_Shift
                 }
             }
             
-            spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
+         //   spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
             aCrate.Draw(spriteBatch);
           //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
            // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
@@ -549,6 +575,7 @@ namespace G_Shift
             if (gameState == GameState.Playing)
             {
                 // Draw the Player
+                gMan.Draw(spriteBatch);
                 //                player.Draw(spriteBatch);
                 // Draw the Enemies
                 //  boss.Draw(spriteBatch);

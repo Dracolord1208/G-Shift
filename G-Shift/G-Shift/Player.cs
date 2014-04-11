@@ -22,14 +22,10 @@ namespace G_Shift
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
-       public Animation PlayerAnimation;
-       // Keyboard states used to determine key presses
-       KeyboardState currentKeyboardState;
-       KeyboardState previousKeyboardState;
 
-       // Gamepad states used to determine button presses
-       GamePadState currentGamePadState;
-       GamePadState previousGamePadState;
+        
+        //float playerMoveSpeed = 5f;
+       public Animation PlayerAnimation;
         // Position of the Player relative to the upper left side of the screen
         public Vector2 Position;
 
@@ -66,7 +62,16 @@ namespace G_Shift
             playerAnimation = new Animation();
             // Set the player to be active
             Active = true;
-            playerAnimation.Initialize(playerTexture, Vector2.Zero, 115, 69, 8, 30, Color.White, 1f, true);
+            Position = new Vector2(50, 250);
+            motion = new Vector2(0f, 0f);
+            Width = 100;
+            Height = 250;
+
+            Vector2 aTest;
+            aTest = new Vector2();
+            aTest.X = 0;
+            aTest.Y = 497;
+            playerAnimation.Initialize(playerTexture, aTest, 79, 162 , 3, 30, Color.White, 1f, true);
             PlayerAnimation = playerAnimation;
             // Set the player health
             Health = 100;
@@ -85,29 +90,29 @@ namespace G_Shift
 
             //////handGunA.position = new Vector2(position.X + 50, position.Y + 100);
 
-            // Keyboard input
-            if (currentKeyboardState.IsKeyDown(Keys.S))
-            {
-
-                Position.Y += playerMoveSpeed;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.W))
-            {
-                //motion = new Vector2(0, -5);
-                Position.Y -= playerMoveSpeed;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.A))
+            // Get Thumbstick Controls
+            Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
+            Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
+            if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
+            currentGamePadState.DPad.Left == ButtonState.Pressed)
             {
                 Position.X -= playerMoveSpeed;
             }
-            if (currentKeyboardState.IsKeyDown(Keys.D))
+            if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
+            currentGamePadState.DPad.Right == ButtonState.Pressed)
             {
-                scrollPosition += moveFactorPerSecond;
-                //far_scrollPosition += far_moveFactorPerSecond;
-                //motion = new Vector2(5, 0);
                 Position.X += playerMoveSpeed;
             }
-
+            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
+            currentGamePadState.DPad.Up == ButtonState.Pressed)
+            {
+                Position.Y -= playerMoveSpeed;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
+            currentGamePadState.DPad.Down == ButtonState.Pressed)
+            {
+                Position.Y += playerMoveSpeed;
+            }
             
 
             // gMan y-boundaries
@@ -122,40 +127,17 @@ namespace G_Shift
                 Position = new Vector2(0, Position.Y);
             if (Position.X >= SCREEN_WIDTH - Width)
                 Position = new Vector2(SCREEN_WIDTH - Width, Position.Y);
+            playerActions( gameTime,  currentKeyboardState, currentGamePadState);
+        
+        }
 
-            /*
-            if (Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.33f)))
-            {
-                depth = 1;  // foreground
-            }
-            else if (Position.Y >= SCREEN_HEIGHT - (LowerBounderyHeight * (.66f)))
-            {
-                depth = 3;  // rear-ground
-            }
-            else
-            {
-                depth = 2;  // middle depth
-            }
-
-
-            if (currentKeyboardState.IsKeyDown(Keys.Space) ||
-    currentGamePadState.Buttons.A == ButtonState.Pressed)
-            {
-
-                if (gameTime.TotalGameTime - previousFireTime > fireTime)
-                {
-                    // Reset our current time
-                    previousFireTime = gameTime.TotalGameTime;
-
-                    // Add the projectile, but add it to the front and center of the player
-
-                }
-            }
-*/        
+        public void playerActions(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState)
+        { 
+        
         }
         public void levelup(int num)
         {
-            PlayerAnimation.colorupdate(num);
+            //PlayerAnimation.colorupdate(num);
         }
         // Draw the player
         public void Draw(SpriteBatch spriteBatch)

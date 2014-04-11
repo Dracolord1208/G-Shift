@@ -6,6 +6,8 @@ namespace G_Shift
 {
     class enemy
     {
+
+
         // Animation representing the enemy
         public Animation EnemyAnimation;
 
@@ -45,7 +47,6 @@ namespace G_Shift
         {
             // Load the enemy ship texture
             EnemyAnimation = animation;
-
             // Set the position of the enemy
             Position = position;
 
@@ -101,7 +102,7 @@ namespace G_Shift
                 }
             }
         }
-
+      
 
         public void Draw(SpriteBatch spriteBatch)
         {

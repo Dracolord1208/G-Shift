@@ -71,16 +71,10 @@ namespace G_Shift
 
             // Set the Animation to active by default
             // why active by default?
+            //so the sprite is actually drawn 
             Active = true;
         }
 
-        //I don't think this is necessary for us now
-        public void colorupdate(int num) {
-            if (num == 1) { color = Color.Red; }
-            if (num == 2) { color = Color.LimeGreen; }
-            if (num == 3) { color = Color.Thistle; }
-            if (num == 4) { color = Color.White; }
-        }
 
 
         public void Update(GameTime gameTime)
