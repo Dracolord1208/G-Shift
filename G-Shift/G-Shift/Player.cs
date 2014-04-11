@@ -182,7 +182,7 @@ namespace G_Shift
             }
             if (playerStance == Stance.lightAttack)
             {
-                playerAnimation.change(gManTest4, 157, 200, 1, 30, Color.White, 1f, true);
+               // playerAnimation.change(gManTest4, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.heavyAttack)
             {
