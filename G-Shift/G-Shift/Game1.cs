@@ -105,11 +105,13 @@ namespace G_Shift
         public float far_scrollPosition = 0;
 
         public List<Enemy1a> badGuys;  // enemies
+        public List<Rectangle> BadGuys1aRect;
         public TimeSpan badGuyspawnTime;      
         public TimeSpan badGuycheckpoint;     
         public Random badGuyrandom;           
 
         public List<Enemy2a> badGuys2;  // enemies
+        public List<Rectangle> BadGuys2aRect;
         public TimeSpan badGuy2spawnTime;      
         public TimeSpan badGuy2checkpoint;     
         public Random badGuy2random;           
@@ -122,7 +124,9 @@ namespace G_Shift
         public TimeSpan badGuy3jumpcheckpoint;
         //public TimeSpan badGuy3decisionTime;
         //public TimeSpan badGuy3lastDecisionTime;
-
+        public Rectangle gManbase;
+        public Rectangle enemy1Rec;
+        public Rectangle enemy2Rec;
 
         public Game1()
         {
@@ -155,10 +159,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-            //gMan.Position = new Vector2(50, 250);
-            gMan.motion = new Vector2(0f, 0f);
-            gMan.Width = 100;
-            gMan.Height = 250;
+
 
             aCrate = new Item();
             aCrate.initialize(Content, "crate");
@@ -187,17 +188,7 @@ namespace G_Shift
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
            
-            /*
-            // Initialize Gun
-            handGunA = new Interactable();
-            handGunA.position = new Vector2(gMan.position.X + 50, gMan.position.Y + 100);
-            handGunA.motion = new Vector2(0f, 0f);
-            handGunA.Width = 150;
-            handGunA.Height = 55;
 
-            gunAngle = 0;
-            gunOrigin = new Vector2(handGunA.position.X + 10, handGunA.position.Y + 10);
-            */
 
             badGuys = new List<Enemy1a>();  
             badGuyspawnTime = new TimeSpan();   
@@ -228,7 +219,7 @@ namespace G_Shift
             //badGuy3decisionTime = new TimeSpan();
             //badGuy3decisionTime = TimeSpan.FromSeconds(0.0f);
             //badGuy3lastDecisionTime = new TimeSpan();
-            
+
 
             base.Initialize();
         }
@@ -246,7 +237,9 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            gMan.Initialize(gManTest, new Vector2(41,166));
+            gMan.Initialize(gManTest, new Vector2(70, 200));
+
+            //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
 
@@ -268,13 +261,9 @@ namespace G_Shift
             enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
             enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
-            //enemyCTexture = Content.Load<Texture2D>("Boss1a");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
 
-            //EnemyTexture = Content.Load<Texture2D>("Enemy 1a");
-            //BulletTexture = Content.Load<Texture2D>("Bullet 1a");
 
-            //font = Content.Load<SpriteFont>("Score");
 
         }
 
@@ -346,6 +335,7 @@ namespace G_Shift
             // Allows the game to exit            
             if (currentKeyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
+            gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
 
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
@@ -396,6 +386,7 @@ namespace G_Shift
             {
                 badGuys[i].Update();
 
+
                 /*  // good start
                 if (badGuys[i].position.X > gMan.Position.X)
                     badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
@@ -427,13 +418,6 @@ namespace G_Shift
                     badGuys[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
 
 
-                /*
-                if (badGuys[i].position.Y > gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
-                else if (badGuys[i].position.Y <= gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
-                */
-
                 if (badGuys[i].position.Y > gMan.Position.Y - 10 && badGuys[i].position.Y < gMan.Position.Y + 10)
                     badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
                 if (badGuys[i].position.Y > gMan.Position.Y + 10)
@@ -457,7 +441,8 @@ namespace G_Shift
             for (int i = 0; i < badGuys2.Count; i++)
             {
                 badGuys2[i].Update();
-
+                enemy1Rec = new Rectangle((int)badGuys2[i].position.X - 60,
+              (int)badGuys2[i].position.Y + 39,  40, 7);
                 /*  // good start
                 if (badGuys[i].position.X > gMan.Position.X)
                     badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
@@ -500,7 +485,6 @@ namespace G_Shift
                 else if (badGuys[i].position.Y <= gMan.Position.Y)
                     badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
                 */
-
                 if (badGuys[i].health <= 0)
                 {
                     badGuys.RemoveAt(i);
@@ -623,77 +607,6 @@ namespace G_Shift
         }
 
 
-           
-        /*
-        private void Addenemy()
-        {
-            // Create the animation object
-            Animation enemyAnimation = new Animation();
-
-            // Initialize the animation with the correct animation information
-            enemyAnimation.Initialize(enemyTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
-
-            // Randomly generate the position of the enemy
-            Vector2 position = new Vector2(GraphicsDevice.Viewport.Width + enemyTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
-            // Create an enemy
-            enemy enemy = new enemy();
-            // Initialize the enemy
-            enemy.Initialize(enemyAnimation, position);
-
-            // Add the enemy to the active gravies list
-            enemies.Add(enemy);
-        }
-        private void UpdateEnemies(GameTime gameTime)
-        {
-            // Spawn a new enemy enemy every 1.5 seconds
-            //if (currentKeyboardState.IsKeyDown(Keys.Q))
-            //{
-          
-                if (gameTime.TotalGameTime - previousSpawnTime > enemySpawnTime)
-                {
-                    previousSpawnTime = gameTime.TotalGameTime;
-
-                    // Add an enemy
-                    Addenemy();
-                }
-           
-            // Update the Enemies
-            for (int i = enemies.Count - 1; i >= 0; i--)
-            {
-
-                enemies[i].Update(gameTime);
-
-                // Fire only every interval we set as the fireTime
-                if (gameTime.TotalGameTime - previousFireTimeEnemy > fireTimeEnemy)
-                {
-                    // Reset our current time
-                    previousFireTimeEnemy = gameTime.TotalGameTime;
-
-                    // Add the projectile, but add it to the front and center of the player
-                    AddEnemyProjectile(enemies[i].Position - new Vector2(enemies[i].Width / 2, 0));
-                }
-
-                if (enemies[i].Active == false)
-                {
-                    if (enemies[i].wallcheck == true)
-                    {
-                        // Play the explosion sound
-                        // explosionSound.Play();
-                        //Add to the player's score
-                        //score += enemies[i].Value * (powerup + 1);
-
-                        // If not active and health <= 0
-                        if (enemies[i].Health <= 0)
-                        {
-                            // Add an explosion
-                        }
-                    }
-                    enemies.RemoveAt(i);
-                }
-
-            }
-        }
-        */
 
         private void UpdateProjectiles()
         {
@@ -768,122 +681,12 @@ namespace G_Shift
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
 
             spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-            //spriteBatch.Draw(backgroundTexture2, level.level[0], Color.White);
-            
-            ///*
-            //for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //{
-            //    for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //    {
-            //        backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //            ((int)scrollPosition) % backgroundTexture.Width,
-            //            y * backgroundTexture.Height);
-            //        spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-            //    }
-            //}
-            // */
 
-            ///*
-            //if(scrollPosition<=2000)
-            //{
-            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //    {
-            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //        {
-            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width+000,
-            //                y * backgroundTexture.Height);
-            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-            //        }
-            //    }
-            //}
-            //if(scrollPosition>=1001)
-            //{
-            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //    {
-            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //        {
-            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width,
-            //                y * backgroundTexture.Height);
-            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
-            //        }
-            //    }
-            //}
-            // */
-
-            //if (scrollPosition <= 1000)
-            //{
-            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //    {
-            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //        {
-            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width + 000,
-            //                y * backgroundTexture.Height);
-            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-            //        }
-            //    }
-            //}
-            //if (scrollPosition >= 1000 && scrollPosition <= 2000)
-            //{
-            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //    {
-            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //        {
-            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width,
-            //                y * backgroundTexture.Height);
-            //            backgroundPos2 = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width+1000,
-            //                y * backgroundTexture.Height);
-            //            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
-            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos2, Color.White);
-            //        }
-            //    }
-            //}
-            //if (scrollPosition >= 2000)
-            //{
-            //    for (int x = -1; x <= resolutionWidth / backgroundTexture.Width + 1; x++)
-            //    {
-            //        for (int y = 0; y <= resolutionHeight / backgroundTexture.Height; y++)
-            //        {
-            //            backgroundPos = new Vector2(x * backgroundTexture.Width +
-            //                ((int)scrollPosition) % backgroundTexture.Width + 000,
-            //                y * backgroundTexture.Height);
-            //            spriteBatch.Draw(backgroundTexture2, -backgroundPos, Color.White);
-            //        }
-            //    }
-            //}
-            
-           // spriteBatch.Draw(gManTexture, gMan.Position, Color.White);
-            //aCrate.Draw(spriteBatch);
             level.Draw(spriteBatch);
-          //  Rectangle sourceRectangle = new Rectangle(0, 0, handGunA.Width, handGunA.Height);
-           // gunOrigin = new Vector2(handGunA.Width - 140, handGunA.Height - 35);
-         //   spriteBatch.Draw(gunATexture, handGunA.position, sourceRectangle, Color.White, gunAngle, gunOrigin, 1.0f, SpriteEffects.None, 1);
-
 
             if (gameState == GameState.Playing)
             {
-                /*
-                // Draw the Player
-                //                player.Draw(spriteBatch);
-                // Draw the Enemies
-                //  boss.Draw(spriteBatch);
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    enemies[i].Draw(spriteBatch);
-                }
-                // Draw the gravies
-                // Draw the Projectiles
-
-                // Draw the Projectiles
-                for (int i = 0; i < enemyProjectiles.Count; i++)
-                {
-                    enemyProjectiles[i].Draw(spriteBatch);
-                }
-                */
+                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
                 for (int i = 0; i < projectiles.Count; i++)
                 {
@@ -894,11 +697,13 @@ namespace G_Shift
                 for (int i = 0; i < badGuys.Count; i++)
                 {
                     badGuys[i].Draw(spriteBatch);
+                  //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 }
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
                     badGuys2[i].Draw(spriteBatch);
+                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
                 }
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)

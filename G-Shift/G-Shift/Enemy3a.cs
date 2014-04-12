@@ -10,6 +10,11 @@ namespace G_Shift
 {
     public class Enemy3a
     {
+        enum Stance
+        {
+            Waiting,
+            Fighting,
+        }
         public int Height { get; set; }
         public int Width { get; set; }
         public Vector2 position { get; set; }

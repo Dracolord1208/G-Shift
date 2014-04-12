@@ -6,6 +6,11 @@ namespace G_Shift
 {
     class enemy
     {
+        enum Stance
+        {
+            Waiting,
+            Fighting,
+        }
         // Animation representing the enemy
         public Animation EnemyAnimation;
 
