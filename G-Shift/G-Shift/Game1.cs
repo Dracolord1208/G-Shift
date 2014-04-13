@@ -50,12 +50,8 @@ namespace G_Shift
         List<Projectile> projectiles;
         List<EnemyProjectile> enemyProjectiles;
         TimeSpan fireTime;
-        TimeSpan previousFireTime;
         TimeSpan fireTimeEnemy;
-        TimeSpan previousFireTimeEnemy;
         private GameState gameState;
-        private Thread backgroundThread;
-        private bool isLoading = false;
         MouseState mouseState;
         MouseState previousMouseState;
         SpriteFont font;
@@ -64,7 +60,6 @@ namespace G_Shift
         private bool pausedForGuide = false;
         Player gMan;
         //Interactable gMan;
-        Interactable handGunA;
         Texture2D gManTest;
         Texture2D gManTexture;
         Texture2D gunATexture;
@@ -73,27 +68,24 @@ namespace G_Shift
         Texture2D enemyBTexture;
         Texture2D enemy2bTexture;
         Texture2D enemyCTexture;
-        Texture2D bulletATexture;
 
         Item aCrate;
 
         World level;
 
-        float playerMoveSpeed = 5f;
+     //  float playerMoveSpeed = 5f;
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
 
-        private float gunAngle;
-        private Vector2 gunOrigin;
 
         //private Texture2D backgroundTexture;
 
         //************************
 
      //   private SpriteFont font;
-        private int score = 0;
-        private int lives = 3;
+        //private int score = 0;
+       //private int lives = 3;
 
         public Texture2D backgroundTexture;
         public Texture2D backgroundTexture2;
@@ -127,7 +119,7 @@ namespace G_Shift
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
-
+        int amountOfFightingEnemies=0;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -203,6 +195,7 @@ namespace G_Shift
             badGuy2checkpoint = new TimeSpan();
             badGuy2checkpoint = TimeSpan.FromSeconds(0.0);
             badGuy2random = new Random();
+            amountOfFightingEnemies++;
 
             
             badGuys3 = new List<Enemy3a>();  // maybe new****!!!!
@@ -237,7 +230,7 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            gMan.Initialize(gManTest, new Vector2(70, 200));
+            gMan.Initialize(gManTest, new Vector2(70, 100));
 
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
@@ -337,6 +330,11 @@ namespace G_Shift
                 this.Exit();
             gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
 
+
+
+
+
+
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
             previousGamePadState = currentGamePadState;
@@ -363,7 +361,7 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+                    gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
                     aCrate.Update(gMan);
                     // Update the gravies
@@ -442,7 +440,7 @@ namespace G_Shift
             {
                 badGuys2[i].Update();
                 enemy1Rec = new Rectangle((int)badGuys2[i].position.X - 60,
-              (int)badGuys2[i].position.Y + 39,  40, 7);
+              (int)badGuys2[i].position.Y + 39, 200, 50);
                 /*  // good start
                 if (badGuys[i].position.X > gMan.Position.X)
                     badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
@@ -456,7 +454,7 @@ namespace G_Shift
                 */
 
                 // 2nd try  // will work as temp
-
+                
                 if (badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width)
                 {
                     badGuys2[i].velocity = new Vector2(-5f, badGuys2[i].velocity.Y);
@@ -607,7 +605,41 @@ namespace G_Shift
         }
 
 
+        private void UpdateCollision()
+        {
+            // Use the Rectangle's built-in intersect function to 
+            // determine if two objects are overlapping
+            Rectangle rectangle1;
+            Rectangle rectangle2;
 
+            rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
+
+            // Do the collision between the player and the gravies
+            for (int i = 0; i < badGuys.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)badGuys[i].position.X - 32,
+                (int)badGuys[i].position.Y - 32,
+                badGuys[i].Width,
+                badGuys[i].Height);
+
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
+                {
+                    //the player can hit the enemy
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                    {
+                        //the player hit the robot
+                        badGuys[i].health -= gMan.heavyHit;
+                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                    }
+                    // If the player health is less than zero we died
+                    if (gMan.Health <= 0)
+                        gMan.Active = false;
+                }
+
+            }
+            }
         private void UpdateProjectiles()
         {
             // Update the Projectiles
