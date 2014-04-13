@@ -178,15 +178,11 @@ namespace G_Shift
             {
                 playerStance = Stance.lightAttack;
             }
-            //if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
-            //{
-            //    playerStance = Stance.heavyAttack;
-            //}
+            if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
+            {
+                playerStance = Stance.heavyAttack;
+            }
 
-            //if (playerStance == Stance.heavyAttack)
-            //{
-            //    animateWhip(gameTime);
-            //}
             //else
             if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space)&&Combo==0)
             {
@@ -278,7 +274,7 @@ namespace G_Shift
                         if (elapsedTime > 30)
                         {
                         
-                            playerAnimation.change(gManTest5r, 186, 207, 1, 30, Color.White, 1f, true);
+                            playerAnimation.change(gManTest5r, 186, 207, 1, 300, Color.White, 1f, true);
                             // Reset the elapsed time to zero
                             elapsedTime = 0;
                         }
@@ -286,7 +282,7 @@ namespace G_Shift
                 }
                 else
                 {
-                      playerAnimation.change(gManTest5l, 186, 207, 1, 1, Color.White, 1f, true);
+                      playerAnimation.change(gManTest5l, 186, 207, 1, 300, Color.White, 1f, true);
                 }
             }
         }
