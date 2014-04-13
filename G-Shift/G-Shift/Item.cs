@@ -13,6 +13,7 @@ namespace G_Shift
 {
     class Item
     {
+        ContentManager gameContents;
         Texture2D throwable;
         Texture2D baseRectangle;
         Rectangle throwableHitbox;
@@ -24,7 +25,7 @@ namespace G_Shift
         SpriteFont font;
         float x;
         float y;
-        float angle;
+        //float angle;
         bool pickedUp;
         bool goUp;
         bool inIfStatement;
@@ -43,6 +44,7 @@ namespace G_Shift
 
         public void initialize(ContentManager Content, string name)
         {
+            gameContents = Content;
             font = Content.Load<SpriteFont>("test");
             throwable = Content.Load<Texture2D>(name);
             throwable.Name = name;
@@ -75,7 +77,7 @@ namespace G_Shift
             right = false;
             canMoveDown = true;
             canMoveUp = true;
-            turnNinetyDegrees = false;
+            //turnNinetyDegrees = false;
             offScreen = false;
             throwCount = 0;
         }
@@ -150,8 +152,10 @@ namespace G_Shift
                 //{
                 if (throwable.Name.CompareTo("barrel") == 0)
                 {
-                    turnNinetyDegrees = true;
-                    angle = (float)Math.PI / 2;
+                    //turnNinetyDegrees = true;
+                    //angle = (float)Math.PI / 2;
+                    throwable = gameContents.Load<Texture2D>("barrel2");
+                    throwable.Name = "barrel2";
                 }
 
                     throwableHitbox.X = (int)gMan.Position.X + 10;
@@ -201,14 +205,14 @@ namespace G_Shift
                         throwCount++;
                     }
 
-                    if (throwCount == 1 && throwable.Name.CompareTo("barrel") != 0)
+                    if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)
                     {
                         throwable = content.Load<Texture2D>("laser");
                     }
                 } 
             }
 
-            if (throwCount == 1 && throwable.Name.CompareTo("barrel") == 0 && !offScreen)
+            if (throwCount == 1 && throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
             {
                 throwableHitbox.X += 4;
 
@@ -220,23 +224,23 @@ namespace G_Shift
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (turnNinetyDegrees)
-            {
-                spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
-            }
-            else
-                spriteBatch.Draw(throwable, throwableHitbox, Color.White);
+            //if (turnNinetyDegrees)
+            //{
+                //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
+            //}
+            //else
+            spriteBatch.Draw(throwable, throwableHitbox, Color.White);
             spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
             spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
-            /*spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
+            spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
             spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
             spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
             spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
-            spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);
-            spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
-            spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
-            spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
-            spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);*/
+            //spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);
+            //spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
+            //spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
+            //spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
+            //spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);
         }
     }
 }
