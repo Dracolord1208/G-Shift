@@ -78,7 +78,7 @@ namespace G_Shift
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
-
+        Rectangle healthRectange;
 
         //private Texture2D backgroundTexture;
 
@@ -93,7 +93,7 @@ namespace G_Shift
         public float scrollPosition = 0;
         public Vector2 backgroundPos;
         public Vector2 backgroundPos2;
-
+        Texture2D baseRectangle;
         public Texture2D far_backgroundTexture;
         public float far_scrollPosition = 0;
 
@@ -122,7 +122,7 @@ namespace G_Shift
         public TimeSpan badGuy4spawnTime;
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
-
+        Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
@@ -165,7 +165,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-
+    
 
             //aCrate = new Item();
             //aCrate.initialize(Content, "crate");
@@ -252,7 +252,7 @@ namespace G_Shift
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
             gMan.Initialize(gManTest, new Vector2(70, 100));
-
+            baseRectangle = Content.Load<Texture2D>("Rectangle");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -352,7 +352,8 @@ namespace G_Shift
             gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
 
 
-
+            healthRectange = new Rectangle((int)gMan.Position.X - 37,
+    (int)gMan.Position.Y + 37, gMan.Health, 7);
 
 
 
@@ -882,9 +883,9 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
-                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+             //   spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
-
+               
 
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
@@ -910,7 +911,7 @@ namespace G_Shift
             //mainWeapon.Draw(spriteBatch);
 
 
-
+            spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);

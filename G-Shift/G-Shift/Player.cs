@@ -74,11 +74,9 @@ namespace G_Shift
         TimeSpan fireTime;
         TimeSpan previousFireTime;
         int elapsedTime;
-
-        bool isPunching;
-
         public Rectangle hitBox;
 
+        bool isPunching;
       //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
         public void LoadContent(ContentManager content) 
@@ -110,7 +108,6 @@ namespace G_Shift
             Health = 100;
             canMoveUp = true;
             canMoveDown = true;
-
             hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
         }
 
@@ -230,9 +227,7 @@ namespace G_Shift
             if (Position.X >= level.level[0].X + level.level[0].Width)
                 Position = new Vector2(level.level[0].X + level.level[0].Width, Position.Y);
 
-
             hitBox = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            
         }
 
         public void StanceMoves(GameTime gameTime)
@@ -263,7 +258,6 @@ namespace G_Shift
             }
             if (playerStance == Stance.hurt)
             {
-                playerAnimation.change(gManTest7, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.heavyAttack)
             {
@@ -317,6 +311,11 @@ namespace G_Shift
                 attackTime = 0.0f;
             }
 
+        }
+
+        public bool getDirection()
+        {
+            return facing;
         }
 
 
