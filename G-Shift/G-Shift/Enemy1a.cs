@@ -14,11 +14,13 @@ namespace G_Shift
 
     public class Enemy1a
     {
-        enum Stance
+        public enum Stance
         {
             Waiting,
             Fighting,
+            Hurt
         }
+        public Stance enemyStance;
         public int Height { get; set; }
         public int Width { get; set; }
         public Vector2 position { get; set; }
@@ -64,7 +66,7 @@ namespace G_Shift
             color = Color.White;
             //ttl = 160;
             ttl = 320;
-
+            enemyStance = Stance.Fighting; 
         }
 
         public void Update()
