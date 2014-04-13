@@ -22,8 +22,28 @@ namespace G_Shift_Level_Editor
 
         Vector2 topLeft, botRight;
 
+        struct Item
+        {
+            public Vector2 loc;
+            public String name;
+        }
+
+        struct Track
+        {
+            public Vector2 topLeft;
+            public Vector2 topRight;
+            public Vector2 botLeft;
+            public Vector2 botRight;
+        }
+
         List<Texture2D> mapTiles;
         List<Rectangle> mapRects;
+        List<Item> items;
+        List<Track> tracks;
+
+        Texture2D outline;
+        Texture2D pathUp;
+        Texture2D pathDown;
 
         Vector2 translation;
 
@@ -52,6 +72,8 @@ namespace G_Shift_Level_Editor
 
             mapTiles = new List<Texture2D>();
             mapRects = new List<Rectangle>();
+            items = new List<Item>();
+            tracks = new List<Track>();
             translation = new Vector2();
 
             topLeft = new Vector2(-1);
@@ -70,10 +92,13 @@ namespace G_Shift_Level_Editor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            outline = Content.Load<Texture2D>("RectOutline");
+            pathUp = Content.Load<Texture2D>("PathUp");
+            pathDown = Content.Load<Texture2D>("PathDown");
+
             String s = "Map";
             Texture2D temp = Content.Load<Texture2D>(s);
-            mapTiles.Add(temp);
-             temp = Content.Load<Texture2D>(s);
             mapTiles.Add(temp);
 
             // TODO: use this.Content to load your game content here
@@ -135,6 +160,11 @@ namespace G_Shift_Level_Editor
 
                 mapRects.Add(temp);
 
+                if (mapRects.Count > 1)
+                {
+                    Pathify();
+                }
+
                 topLeft.X = -1;
             }
 
@@ -166,7 +196,7 @@ namespace G_Shift_Level_Editor
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null,
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null,
                 Matrix.CreateTranslation(-translation.X, -translation.Y, 0));
 
             spriteBatch.Draw(mapTiles[0], new Vector2(0, 0), Color.White);
@@ -177,9 +207,95 @@ namespace G_Shift_Level_Editor
                 prevXVal += mapTiles[x].Width;
             }
 
+            foreach(Rectangle rect in mapRects)
+            {
+                spriteBatch.Draw(outline, rect, Color.White);
+            }
+
+            for(int x = 0; x < mapRects.Count-1; x++)
+            {
+                
+                Rectangle rect = new Rectangle();
+                if (mapRects[x].Y > mapRects[x + 1].Y)
+                {
+                    rect.X = (int)(tracks[x].topLeft.X);
+                    rect.Y = (int)(tracks[x].topLeft.Y - (tracks[x].topLeft.Y - tracks[x].topRight.Y));
+                    rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                    rect.Height = (int)(tracks[x].topLeft.Y - tracks[x].topRight.Y);
+
+                    spriteBatch.Draw(pathUp, rect, Color.White);
+
+                    if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
+                    {
+                        rect.X = (int)(tracks[x].topLeft.X);
+                        rect.Y = (int)(tracks[x].botLeft.Y - (tracks[x].botLeft.Y - tracks[x].botRight.Y));
+                        rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                        rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
+
+                        spriteBatch.Draw(pathUp, rect, Color.White);
+                    }
+                    else
+                    {
+                        rect.X = (int)(tracks[x].topLeft.X);
+                        rect.Y = (int)(tracks[x].botRight.Y - (tracks[x].botRight.Y - tracks[x].botLeft.Y));
+                        rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                        rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
+
+                        spriteBatch.Draw(pathDown, rect, Color.White);
+                    }
+                }
+                else
+                {
+                    rect.X = (int)(tracks[x].topLeft.X);
+                    rect.Y = (int)(tracks[x].topLeft.Y - (tracks[x].topRight.Y - tracks[x].topRight.Y));
+                    rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                    rect.Height = (int)(tracks[x].topRight.Y - tracks[x].topLeft.Y);
+
+                    spriteBatch.Draw(pathDown, rect, Color.White);
+
+                    if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
+                    {
+                        rect.X = (int)(tracks[x].topLeft.X);
+                        rect.Y = (int)(tracks[x].botLeft.Y - (tracks[x].botLeft.Y - tracks[x].botRight.Y));
+                        rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                        rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
+
+                        spriteBatch.Draw(pathUp, rect, Color.White);
+                    }
+                    else
+                    {
+                        rect.X = (int)(tracks[x].topLeft.X);
+                        rect.Y = (int)(tracks[x].botRight.Y - (tracks[x].botRight.Y - tracks[x].botLeft.Y));
+                        rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
+                        rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
+
+                        spriteBatch.Draw(pathDown, rect, Color.White);
+                    }
+                }
+            }
+            
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void Pathify()
+        {
+            Track temp = new Track();
+            temp.topLeft = new Vector2(
+                            mapRects[mapRects.Count - 2].Right,
+                            mapRects[mapRects.Count - 2].Top);
+            temp.botLeft = new Vector2(
+                            mapRects[mapRects.Count - 2].Right,
+                            mapRects[mapRects.Count - 2].Bottom);
+            temp.topRight = new Vector2(
+                            mapRects[mapRects.Count - 1].Left,
+                            mapRects[mapRects.Count - 1].Top);
+            temp.botRight = new Vector2(
+                            mapRects[mapRects.Count - 1].Left,
+                            mapRects[mapRects.Count - 1].Bottom);
+
+            tracks.Add(temp);
         }
     }
 }
