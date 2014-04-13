@@ -656,9 +656,22 @@ namespace G_Shift
                     badGuys4[i].moveDownFlag = true;
                 }
 
+                if (badGuys4[i].holdxPosFlag == true && badGuys4[i].holdyPosFlag == true)
+                {
+                    badGuys4[i].attackFlag = true;
+                }
+                if(badGuys4[i].attackFlag == true)
+                {
+                    if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                    {
+                        gMan.Health -= 10;
+                        badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                    }
+                }
+
                 badGuys4[i].Update();
 
-                if (badGuys4[i].ttl <= 0)
+                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
                 {
                     badGuys4.RemoveAt(i);
                     i--;

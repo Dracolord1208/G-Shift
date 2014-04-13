@@ -39,7 +39,8 @@ namespace G_Shift
         public float gravity;
 
         public Rectangle baseRect { get; set; }
-        public Rectangle attackRect { get; set; }
+        public Rectangle attackLeftRect { get; set; }
+        public Rectangle attackRightRect { get; set; }
 
         public Rectangle rect
         {
@@ -60,6 +61,9 @@ namespace G_Shift
         public TimeSpan lastDecisionTime { get; set; }
         public TimeSpan reverseDecisionTime { get; set; }
         public Random randomDecisionTime { get; set; }
+
+        public TimeSpan attackCheckpoint { get; set; }
+        public TimeSpan attackTimeSpan { get; set; }
 
         // move left
         public bool moveLeftFlag { get; set; }
@@ -96,6 +100,15 @@ namespace G_Shift
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
 
+        public enum Stance
+        {                        
+            Wait,
+            Move,
+            Attack,
+            Stunned
+        }
+        public Stance stance { get; set; }
+
 
         public Enemy4a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
@@ -129,6 +142,9 @@ namespace G_Shift
             randomDecisionTime = new Random();
             decisionTime = TimeSpan.FromSeconds((float)randomDecisionTime.Next(1, 5));
 
+            attackCheckpoint = TimeSpan.FromSeconds(0.0f);
+            attackTimeSpan = TimeSpan.FromSeconds(2.0f);
+
             moveLeftFlag = false;
             moveRightFlag = false;
             moveUpFlag = false;
@@ -141,14 +157,16 @@ namespace G_Shift
             baseHeight = 20;
 
             baseRect = new Rectangle((int)position.X, (int)position.Y + Height - 15, Width, 30);
-            //attackLeftRect = new Rectangle();
-            //attackRightRect = 
+            attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width*(.25)), Height);
+            attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
 
             //spriteSheet = Content.Load<Texture2D>("robotSmallSheet1a");
             //moveAnimation = new AnimatedSprite();
             ContentLoadedFlag = false;
 
             isRightFlag = false;
+
+            stance = Stance.Wait;
         }
 
         public void LoadContent(ContentManager content)
