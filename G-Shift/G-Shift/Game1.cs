@@ -869,12 +869,12 @@ namespace G_Shift
                 // draw badGuys
                 for (int i = 0; i < badGuys.Count; i++)
                 {
-<<<<<<< HEAD
+
                     badGuys[i].Draw(spriteBatch);
                     spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
-=======
+
                     //badGuys[i].Draw(spriteBatch);
->>>>>>> 63f6b33a0d32a5bf9f09c08c8cf79c1f42cde240
+
                     //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 }
                 // draw badGuys2
