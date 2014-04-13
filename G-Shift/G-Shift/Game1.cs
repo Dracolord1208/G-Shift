@@ -375,7 +375,7 @@ namespace G_Shift
                     // Update the gravies
                     //UpdateEnemies(gameTime);
                     // Update the collision
-                    //UpdateCollision();
+                    UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
 =======
@@ -507,12 +507,12 @@ namespace G_Shift
                 else if (badGuys[i].position.Y <= gMan.Position.Y)
                     badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
                 */
-                if (badGuys[i].health <= 0)
-                {
-                    badGuys.RemoveAt(i);
-                    i--;
-                    //scream_male.Play();
-                }
+                //if (badGuys[i].health <= 0)
+                //{
+                //    badGuys.RemoveAt(i);
+                //    i--;
+                //    //scream_male.Play();
+                //}
             }
 
             //*********************
