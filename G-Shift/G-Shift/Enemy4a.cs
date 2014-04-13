@@ -158,7 +158,8 @@ namespace G_Shift
 
             baseRect = new Rectangle((int)position.X, (int)position.Y + Height - 15, Width, 30);
             attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width*(.25)), Height);
-            attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
+            //attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
+            attackRightRect = new Rectangle((int)(position.X + Width*(.75)), (int)position.Y, (int)(Width * (.25)), Height);
 
             //spriteSheet = Content.Load<Texture2D>("robotSmallSheet1a");
             //moveAnimation = new AnimatedSprite();

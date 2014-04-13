@@ -19,8 +19,6 @@ using System.Timers;
 
 namespace G_Shift
 {
-    
-
     public class Enemy2b
     {
         public int Height { get; set; }
@@ -178,8 +176,8 @@ namespace G_Shift
             //spriteSheet = content.Load<Texture2D>("robotSmallSheet1a");   // Working!!
             //moveAnimation = new AnimatedSprite(spriteSheet, 7, 5);
 
-            spriteSheetmoveRight = content.Load<Texture2D>("medSheet2b");
-            spriteSheetmoveLeft = content.Load<Texture2D>("medSheet2a");
+            spriteSheetmoveRight = content.Load<Texture2D>("medSheet2a");
+            spriteSheetmoveLeft = content.Load<Texture2D>("medSheet2b");
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
             moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 7, 5);
         }

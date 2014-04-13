@@ -40,6 +40,7 @@ namespace G_Shift
         bool canMoveUp;
         bool turnNinetyDegrees;
         bool offScreen;
+        bool charDirection;
         int throwCount;
         Vector2 speed;
 
@@ -80,6 +81,7 @@ namespace G_Shift
             canMoveUp = true;
             //turnNinetyDegrees = false;
             offScreen = false;
+            charDirection = false;
             throwCount = 0;
 
             speed = new Vector2(10,20);
@@ -182,6 +184,7 @@ namespace G_Shift
                 goUp = true;
                 stillIntersects = false;
                 spacePressed = true;
+                charDirection = gMan.getDirection();
             }
 
             if (goUp && pickedUp)
@@ -189,7 +192,11 @@ namespace G_Shift
                 //if (throwableHitbox.Y > 100 && goneUp)
                 if(speed.Y > 1 && goneUp)
                 {
+<<<<<<< HEAD
                    // if (!gMan.getDirection())
+=======
+                    if (charDirection)
+>>>>>>> 04c8e06cfba7b345a559f6cf04ed1e4471f70cda
                     {
                         throwableHitbox.X += (int)speed.X;
                         throwableHitbox.Y -= (int)speed.Y;
@@ -211,17 +218,21 @@ namespace G_Shift
                     if(speed.Y < 30)
                     {
 
+<<<<<<< HEAD
                         //if (!gMan.getDirection())
+=======
+                        if (charDirection)
+>>>>>>> 04c8e06cfba7b345a559f6cf04ed1e4471f70cda
                         {
                             throwableHitbox.X += (int)speed.X;
-                            throwableHitbox.Y -= (int)speed.Y;
+                            throwableHitbox.Y += (int)speed.Y;
                             inIfStatement = true;
                             speed.Y++;
                         }
                        // else
                         {
                             throwableHitbox.X -= (int)speed.X;
-                            throwableHitbox.Y -= (int)speed.Y;
+                            throwableHitbox.Y += (int)speed.Y;
                             //inIfStatement = true;
                             speed.Y++;
                         }
@@ -247,10 +258,20 @@ namespace G_Shift
 
             if (throwCount == 1 && throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
             {
-                throwableHitbox.X += 4;
+                if (charDirection)
+                {
+                    throwableHitbox.X += 4;
 
-                if (throwableHitbox.X - throwableHitbox.Height > graphics.GraphicsDevice.Viewport.Width)
-                    offScreen = true;
+                    if (throwableHitbox.X - throwableHitbox.Height > graphics.GraphicsDevice.Viewport.Width)
+                        offScreen = true;
+                }
+                else
+                {
+                    throwableHitbox.X -= 4;
+
+                    if (throwableHitbox.X + throwableHitbox.Height < 0)
+                        offScreen = true;
+                }
             }
             
         }

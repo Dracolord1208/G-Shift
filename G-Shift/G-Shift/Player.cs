@@ -74,7 +74,9 @@ namespace G_Shift
         TimeSpan fireTime;
         TimeSpan previousFireTime;
         int elapsedTime;
+        
         public Rectangle hitBox;
+        //public Rectangle hitbox { get; set; }
 
         bool isPunching;
       //   float MaxAttackTime=2;
