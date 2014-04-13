@@ -41,6 +41,7 @@ namespace G_Shift
         bool turnNinetyDegrees;
         bool offScreen;
         int throwCount;
+        Vector2 speed;
 
         public void initialize(ContentManager Content, string name)
         {
@@ -80,6 +81,8 @@ namespace G_Shift
             //turnNinetyDegrees = false;
             offScreen = false;
             throwCount = 0;
+
+            speed = new Vector2(10,20);
         }
 
         public void setItemPosition(Vector2 position)
@@ -183,19 +186,23 @@ namespace G_Shift
 
             if (goUp && pickedUp)
             {
-                if (throwableHitbox.Y > 100 && goneUp)
+                //if (throwableHitbox.Y > 100 && goneUp)
+                if(speed.Y > 1 && goneUp)
                 {
-                    throwableHitbox.X += 4;
-                    throwableHitbox.Y -= 4;
+                    throwableHitbox.X += (int)speed.X;
+                    throwableHitbox.Y -= (int)speed.Y;
                     inIfStatement = true;
+                    speed.Y--;
                 }
                 else
                 {
                     goneUp = false;
-                    if (throwableHitbox.Y < 350)
+                    //if (throwableHitbox.Y < 350)
+                    if(speed.Y < 30)
                     {
-                        throwableHitbox.X += 4;
-                        throwableHitbox.Y += 4;
+                        throwableHitbox.X += (int)speed.X;
+                        throwableHitbox.Y += (int)speed.Y;
+                        speed.Y++;
                     }
                     else
                     {

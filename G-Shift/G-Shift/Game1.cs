@@ -677,11 +677,7 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
-<<<<<<< HEAD
                 if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
-=======
-                if (badGuys4[i].health <= 0)
->>>>>>> 3c94114887a4576bd4495881f6678be4a535f0e2
                 {
                     badGuys4.RemoveAt(i);
                     i--;
@@ -881,26 +877,13 @@ namespace G_Shift
 
 
                 // draw badGuys
-<<<<<<< HEAD
-                for (int i = 0; i < badGuys.Count; i++)
-                {
-
-                    badGuys[i].Draw(spriteBatch);
-                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
-
-                    //badGuys[i].Draw(spriteBatch);
-
-                    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
-                }
-=======
-                //for (int i = 0; i < badGuys.Count; i++)
+    //for (int i = 0; i < badGuys.Count; i++)
                 //{
                 //    badGuys[i].Draw(spriteBatch);
                 //    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
                 //    //badGuys[i].Draw(spriteBatch);
                 //    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 //}
->>>>>>> 60d091b5a0af2fdc6c93db8524682f3d38ae33a6
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
