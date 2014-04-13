@@ -75,7 +75,9 @@ namespace G_Shift
         Texture2D enemyCTexture;
         Texture2D bulletATexture;
 
+        List<Item> allItems;
         Item aCrate;
+        Item aBarrel;
 
         World level;
 
@@ -161,9 +163,17 @@ namespace G_Shift
             gMan = new Player ();
 
 
+            allItems = new List<Item>();
+
             aCrate = new Item();
             aCrate.initialize(Content, "crate");
-            aCrate.setItemPosition(new Vector2(250, 300));
+            allItems.Add(aCrate);
+            //aCrate.setItemPosition(new Rectangle(250, 300, 50, 100));
+
+            aBarrel = new Item();
+            aBarrel.initialize(Content, "barrel");
+            allItems.Add(aBarrel);
+            //aBarrel.setItemPosition(new Rectangle(100, 300, 50, 100));
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -363,9 +373,10 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+                    gMan.Update(gameTime, currentKeyboardState, currentGamePadState, allItems, level);
 
-                    aCrate.Update(gMan);
+                    for (int i = 0; i < allItems.Count; i++ )
+                        allItems[i].Update(gMan, Content, graphics);
                     // Update the gravies
                     //UpdateEnemies(gameTime);
                     // Update the collision
@@ -686,7 +697,7 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
-                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+                //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
                 for (int i = 0; i < projectiles.Count; i++)
                 {
@@ -710,14 +721,18 @@ namespace G_Shift
                 {
                     //badGuys3[i].Draw(spriteBatch);
                 }
-
+                spriteBatch.DrawString(font, "xPosition: " + gMan.Position.X, Vector2.Zero, Color.White);
+                spriteBatch.DrawString(font, "yPosition: " + gMan.Position.Y, new Vector2(0, 30), Color.White);
             }
 
+            //for (int i = 0; i < allItems.Count; i++)
+            //{
+                //allItems[i].Draw(spriteBatch);
+            //}
+                //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
+                //mainWeapon.Draw(spriteBatch);
 
-            //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
-            //mainWeapon.Draw(spriteBatch);
 
-            
 
             spriteBatch.End();
 

@@ -14,16 +14,18 @@ namespace G_Shift
     class Item
     {
         Texture2D throwable;
-        //Texture2D baseRectangle;
+        Texture2D baseRectangle;
         Rectangle throwableHitbox;
         Rectangle playerPosition;
         Rectangle bottomPlayerHitbox;
         Rectangle bottomObjectHitbox;
         int objectPositionX;
         int objectPositionY;
+        int throwCount;
         SpriteFont font;
         float x;
         float y;
+        float angle;
         bool pickedUp;
         bool goUp;
         bool inIfStatement;
@@ -36,14 +38,30 @@ namespace G_Shift
         bool right;
         bool canMoveDown;
         bool canMoveUp;
+        bool turnNinetyDegrees;
+        bool offScreen;
+        
 
         public void initialize(ContentManager Content, string name)
         {
             font = Content.Load<SpriteFont>("test");
             throwable = Content.Load<Texture2D>(name);
-            //baseRectangle = Content.Load<Texture2D>("Rectangle");
-            throwableHitbox = new Rectangle(0, 0, 50, 100);
-            bottomObjectHitbox = new Rectangle(throwableHitbox.X, throwableHitbox.Y + throwableHitbox.Height - 40, throwableHitbox.Width, 10);
+            throwable.Name = name;
+            baseRectangle = Content.Load<Texture2D>("Rectangle");
+            //throwableHitbox = new Rectangle(0, 0, 50, 100);
+
+            if (throwable.Name.CompareTo("crate") == 0)
+            {
+                throwableHitbox = new Rectangle(0, 0, 50, 100);
+            }
+            else if (throwable.Name.CompareTo("barrel") == 0)
+            {
+                throwableHitbox = new Rectangle(0, 0, 100, 100);
+            }
+            else
+                throwableHitbox = new Rectangle(0, 0, throwable.Width, throwable.Height);
+
+            bottomObjectHitbox = new Rectangle(throwableHitbox.X, throwableHitbox.Y + throwableHitbox.Height, throwableHitbox.Width, 10);
             playerPosition = new Rectangle(0, 0, 50, 250);
             bottomPlayerHitbox = new Rectangle(playerPosition.X, playerPosition.Y + playerPosition.Height - 150, 70, 10);
             pickedUp = false;
@@ -58,6 +76,10 @@ namespace G_Shift
             right = false;
             canMoveDown = true;
             canMoveUp = true;
+            turnNinetyDegrees = false;
+            offScreen = false;
+            angle = 0;
+            throwCount = 0;
         }
 
         public void setItemPosition(Vector2 position)
@@ -100,7 +122,7 @@ namespace G_Shift
             }
         }
 
-        public void Update(Player gMan)
+        public void Update(Player gMan, ContentManager content, GraphicsDeviceManager graphics)
         {
             playerPosition.X = (int)gMan.Position.X;
             playerPosition.Y = (int)gMan.Position.Y;
@@ -128,6 +150,12 @@ namespace G_Shift
             {
                 //if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 //{
+                if (throwable.Name.CompareTo("barrel") == 0)
+                {
+                    turnNinetyDegrees = true;
+                    angle = (float)Math.PI / 2;
+                }
+
                     throwableHitbox.X = (int)gMan.Position.X + 10;
                     throwableHitbox.Y = (int)gMan.Position.Y - 80;
                     pickedUp = true;
@@ -172,19 +200,36 @@ namespace G_Shift
                         goUp = false;
                         pickedUp = false;
                         spacePressed = false;
+                        throwCount++;
+                    }
+                    if (throwCount == 1 && throwable.Name.CompareTo("barrel") != 0)
+                    {
+                        throwable = content.Load<Texture2D>("laser");
                     }
                 } 
+            }
+
+            if (throwCount == 1 && throwable.Name.CompareTo("barrel") == 0 && !offScreen)
+            {
+                throwableHitbox.X += 4;
+
+                if (throwableHitbox.X - throwableHitbox.Height > graphics.GraphicsDevice.Viewport.Width)
+                    offScreen = true;
             }
             
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(throwable, throwableHitbox, Color.White);
-            //spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
-            //spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
-            spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
-            spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
+            if (turnNinetyDegrees)
+            {
+                spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
+            }
+            else
+                spriteBatch.Draw(throwable, throwableHitbox, Color.White);
+            spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
+            spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
+
             spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
             spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
             spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);

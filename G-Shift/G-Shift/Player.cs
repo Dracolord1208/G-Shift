@@ -32,6 +32,8 @@ namespace G_Shift
         public bool hasBeenHit = false;
         // State of the player
         public bool Active;
+        bool canMoveUp;
+        bool canMoveDown;
         public int Height { get; set; }
         public int Width { get; set; }
         bool facing=true;//true==left false == right
@@ -79,6 +81,8 @@ namespace G_Shift
             gManTest7 = content.Load<Texture2D>("Galager/DEATH 1");
 
         }
+
+
         public void Initialize(Texture2D playerTexture, Vector2 position)
         {
             
@@ -94,10 +98,12 @@ namespace G_Shift
             PlayerAnimation = playerAnimation;
             // Set the player health
             Health = 100;
+            canMoveUp = true;
+            canMoveDown = true;
         }
 
         // Update the player animation
-        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown, World level)
+        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, List<Item>allItems, World level)
         {
             PlayerAnimation.Position = Position;
             PlayerAnimation.Update(gameTime);
@@ -124,16 +130,43 @@ namespace G_Shift
                 facing = true;
                 playerStance = Stance.Right;
             }
-            if (canMoveUp && (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
-            currentGamePadState.DPad.Up == ButtonState.Pressed))
+
+
+            canMoveUp = true;
+
+            if (currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
+                currentGamePadState.DPad.Up == ButtonState.Pressed)
             {
-                Position.Y -= playerMoveSpeed;
+                for (int i = 0; i < allItems.Count; i++)
+                {
+                    if (!(allItems[i].getUpMove()))
+                    {
+                        canMoveUp = false;
+                    }
+                }
+
+                if (canMoveUp)
+                    Position.Y -= playerMoveSpeed;
             }
-            if (canMoveDown && (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
-            currentGamePadState.DPad.Down == ButtonState.Pressed))
+
+            canMoveDown = true;
+
+            if (currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
+            currentGamePadState.DPad.Down == ButtonState.Pressed)
             {
-                Position.Y += playerMoveSpeed;
+                for (int i = 0; i < allItems.Count; i++)
+                {
+                    if (!(allItems[i].getDownMove()))
+                    {
+                        canMoveDown = false;
+                    }
+                }
+
+                if (canMoveDown)
+                    Position.Y += playerMoveSpeed;
             }
+
+
             if (currentKeyboardState.IsKeyDown(Keys.Z) || currentGamePadState.Buttons.X == ButtonState.Pressed)
             {
                 playerStance = Stance.lightAttack;
