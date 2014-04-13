@@ -117,10 +117,17 @@ namespace G_Shift
         public TimeSpan badGuy3jumpcheckpoint;
         //public TimeSpan badGuy3decisionTime;
         //public TimeSpan badGuy3lastDecisionTime;
+
+        public List<Enemy4a> badGuys4;  // enemies
+        public TimeSpan badGuy4spawnTime;
+        public TimeSpan badGuy4checkpoint;
+        public Random badGuy4random;
+
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -219,6 +226,13 @@ namespace G_Shift
             //badGuy3decisionTime = new TimeSpan();
             //badGuy3decisionTime = TimeSpan.FromSeconds(0.0f);
             //badGuy3lastDecisionTime = new TimeSpan();
+
+            badGuys4 = new List<Enemy4a>();  // maybe new****!!!!
+            badGuy4spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
+            badGuy4spawnTime = TimeSpan.FromSeconds(3.0f);  // spawn within 5 seconds
+            badGuy4checkpoint = new TimeSpan();
+            badGuy4checkpoint = TimeSpan.FromSeconds(0.0);
+            badGuy4random = new Random();
 
 
             base.Initialize();
@@ -404,29 +418,7 @@ namespace G_Shift
             for (int i = 0; i < badGuys.Count; i++)
             {
                 badGuys[i].Update();
-
-
-                /*  // good start
-                if (badGuys[i].position.X > gMan.Position.X)
-                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
-                else if (badGuys[i].position.X <= gMan.Position.X)
-                    badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
-
-                if (badGuys[i].position.Y > gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
-                else if (badGuys[i].position.Y <= gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
-                */
-
-                // 2nd try  // will work as temp
-                /*
-                if (badGuys[i].position.X > gMan.Position.X + badGuys[i].Width)
-                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
-                else if (badGuys[i].position.X <= gMan.Position.X + badGuys[i].Width && badGuys[i].position.X >= gMan.Position.X - badGuys[i].Width)
-                    badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
-                else if (badGuys[i].position.X < gMan.Position.X - badGuys[i].Width)
-                    badGuys[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
-                */
+                
 
                 // 3rd try
                 if (badGuys[i].position.X <= gMan.Position.X + badGuys[i].Width && badGuys[i].position.X >= gMan.Position.X + gMan.Width)
@@ -567,6 +559,84 @@ namespace G_Shift
                 }
             }
 
+            //*********************
+            // Update badGuys4
+            // 
+            for (int i = 0; i < badGuys4.Count; i++)
+            {
+                if (badGuys4[i].ContentLoadedFlag == false)
+                {
+                    badGuys4[i].LoadContent(Content);
+                    badGuys4[i].ContentLoadedFlag = true;
+                }
+                //badGuys4[i].Update();
+                badGuys4[i].ResetValues();
+
+                /*  // Working
+                if(badGuys4[i].position.X + badGuys4[i].Width*(0.5f) > gMan.Position.X + gMan.Width*(0.5f))
+                    badGuys4[i].texture = enemyATexture;
+                else
+                    badGuys4[i].texture = enemy1bTexture;
+                 */
+
+                if (badGuys4[i].position.X + badGuys4[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
+                {
+                    //badGuys4[i].texture = enemyATexture;
+                    //badGuys4[i].moveAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
+                    badGuys4[i].isRightFlag = true;
+                }
+                else
+                {
+                    badGuys4[i].isRightFlag = false;
+                }
+
+
+                //Vector2 tempPos = badGuys4[i].position;
+
+
+                // general movement rules
+
+                // Adjust X-directional movement
+                if (badGuys4[i].position.X < gMan.Position.X + gMan.Width + (badGuys4[i].Width) && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
+                {
+                    badGuys4[i].holdxPosFlag = true;
+                }
+                else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width + (badGuys4[i].Width * 2))
+                {
+                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                    badGuys4[i].moveLeftFlag = true;
+                }
+                else if (badGuys4[i].position.X < gMan.Position.X - (badGuys4[i].Width * 2))
+                {
+                    badGuys4[i].moveRightFlag = true;
+                }
+
+                // Adjust Y-directional movement
+                if (badGuys4[i].position.Y < gMan.Position.Y + badGuys4[i].baseHeight * 2 && badGuys4[i].position.Y > gMan.Position.Y - badGuys4[i].baseHeight * 2)
+                {
+                    badGuys4[i].holdyPosFlag = true;
+                }
+                else if (badGuys4[i].position.Y > gMan.Position.Y + badGuys4[i].baseHeight * 4)
+                {
+                    badGuys4[i].moveUpFlag = true;
+                }
+                else if (badGuys4[i].position.Y < gMan.Position.Y - badGuys4[i].baseHeight * 4)
+                {
+                    badGuys4[i].moveDownFlag = true;
+                }
+
+
+                badGuys4[i].Update();
+
+                if (badGuys4[i].ttl <= 0)
+                {
+                    badGuys4.RemoveAt(i);
+                    i--;
+                }
+            }
+
+
+            //////////////////////////////////////////////  Spawn Enemies
 
             // badGuys spawn on random time interval
             if (gameTime.TotalGameTime - badGuycheckpoint > badGuyspawnTime && badGuys.Count <= 4)
@@ -618,7 +688,38 @@ namespace G_Shift
 
                 badGuy3spawnTime = TimeSpan.FromSeconds((float)badGuy3random.Next(1, 5));
             }
-            
+
+            // badGuys4 spawn on random time interval
+            if (gameTime.TotalGameTime - badGuy4checkpoint > badGuy4spawnTime && badGuys4.Count <= 3)
+            {
+                Vector2 eMotion = new Vector2(-6f, 0f);
+
+                float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempXleft = (float)badGuy4random.Next(-258, -158);
+                //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+                float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+
+                Vector2 startPos = new Vector2(0, 0);
+                if (random.Next(1, 3) == 1)
+                {
+                    startPos = new Vector2(tempXleft, tempY);
+                    eMotion = new Vector2(6f, 0f);
+                    //badGuys4[i].texture = enemy1bTexture;
+                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
+                }
+                else
+                {
+                    startPos = new Vector2(tempXright, tempY);
+                    eMotion = new Vector2(-6f, 0f);
+                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                }
+
+
+                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                badGuy4checkpoint = gameTime.TotalGameTime;
+
+                badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));
+            }
                         
 
 
@@ -719,7 +820,11 @@ namespace G_Shift
                 {
                     //badGuys3[i].Draw(spriteBatch);
                 }
-
+                // draw badGuys4
+                for (int i = 0; i < badGuys4.Count; i++)
+                {
+                    //badGuys4[i].Draw(spriteBatch);
+                }
             }
 
 
