@@ -368,17 +368,17 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-<<<<<<< HEAD
-                    gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
-                    aCrate.Update(gMan);
+                    //gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+
+                    //aCrate.Update(gMan);
                     // Update the gravies
                     //UpdateEnemies(gameTime);
                     // Update the collision
                     UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
-=======
+
                     gMan.Update(gameTime,currentKeyboardState,currentGamePadState, allItems, level);
 
                     for (int i = 0; i < allItems.Count; i++)
@@ -393,7 +393,7 @@ namespace G_Shift
                         //UpdateCollision();
                         // Update the projectiles
                         UpdateProjectiles();
->>>>>>> origin/ko
+
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
                 }
