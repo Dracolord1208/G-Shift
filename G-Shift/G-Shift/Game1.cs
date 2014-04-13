@@ -677,11 +677,7 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
-<<<<<<< HEAD
                 if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
-=======
-                if (badGuys4[i].health <= 0)
->>>>>>> 3c94114887a4576bd4495881f6678be4a535f0e2
                 {
                     badGuys4.RemoveAt(i);
                     i--;
