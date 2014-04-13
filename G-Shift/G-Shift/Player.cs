@@ -171,6 +171,11 @@ namespace G_Shift
             if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
                 playerStance = Stance.heavyAttack;
+<<<<<<< HEAD
+=======
+//ok
+                Combo ++;
+>>>>>>> c797f70cdcdf3a29ae9a2d5ea08e6836eb0d9752
             }
             // gMan y-boundaries
             if (Position.Y <= level.level[0].Y)
