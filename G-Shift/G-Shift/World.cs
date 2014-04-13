@@ -59,6 +59,11 @@ namespace G_Shift
             }
         }
 
+        public List<Item> getForUpdate()
+        {
+            return items;
+        }
+
         public void Draw(SpriteBatch sBatch)
         {
             foreach (Item item in items)

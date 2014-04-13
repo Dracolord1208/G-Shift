@@ -69,7 +69,8 @@ namespace G_Shift
         Texture2D enemy2bTexture;
         Texture2D enemyCTexture;
 
-        Item aCrate;
+        List<Item> allItems;
+        //Item aCrate;
 
         World level;
 
@@ -143,8 +144,14 @@ namespace G_Shift
             //world declaration
             level = new World(0, Content);
 
-            // Setup window dimensions.
-            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            allItems = new List<Item>();
+
+            for (int i = 0; i < level.getForUpdate().Count; i++)
+            {
+                allItems.Add(level.getForUpdate()[i]);
+            }
+                // Setup window dimensions.
+                graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferMultiSampling = false;
             graphics.ApplyChanges();
@@ -153,9 +160,9 @@ namespace G_Shift
             gMan = new Player ();
 
 
-            aCrate = new Item();
-            aCrate.initialize(Content, "crate");
-            aCrate.setItemPosition(new Vector2(250, 300));
+            //aCrate = new Item();
+            //aCrate.initialize(Content, "crate");
+            //aCrate.setItemPosition(new Vector2(250, 300));
 
             projectiles = new List<Projectile>();
             enemyProjectiles = new List<EnemyProjectile>();
@@ -361,6 +368,7 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
+<<<<<<< HEAD
                     gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
                     aCrate.Update(gMan);
@@ -370,6 +378,22 @@ namespace G_Shift
                     //UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
+=======
+                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, allItems, level);
+
+                    for (int i = 0; i < allItems.Count; i++)
+                    {
+                        allItems[i].Update(gMan, Content, graphics);
+                    }
+
+                        //aCrate.Update(gMan);
+                        // Update the gravies
+                        //UpdateEnemies(gameTime);
+                        // Update the collision
+                        //UpdateCollision();
+                        // Update the projectiles
+                        UpdateProjectiles();
+>>>>>>> origin/ko
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
                 }
@@ -718,7 +742,7 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
-                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+                //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
                 for (int i = 0; i < projectiles.Count; i++)
                 {
