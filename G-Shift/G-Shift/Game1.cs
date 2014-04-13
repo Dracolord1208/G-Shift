@@ -368,11 +368,8 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
-<<<<<<< HEAD
 
-                    gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
-=======
->>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
+                   // gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
                     //gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
@@ -382,12 +379,7 @@ namespace G_Shift
                     // Update the collision
                     UpdateCollision();
                     // Update the projectiles
-                    UpdateProjectiles();
-<<<<<<< HEAD
-=======
-
->>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
-                    gMan.Update(gameTime,currentKeyboardState,currentGamePadState, allItems, level);
+                    gMan.Update(gameTime,currentKeyboardState,previousKeyboardState,currentGamePadState, allItems, level);
 
                     for (int i = 0; i < allItems.Count; i++)
                     {
@@ -398,13 +390,7 @@ namespace G_Shift
                         // Update the gravies
                         //UpdateEnemies(gameTime);
                         // Update the collision
-                        //UpdateCollision();
                         // Update the projectiles
-                        UpdateProjectiles();
-<<<<<<< HEAD
-=======
-
->>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
                 }
@@ -675,51 +661,7 @@ namespace G_Shift
 
             }
             }
-        private void UpdateProjectiles()
-        {
-            // Update the Projectiles
-            for (int i = projectiles.Count - 1; i >= 0; i--)
-            {
-                projectiles[i].Update();
-                if (projectiles[i].Active == false)
-                {
 
-                    projectiles.RemoveAt(i);
-                }
-
-
-            }
-        }
-
-        private void AddProjectile(Vector2 position)
-        {
-            Projectile projectile = new Projectile();
-            projectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
-            projectiles.Add(projectile);
-        }
-        /*
-        private void UpdateEnemyProjectiles()
-        {
-            // Update the Projectiles
-            for (int i = enemyProjectiles.Count - 1; i >= 0; i--)
-            {
-                enemyProjectiles[i].Update();
-
-                if (enemyProjectiles[i].Active == false)
-                {
-                    enemyProjectiles.RemoveAt(i);
-                }
-
-
-            }
-        }
-        private void AddEnemyProjectile(Vector2 position)
-        {
-            EnemyProjectile enemyProjectile = new EnemyProjectile();
-            enemyProjectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
-            enemyProjectiles.Add(enemyProjectile);
-        }
-        */
 
 
 
@@ -753,7 +695,7 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
-                //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
                 for (int i = 0; i < projectiles.Count; i++)
                 {
@@ -764,7 +706,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys.Count; i++)
                 {
                     badGuys[i].Draw(spriteBatch);
-                  //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
+                    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 }
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
@@ -784,7 +726,7 @@ namespace G_Shift
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);
 
-            
+
 
             spriteBatch.End();
 

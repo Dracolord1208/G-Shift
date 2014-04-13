@@ -14,7 +14,7 @@ namespace G_Shift
 {
     class Player 
     {
-        public enum Stance { 
+       public  enum Stance { 
             Standing,
             Left,
             Right,
@@ -39,7 +39,6 @@ namespace G_Shift
         bool facing=true;//true==left false == right
         // Amount of hit points that player has
         public int Health;
-        public int heavyHit=5;
         public Vector2 motion { get; set; }
         // Get the width of the player ship
         /*public int Width
@@ -53,6 +52,8 @@ namespace G_Shift
             get { return PlayerAnimation.FrameHeight; }
         }
         */
+        float WaitTimeToShowCard = 0;
+
         public int depth { get; set; }
         // Initialize the player
         Animation playerAnimation;
@@ -65,10 +66,16 @@ namespace G_Shift
         Texture2D gManTest4;   //if (playerStance == Stance.heavyAttack
         Texture2D gManTest6;//hit
         Texture2D gManTest7;//death
-         
-            
-          
-         
+        public int heavyHit = 5;
+        int Combo = 0;
+        float attackTime;
+        bool isAttacking;
+        TimeSpan fireTime;
+        TimeSpan previousFireTime;
+        int elapsedTime;
+
+        bool isPunching;
+      //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
         public void LoadContent(ContentManager content) 
         {
@@ -86,7 +93,7 @@ namespace G_Shift
         {
             
             //set animation
-            
+            fireTime = TimeSpan.FromSeconds(.30f);
             // Set the starting position of the player around the middle of the screen and to the back
             Position = position;
             playerAnimation = new Animation();
@@ -102,12 +109,15 @@ namespace G_Shift
         }
 
         // Update the player animation
-        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, GamePadState currentGamePadState, List<Item> allItems, World level)
+        //public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown, List<Item> allItems, World level)
+        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, List<Item> allItems, World level)
+
         {
             PlayerAnimation.Position = Position;
             PlayerAnimation.Update(gameTime);
+           //  currentKeyboardState=   Keyboard.GetState();
            // Move background texture 400 pixels each second 
-            StanceMoves();
+            StanceMoves( gameTime);
             playerStance = Stance.Standing;
             motion = new Vector2(0, 0);
             Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
@@ -168,15 +178,43 @@ namespace G_Shift
             {
                 playerStance = Stance.lightAttack;
             }
-            if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
+            //if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
+            //{
+            //    playerStance = Stance.heavyAttack;
+            //}
+
+            //if (playerStance == Stance.heavyAttack)
+            //{
+            //    animateWhip(gameTime);
+            //}
+            //else
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space)&&Combo==0)
             {
+             //   whipping = true;
+                //attackTime = maxAttackTime;
+               // animateWhip(gameTime);
+
                 playerStance = Stance.heavyAttack;
-<<<<<<< HEAD
-=======
 //ok
                 Combo ++;
->>>>>>> c797f70cdcdf3a29ae9a2d5ea08e6836eb0d9752
             }
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 1)
+            {
+                //   whipping = true;
+                //attackTime = maxAttackTime;
+                // animateWhip(gameTime);
+                playerStance = Stance.heavyAttack;
+                Combo++;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 2)
+            {
+                //   whipping = true;
+                //attackTime = maxAttackTime;
+                // animateWhip(gameTime);
+                playerStance = Stance.heavyAttack;
+                Combo=0;
+            } 
+
             // gMan y-boundaries
             if (Position.Y <= level.level[0].Y)
                 Position = new Vector2(Position.X, level.level[0].Y );
@@ -192,8 +230,8 @@ namespace G_Shift
            
             
         }
-        
-        public void StanceMoves()
+
+        public void StanceMoves(GameTime gameTime)
         {
             if (playerStance == Stance.Standing)
             {
@@ -223,14 +261,57 @@ namespace G_Shift
             {
                 if (facing)
                 {
-                    playerAnimation.change(gManTest5r, 186, 207, 1, 30, Color.White, 1f, true);
+                        isPunching = true;
+                        if (isPunching)
+                        {
+                           //Update_Hit(gameTime);
+                        }
+                        if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                        {
+                            // Reset our current time
+                            previousFireTime = gameTime.TotalGameTime;
+
+                            
+                            // Add the projectile, but add it to the front and center of the player
+                        }
+                        elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                        if (elapsedTime > 30)
+                        {
+                        
+                            playerAnimation.change(gManTest5r, 186, 207, 1, 30, Color.White, 1f, true);
+                            // Reset the elapsed time to zero
+                            elapsedTime = 0;
+                        }
+                    isPunching = false;
                 }
                 else
                 {
-                      playerAnimation.change(gManTest5l, 186, 207, 1, 30, Color.White, 1f, true);
+                      playerAnimation.change(gManTest5l, 186, 207, 1, 1, Color.White, 1f, true);
                 }
             }
         }
+
+        private void doAttack(GameTime gameTime)
+        {
+            if (isAttacking)
+            {
+                if (attackTime > 0.0f)
+                {
+                    attackTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    isAttacking = false;
+                }
+            }
+            else
+            {
+                attackTime = 0.0f;
+            }
+
+        }
+
+
         // Draw the player
         public void Draw(SpriteBatch spriteBatch)
         {
