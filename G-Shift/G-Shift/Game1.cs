@@ -662,17 +662,35 @@ namespace G_Shift
                     badGuys4[i].moveDownFlag = true;
                 }
 
+                // go into attack stance if holding still
                 if (badGuys4[i].holdxPosFlag == true && badGuys4[i].holdyPosFlag == true)
                 {
                     badGuys4[i].attackFlag = true;
                 }
                 if(badGuys4[i].attackFlag == true)
                 {
-                    if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                    if (badGuys4[i].isRightFlag == true)
                     {
-                        gMan.Health -= 10;
-                        badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                        badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
+                        if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
                     }
+                    else
+                    {
+                        if (badGuys4[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                            badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
                 }
 
                 badGuys4[i].Update();
