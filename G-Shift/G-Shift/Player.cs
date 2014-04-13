@@ -197,7 +197,7 @@ namespace G_Shift
                // animateWhip(gameTime);
 
                 playerStance = Stance.heavyAttack;
-
+//ok
                 Combo ++;
             }
             if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 1)
