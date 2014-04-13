@@ -19,7 +19,8 @@ namespace G_Shift
             Left,
             Right,
             lightAttack,
-            heavyAttack
+            heavyAttack,
+            hurt
         }
         public float scrollPosition = 0;
         float playerMoveSpeed = 4f;
@@ -252,6 +253,10 @@ namespace G_Shift
             if (playerStance == Stance.lightAttack)
             {
                // playerAnimation.change(gManTest4, 157, 200, 1, 30, Color.White, 1f, true);
+            }
+            if (playerStance == Stance.hurt)
+            {
+                playerAnimation.change(gManTest7, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.heavyAttack)
             {
