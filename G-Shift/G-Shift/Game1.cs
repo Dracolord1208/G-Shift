@@ -368,16 +368,25 @@ namespace G_Shift
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
+<<<<<<< HEAD
 
                     gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+=======
+>>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
 
-                    aCrate.Update(gMan);
+                    //gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+
+                    //aCrate.Update(gMan);
                     // Update the gravies
                     //UpdateEnemies(gameTime);
                     // Update the collision
                     UpdateCollision();
                     // Update the projectiles
                     UpdateProjectiles();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
                     gMan.Update(gameTime,currentKeyboardState,currentGamePadState, allItems, level);
 
                     for (int i = 0; i < allItems.Count; i++)
@@ -392,6 +401,10 @@ namespace G_Shift
                         //UpdateCollision();
                         // Update the projectiles
                         UpdateProjectiles();
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2d8eb6d99115822f28896af483ca27af0f26e0f9
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
                 }
