@@ -79,7 +79,7 @@ namespace G_Shift
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
         Rectangle healthRectange;
-
+        Rectangle dgs;
         //private Texture2D backgroundTexture;
 
         //************************
@@ -165,6 +165,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
+            gMan.Initialize(gManTest, new Vector2(0, 200));
     
 
             //aCrate = new Item();
@@ -251,7 +252,6 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            gMan.Initialize(gManTest, new Vector2(70, 100));
             baseRectangle = Content.Load<Texture2D>("Rectangle");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
@@ -350,7 +350,7 @@ namespace G_Shift
             if (currentKeyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
             gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
-
+            dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
             healthRectange = new Rectangle((int)gMan.Position.X - 37,
     (int)gMan.Position.Y + 37, gMan.Health, 7);
@@ -912,6 +912,7 @@ namespace G_Shift
 
 
             spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
+            spriteBatch.Draw(baseRectangle, dgs, Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);
