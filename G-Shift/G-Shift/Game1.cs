@@ -581,8 +581,6 @@ namespace G_Shift
 
                 if (badGuys4[i].position.X + badGuys4[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
-                    //badGuys4[i].texture = enemyATexture;
-                    //badGuys4[i].moveAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
                     badGuys4[i].isRightFlag = true;
                 }
                 else
@@ -597,6 +595,7 @@ namespace G_Shift
                 // general movement rules
 
                 // Adjust X-directional movement
+                /*
                 if (badGuys4[i].position.X < gMan.Position.X + gMan.Width + (badGuys4[i].Width) && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
                 {
                     badGuys4[i].holdxPosFlag = true;
@@ -624,7 +623,38 @@ namespace G_Shift
                 {
                     badGuys4[i].moveDownFlag = true;
                 }
+                */
 
+                //*************************
+                // Simple movement rules
+                //
+                if (badGuys4[i].position.X < gMan.Position.X + gMan.Width && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
+                {
+                    badGuys4[i].holdxPosFlag = true;
+                }
+                else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width)
+                {
+                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                    badGuys4[i].moveLeftFlag = true;
+                }
+                else if (badGuys4[i].position.X < gMan.Position.X - badGuys4[i].Width)
+                {
+                    badGuys4[i].moveRightFlag = true;
+                }
+
+                // Adjust Y-directional movement
+                if (badGuys4[i].position.Y + badGuys4[i].Height < gMan.Position.Y + gMan.Height + badGuys4[i].baseHeight && badGuys4[i].position.Y + badGuys4[i].Height > gMan.Position.Y + gMan.Height - badGuys4[i].baseHeight)
+                {
+                    badGuys4[i].holdyPosFlag = true;
+                }
+                else if (badGuys4[i].position.Y + badGuys4[i].Height > gMan.Position.Y + gMan.Height + badGuys4[i].baseHeight)
+                {
+                    badGuys4[i].moveUpFlag = true;
+                }
+                else if (badGuys4[i].position.Y + badGuys4[i].Height < gMan.Position.Y + gMan.Height - badGuys4[i].baseHeight)
+                {
+                    badGuys4[i].moveDownFlag = true;
+                }
 
                 badGuys4[i].Update();
 
@@ -806,7 +836,7 @@ namespace G_Shift
                 // draw badGuys
                 for (int i = 0; i < badGuys.Count; i++)
                 {
-                    badGuys[i].Draw(spriteBatch);
+                    //badGuys[i].Draw(spriteBatch);
                     //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 }
                 // draw badGuys2
@@ -823,7 +853,7 @@ namespace G_Shift
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
-                    //badGuys4[i].Draw(spriteBatch);
+                    badGuys4[i].Draw(spriteBatch);
                 }
             }
 
