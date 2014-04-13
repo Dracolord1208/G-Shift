@@ -131,6 +131,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="SHOOT 4r.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\G-ShiftContent\G-ShiftContent.contentproj">

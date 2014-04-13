@@ -452,8 +452,8 @@ namespace G_Shift
             for (int i = 0; i < badGuys2.Count; i++)
             {
                 badGuys2[i].Update();
-                enemy1Rec = new Rectangle((int)badGuys2[i].position.X - 60,
-              (int)badGuys2[i].position.Y + 39, 200, 50);
+               // enemy1Rec = new Rectangle((int)badGuys2[i].position.X - 60,
+            //  (int)badGuys2[i].position.Y + 39, 200, 50);
                 /*  // good start
                 if (badGuys[i].position.X > gMan.Position.X)
                     badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
@@ -467,7 +467,7 @@ namespace G_Shift
                 */
 
                 // 2nd try  // will work as temp
-                
+
                 if (badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width)
                 {
                     badGuys2[i].velocity = new Vector2(-5f, badGuys2[i].velocity.Y);
@@ -489,6 +489,12 @@ namespace G_Shift
                     //enemyBTexture = Content.Load<Texture2D>("gunEnemy 2b");
                     badGuys2[i].texture = enemy2bTexture;
                     badGuys2[i].velocity = new Vector2(5f, badGuys2[i].velocity.Y);
+                }
+                                if (badGuys2[i].health <= 0)
+                {
+                    badGuys2.RemoveAt(i);
+                    i--;
+                    //scream_male.Play();
                 }
                 /*
                 if (badGuys[i].position.Y > gMan.Position.Y)
@@ -671,7 +677,11 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
+<<<<<<< HEAD
                 if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+=======
+                if (badGuys4[i].health <= 0)
+>>>>>>> 3c94114887a4576bd4495881f6678be4a535f0e2
                 {
                     badGuys4.RemoveAt(i);
                     i--;
@@ -780,32 +790,59 @@ namespace G_Shift
             rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
 
             // Do the collision between the player and the gravies
-            for (int i = 0; i < badGuys.Count; i++)
+            for (int i = 0; i < badGuys4.Count; i++)
             {
-                rectangle2 = new Rectangle((int)badGuys[i].position.X - 32,
-                (int)badGuys[i].position.Y - 32,
-                badGuys[i].Width,
-                badGuys[i].Height);
-
+                rectangle2 = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
+                (int)badGuys4[i].position.Y - 20 - 20,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
+                (int)badGuys4[i].position.Y - 20 - 20,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
                 // Determine if the two objects collided with each
                 // other
                 if (rectangle1.Intersects(rectangle2))
                 {
                     //the player can hit the enemy
-                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
                         //the player hit the robot
-                        badGuys[i].health -= gMan.heavyHit;
+                        badGuys4[i].health -= gMan.heavyHit;
                         //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
                     // If the player health is less than zero we died
                     if (gMan.Health <= 0)
                         gMan.Active = false;
                 }
-
             }
-            }
-
+                // Do the collision between the player and the gravies
+                for (int i = 0; i < badGuys2.Count; i++)
+                {
+                    rectangle2 = new Rectangle((int)badGuys2[i].position.X,
+                    (int)badGuys2[i].position.Y,
+                    badGuys2[i].Width,
+                    badGuys2[i].Height);
+                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X,
+                    (int)badGuys2[i].position.Y,
+                    badGuys2[i].Width,
+                    badGuys2[i].Height);
+                    // Determine if the two objects collided with each
+                    // other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        //the player can hit the enemy
+                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack )//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                        {
+                            //the player hit the robot
+                            badGuys2[i].health -= gMan.heavyHit;
+                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                        }
+                        // If the player health is less than zero we died
+                    }
+                }
+            
+        }
 
 
 
@@ -841,22 +878,21 @@ namespace G_Shift
             {
                 spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
-                for (int i = 0; i < projectiles.Count; i++)
-                {
-                    projectiles[i].Draw(spriteBatch);
-                }
+
 
                 // draw badGuys
-                for (int i = 0; i < badGuys.Count; i++)
-                {
-                    //badGuys[i].Draw(spriteBatch);
-                    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
-                }
+                //for (int i = 0; i < badGuys.Count; i++)
+                //{
+                //    badGuys[i].Draw(spriteBatch);
+                //    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                //    //badGuys[i].Draw(spriteBatch);
+                //    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
+                //}
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
                     badGuys2[i].Draw(spriteBatch);
-                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                    spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)
@@ -867,6 +903,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
                     badGuys4[i].Draw(spriteBatch);
+                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
                 }
             }
 
