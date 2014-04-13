@@ -19,7 +19,8 @@ namespace G_Shift
             Left,
             Right,
             lightAttack,
-            heavyAttack
+            heavyAttack,
+            hurt
         }
         public float scrollPosition = 0;
         float playerMoveSpeed = 4f;
@@ -75,6 +76,9 @@ namespace G_Shift
         int elapsedTime;
 
         bool isPunching;
+
+        public Rectangle hitBox;
+
       //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
         public void LoadContent(ContentManager content) 
@@ -106,6 +110,8 @@ namespace G_Shift
             Health = 100;
             canMoveUp = true;
             canMoveDown = true;
+
+            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
         }
 
         // Update the player animation
@@ -223,7 +229,9 @@ namespace G_Shift
                 Position = new Vector2(level.level[0].X, Position.Y);
             if (Position.X >= level.level[0].X + level.level[0].Width)
                 Position = new Vector2(level.level[0].X + level.level[0].Width, Position.Y);
-           
+
+
+            hitBox = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
             
         }
 
@@ -252,6 +260,10 @@ namespace G_Shift
             if (playerStance == Stance.lightAttack)
             {
                // playerAnimation.change(gManTest4, 157, 200, 1, 30, Color.White, 1f, true);
+            }
+            if (playerStance == Stance.hurt)
+            {
+                playerAnimation.change(gManTest7, 157, 200, 1, 30, Color.White, 1f, true);
             }
             if (playerStance == Stance.heavyAttack)
             {

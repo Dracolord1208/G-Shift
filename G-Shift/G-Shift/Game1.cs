@@ -662,9 +662,26 @@ namespace G_Shift
                     badGuys4[i].moveDownFlag = true;
                 }
 
+                if (badGuys4[i].holdxPosFlag == true && badGuys4[i].holdyPosFlag == true)
+                {
+                    badGuys4[i].attackFlag = true;
+                }
+                if(badGuys4[i].attackFlag == true)
+                {
+                    if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                    {
+                        gMan.Health -= 10;
+                        badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                    }
+                }
+
                 badGuys4[i].Update();
 
-                if (badGuys4[i].ttl <= 0)
+<<<<<<< HEAD
+                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+=======
+                if (badGuys4[i].health <= 0)
+>>>>>>> 3c94114887a4576bd4495881f6678be4a535f0e2
                 {
                     badGuys4.RemoveAt(i);
                     i--;
@@ -773,25 +790,25 @@ namespace G_Shift
             rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
 
             // Do the collision between the player and the gravies
-            for (int i = 0; i < badGuys.Count; i++)
+            for (int i = 0; i < badGuys4.Count; i++)
             {
-                rectangle2 = new Rectangle((int)badGuys[i].position.X - 20 - 20,
-                (int)badGuys[i].position.Y - 20 - 20,
-                badGuys[i].Width,
-                badGuys[i].Height);
-                enemy1Rec = new Rectangle((int)badGuys[i].position.X - 20 - 20,
-                (int)badGuys[i].position.Y - 20 - 20,
-                badGuys[i].Width,
-                badGuys[i].Height);
+                rectangle2 = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
+                (int)badGuys4[i].position.Y - 20 - 20,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
+                (int)badGuys4[i].position.Y - 20 - 20,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
                 // Determine if the two objects collided with each
                 // other
                 if (rectangle1.Intersects(rectangle2))
                 {
                     //the player can hit the enemy
-                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
                         //the player hit the robot
-                        badGuys[i].health -= gMan.heavyHit;
+                        badGuys4[i].health -= gMan.heavyHit;
                         //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
                     // If the player health is less than zero we died
@@ -861,12 +878,10 @@ namespace G_Shift
             {
                 spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
-                for (int i = 0; i < projectiles.Count; i++)
-                {
-                    projectiles[i].Draw(spriteBatch);
-                }
+
 
                 // draw badGuys
+<<<<<<< HEAD
                 for (int i = 0; i < badGuys.Count; i++)
                 {
 
@@ -877,6 +892,15 @@ namespace G_Shift
 
                     //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 }
+=======
+                //for (int i = 0; i < badGuys.Count; i++)
+                //{
+                //    badGuys[i].Draw(spriteBatch);
+                //    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                //    //badGuys[i].Draw(spriteBatch);
+                //    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
+                //}
+>>>>>>> 60d091b5a0af2fdc6c93db8524682f3d38ae33a6
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
@@ -892,6 +916,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
                     badGuys4[i].Draw(spriteBatch);
+                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
                 }
             }
 
