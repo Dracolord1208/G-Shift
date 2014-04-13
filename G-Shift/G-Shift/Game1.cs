@@ -78,7 +78,7 @@ namespace G_Shift
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
-
+        Rectangle healthRectange;
 
         //private Texture2D backgroundTexture;
 
@@ -122,7 +122,7 @@ namespace G_Shift
         public TimeSpan badGuy4spawnTime;
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
-
+        Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
@@ -165,7 +165,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-
+    
 
             //aCrate = new Item();
             //aCrate.initialize(Content, "crate");
@@ -352,7 +352,8 @@ namespace G_Shift
             gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
 
 
-
+            healthRectange = new Rectangle((int)gMan.Position.X - 37,
+    (int)gMan.Position.Y + 37, gMan.Health, 7);
 
 
 
@@ -662,17 +663,35 @@ namespace G_Shift
                     badGuys4[i].moveDownFlag = true;
                 }
 
+                // go into attack stance if holding still
                 if (badGuys4[i].holdxPosFlag == true && badGuys4[i].holdyPosFlag == true)
                 {
                     badGuys4[i].attackFlag = true;
                 }
                 if(badGuys4[i].attackFlag == true)
                 {
-                    if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                    if (badGuys4[i].isRightFlag == true)
                     {
-                        gMan.Health -= 10;
-                        badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                        badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
+                        if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
                     }
+                    else
+                    {
+                        if (badGuys4[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                            badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
                 }
 
                 badGuys4[i].Update();
@@ -872,9 +891,11 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
-                spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+             //   spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
+               
 
+<<<<<<< HEAD
 
                 // draw badGuys
 
@@ -889,6 +910,8 @@ namespace G_Shift
                 //    //badGuys[i].Draw(spriteBatch);
                 //    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
                 //}
+=======
+>>>>>>> 467c661e516712e289bc9260e596490f540666d3
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
@@ -913,7 +936,7 @@ namespace G_Shift
             //mainWeapon.Draw(spriteBatch);
 
 
-
+            spriteBatch.Draw(enemyTexture, healthRectange, Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);

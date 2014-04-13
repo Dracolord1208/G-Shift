@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace G_Shift
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
-            for (int x = 0; x < data.Length; x++)
+            for (int x = 0; x < data.Length; x++ )
             {
                 if (data[x] == "Rect")
                 {

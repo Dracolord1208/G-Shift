@@ -36,10 +36,17 @@ namespace G_Shift_Level_Editor
             public Vector2 botRight;
         }
 
+        struct MenuBox
+        {
+            public Texture2D img;
+            public Rectangle rect;
+        }
+
         List<Texture2D> mapTiles;
         List<Rectangle> mapRects;
         List<Item> items;
         List<Track> tracks;
+        List<MenuBox> menuChoices;
 
         Texture2D outline;
         Texture2D pathUp;
@@ -49,6 +56,9 @@ namespace G_Shift_Level_Editor
 
         MouseState prevMouseState;
         KeyboardState prevKeyboardState;
+
+        bool itemDrag;
+        Item tempItem;
 
         public Game1()
         {
@@ -74,10 +84,15 @@ namespace G_Shift_Level_Editor
             mapRects = new List<Rectangle>();
             items = new List<Item>();
             tracks = new List<Track>();
+            menuChoices = new List<MenuBox>();
+
             translation = new Vector2();
 
             topLeft = new Vector2(-1);
             botRight = new Vector2(-1);
+
+            tempItem = new Item();
+            itemDrag = false;
 
             IsMouseVisible = true;
 
@@ -100,6 +115,16 @@ namespace G_Shift_Level_Editor
             String s = "Map";
             Texture2D temp = Content.Load<Texture2D>(s);
             mapTiles.Add(temp);
+
+            MenuBox tempMenu = new MenuBox();
+
+            tempMenu.img = Content.Load<Texture2D>("crate");
+            tempMenu.rect = new Rectangle(0, 0, 40, 40);
+            menuChoices.Add(tempMenu);
+
+            tempMenu.img = Content.Load<Texture2D>("barrel");
+            tempMenu.rect = new Rectangle(40, 0, 40, 40);
+            menuChoices.Add(tempMenu);
 
             // TODO: use this.Content to load your game content here
         }
@@ -137,49 +162,100 @@ namespace G_Shift_Level_Editor
             else if (mState.Y > 560 && mState.Y <= 600)
                 translation.Y += 2;
 
-            if (mState.LeftButton == ButtonState.Pressed &&
-                prevMouseState.LeftButton == ButtonState.Released &&
-                topLeft.X == -1)
+            if (itemDrag)
             {
-                topLeft.X = mState.X + translation.X;
-                topLeft.Y = mState.Y + translation.Y;
+                tempItem.loc.X = mState.X;
+                tempItem.loc.Y = mState.Y;
+
+                if (mState.LeftButton == ButtonState.Pressed &&
+                    prevMouseState.LeftButton == ButtonState.Released)
+                {
+                    tempItem.loc.X += translation.X;
+                    tempItem.loc.Y += translation.Y;
+                    itemDrag = false;
+                    items.Add(tempItem);
+                    tempItem.name = "";
+                }
             }
             else
-            if (mState.LeftButton == ButtonState.Pressed &&
-                prevMouseState.LeftButton == ButtonState.Released &&
-                topLeft.X != -1)
             {
-                botRight.X = mState.X + translation.X;
-                botRight.Y = mState.Y + translation.Y;
-
-                Rectangle temp = new Rectangle();
-                temp.X = (int)topLeft.X;
-                temp.Y = (int)topLeft.Y;
-                temp.Width = (int)(botRight.X - topLeft.X);
-                temp.Height = (int)(botRight.Y - topLeft.Y);
-
-                mapRects.Add(temp);
-
-                if (mapRects.Count > 1)
+                if (mState.LeftButton == ButtonState.Pressed &&
+                    prevMouseState.LeftButton == ButtonState.Released &&
+                    topLeft.X == -1 && mState.Y > 40)
                 {
-                    Pathify();
+                    topLeft.X = mState.X + translation.X;
+                    topLeft.Y = mState.Y + translation.Y;
+                }
+                else
+                    if (mState.LeftButton == ButtonState.Pressed &&
+                        prevMouseState.LeftButton == ButtonState.Released &&
+                        topLeft.X != -1 && mState.Y > 40)
+                    {
+                        botRight.X = mState.X + translation.X;
+                        botRight.Y = mState.Y + translation.Y;
+
+                        Rectangle temp = new Rectangle();
+                        temp.X = (int)topLeft.X;
+                        temp.Y = (int)topLeft.Y;
+                        temp.Width = (int)(botRight.X - topLeft.X);
+                        temp.Height = (int)(botRight.Y - topLeft.Y);
+
+                        mapRects.Add(temp);
+
+                        if (mapRects.Count > 1)
+                        {
+                            Pathify();
+                        }
+
+                        topLeft.X = -1;
+                    }
+
+                if (prevMouseState.LeftButton == ButtonState.Released &&
+                    mState.LeftButton == ButtonState.Pressed &&
+                    mState.Y <= 40 && !itemDrag)
+                {
+                    if (mState.X <= 40)
+                    {
+                        itemDrag = true;
+                        tempItem.loc = new Vector2(mState.X, mState.Y);
+                        tempItem.name = "crate";
+                    }
+                    else
+                        if (mState.X <= 80 && mState.X > 40)
+                        {
+                            itemDrag = true;
+                            tempItem.loc = new Vector2(mState.X, mState.Y);
+                            tempItem.name = "barrel";
+                        }
                 }
 
-                topLeft.X = -1;
-            }
-
-            if (prevKeyboardState.IsKeyUp(Keys.Enter)
-                && kState.IsKeyDown(Keys.Enter))
-            {
-                String s = "";
-
-                foreach (Rectangle rect in mapRects)
+                if (prevKeyboardState.IsKeyUp(Keys.Enter)
+                    && kState.IsKeyDown(Keys.Enter))
                 {
-                    s += "Rect " + rect.X + " " + rect.Y + " " +
-                        rect.Width + " " + rect.Height + Environment.NewLine;
-                }
+                    String s = "";
 
-                File.WriteAllText("level.txt", s);
+                    foreach (Rectangle rect in mapRects)
+                    {
+                        s += "Rect " + rect.X + " " + rect.Y + " " +
+                            rect.Width + " " + rect.Height + Environment.NewLine;
+                    }
+
+                    foreach (Track track in tracks)
+                    {
+                        s += "Track " + track.topLeft.X + " " + track.topLeft.Y + " " +
+                            track.topRight.X + " " + track.topRight.Y + " " +
+                            track.botLeft.X + " " + track.botLeft.Y + " " +
+                            track.botRight.X + " " + track.botRight.Y + Environment.NewLine;
+                    }
+
+                    foreach (Item item in items)
+                    {
+                        s += "Item " + item.loc.X + " " + item.loc.Y +
+                            " " + item.name + Environment.NewLine;
+                    }
+
+                    File.WriteAllText("level.txt", s);
+                }
             }
 
             prevMouseState = mState;
@@ -273,7 +349,43 @@ namespace G_Shift_Level_Editor
                     }
                 }
             }
+
+            foreach (Item item in items)
+            {
+                if(item.name == "crate")
+                {
+                    spriteBatch.Draw(menuChoices[0].img, item.loc, Color.White);
+                }
+                else
+                if (item.name == "barrel")
+                {
+                    spriteBatch.Draw(menuChoices[1].img, item.loc, Color.White);
+                }
+            }
             
+
+
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+
+            foreach (MenuBox choice in menuChoices)
+            {
+                spriteBatch.Draw(choice.img, choice.rect, Color.White);
+            }
+
+            if (itemDrag)
+            {
+                if(tempItem.name == "crate")
+                {
+                    spriteBatch.Draw(menuChoices[0].img, tempItem.loc, Color.White);
+                }
+                if (tempItem.name == "barrel")
+                {
+                    spriteBatch.Draw(menuChoices[1].img, tempItem.loc, Color.White);
+                }
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -282,6 +394,7 @@ namespace G_Shift_Level_Editor
         public void Pathify()
         {
             Track temp = new Track();
+
             temp.topLeft = new Vector2(
                             mapRects[mapRects.Count - 2].Right,
                             mapRects[mapRects.Count - 2].Top);
