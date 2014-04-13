@@ -93,7 +93,7 @@ namespace G_Shift
         public float scrollPosition = 0;
         public Vector2 backgroundPos;
         public Vector2 backgroundPos2;
-
+        Texture2D baseRectangle;
         public Texture2D far_backgroundTexture;
         public float far_scrollPosition = 0;
 
@@ -252,7 +252,7 @@ namespace G_Shift
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
             gMan.Initialize(gManTest, new Vector2(70, 100));
-
+            baseRectangle = Content.Load<Texture2D>("Rectangle");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -807,12 +807,12 @@ namespace G_Shift
             // Do the collision between the player and the gravies
             for (int i = 0; i < badGuys4.Count; i++)
             {
-                rectangle2 = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
-                (int)badGuys4[i].position.Y - 20 - 20,
+                rectangle2 = new Rectangle((int)badGuys4[i].position.X ,
+                (int)badGuys4[i].position.Y ,
                 badGuys4[i].Width,
                 badGuys4[i].Height);
-                enemy1Rec = new Rectangle((int)badGuys4[i].position.X - 20 - 20,
-                (int)badGuys4[i].position.Y - 20 - 20,
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X,
+                (int)badGuys4[i].position.Y ,
                 badGuys4[i].Width,
                 badGuys4[i].Height);
                 // Determine if the two objects collided with each
@@ -895,23 +895,6 @@ namespace G_Shift
                 gMan.Draw(spriteBatch);
                
 
-<<<<<<< HEAD
-
-                // draw badGuys
-
-    //for (int i = 0; i < badGuys.Count; i++)
-
-
-                //for (int i = 0; i < badGuys.Count; i++)
-
-                //{
-                //    badGuys[i].Draw(spriteBatch);
-                //    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
-                //    //badGuys[i].Draw(spriteBatch);
-                //    //  spriteBatch.Draw(backgroundTexture, BadGuys1aRect[i], Color.White);
-                //}
-=======
->>>>>>> 467c661e516712e289bc9260e596490f540666d3
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
@@ -936,7 +919,7 @@ namespace G_Shift
             //mainWeapon.Draw(spriteBatch);
 
 
-            spriteBatch.Draw(enemyTexture, healthRectange, Color.Black);
+            spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             spriteBatch.End();
 
             base.Draw(gameTime);

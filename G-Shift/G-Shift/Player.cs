@@ -313,11 +313,6 @@ namespace G_Shift
 
         }
 
-        public bool getDirection()
-        {
-            return facing;
-        }
-
 
         // Draw the player
         public void Draw(SpriteBatch spriteBatch)
