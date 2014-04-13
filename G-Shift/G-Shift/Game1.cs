@@ -103,7 +103,8 @@ namespace G_Shift
         public TimeSpan badGuycheckpoint;     
         public Random badGuyrandom;           
 
-        public List<Enemy2a> badGuys2;  // enemies
+        //public List<Enemy2a> badGuys2;  // enemies
+        public List<Enemy2b> badGuys2;
         public List<Rectangle> BadGuys2aRect;
         public TimeSpan badGuy2spawnTime;      
         public TimeSpan badGuy2checkpoint;     
@@ -122,6 +123,7 @@ namespace G_Shift
         public TimeSpan badGuy4spawnTime;
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
+
         Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
@@ -203,7 +205,8 @@ namespace G_Shift
             badGuycheckpoint = TimeSpan.FromSeconds(0.0);
             badGuyrandom = new Random();
 
-            badGuys2 = new List<Enemy2a>();  // maybe new****!!!!
+            //badGuys2 = new List<Enemy2a>();  // maybe new****!!!!
+            badGuys2 = new List<Enemy2b>();
             badGuy2spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
             badGuy2spawnTime = TimeSpan.FromSeconds(4.0f);  // spawn within 5 seconds
             badGuy2checkpoint = new TimeSpan();
@@ -452,23 +455,145 @@ namespace G_Shift
             //
             for (int i = 0; i < badGuys2.Count; i++)
             {
-                badGuys2[i].Update();
-               // enemy1Rec = new Rectangle((int)badGuys2[i].position.X - 60,
-            //  (int)badGuys2[i].position.Y + 39, 200, 50);
-                /*  // good start
-                if (badGuys[i].position.X > gMan.Position.X)
-                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
-                else if (badGuys[i].position.X <= gMan.Position.X)
-                    badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
+                if (badGuys2[i].ContentLoadedFlag == false)
+                {
+                    badGuys2[i].LoadContent(Content);
+                    badGuys2[i].ContentLoadedFlag = true;
+                }
+                //badGuys4[i].Update();
+                badGuys2[i].ResetValues();
 
-                if (badGuys[i].position.Y > gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
-                else if (badGuys[i].position.Y <= gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
+                /*  // Working
+                if(badGuys4[i].position.X + badGuys4[i].Width*(0.5f) > gMan.Position.X + gMan.Width*(0.5f))
+                    badGuys4[i].texture = enemyATexture;
+                else
+                    badGuys4[i].texture = enemy1bTexture;
+                 */
+
+                if (badGuys2[i].position.X + badGuys2[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
+                {
+                    badGuys2[i].isRightFlag = true;
+                }
+                else
+                {
+                    badGuys2[i].isRightFlag = false;
+                }
+
+
+                //Vector2 tempPos = badGuys4[i].position;
+
+
+                // general movement rules
+
+                // Adjust X-directional movement
+                /*
+                if (badGuys4[i].position.X < gMan.Position.X + gMan.Width + (badGuys4[i].Width) && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
+                {
+                    badGuys4[i].holdxPosFlag = true;
+                }
+                else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width + (badGuys4[i].Width * 2))
+                {
+                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                    badGuys4[i].moveLeftFlag = true;
+                }
+                else if (badGuys4[i].position.X < gMan.Position.X - (badGuys4[i].Width * 2))
+                {
+                    badGuys4[i].moveRightFlag = true;
+                }
+
+                // Adjust Y-directional movement
+                if (badGuys4[i].position.Y < gMan.Position.Y + badGuys4[i].baseHeight * 2 && badGuys4[i].position.Y > gMan.Position.Y - badGuys4[i].baseHeight * 2)
+                {
+                    badGuys4[i].holdyPosFlag = true;
+                }
+                else if (badGuys4[i].position.Y > gMan.Position.Y + badGuys4[i].baseHeight * 4)
+                {
+                    badGuys4[i].moveUpFlag = true;
+                }
+                else if (badGuys4[i].position.Y < gMan.Position.Y - badGuys4[i].baseHeight * 4)
+                {
+                    badGuys4[i].moveDownFlag = true;
+                }
                 */
 
-                // 2nd try  // will work as temp
+                //*************************
+                // Simple movement rules
+                //
+                if (badGuys2[i].position.X < gMan.Position.X + gMan.Width && badGuys2[i].position.X > gMan.Position.X - (badGuys2[i].Width))
+                {
+                    badGuys2[i].holdxPosFlag = true;
+                }
+                else if (badGuys2[i].position.X > gMan.Position.X + gMan.Width)
+                {
+                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                    badGuys2[i].moveLeftFlag = true;
+                }
+                else if (badGuys2[i].position.X < gMan.Position.X - badGuys2[i].Width)
+                {
+                    badGuys2[i].moveRightFlag = true;
+                }
 
+                // Adjust Y-directional movement
+                if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
+                {
+                    badGuys2[i].holdyPosFlag = true;
+                }
+                else if (badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight)
+                {
+                    badGuys2[i].moveUpFlag = true;
+                }
+                else if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
+                {
+                    badGuys2[i].moveDownFlag = true;
+                }
+
+                // go into attack stance if holding still
+                if (badGuys2[i].holdxPosFlag == true && badGuys2[i].holdyPosFlag == true)
+                {
+                    badGuys2[i].attackFlag = true;
+                }
+                if (badGuys2[i].attackFlag == true)
+                {
+                    if (badGuys2[i].isRightFlag == true)
+                    {
+                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                        badGuys2[i].attackLeftRect = new Rectangle((int)badGuys2[i].position.X, (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+                        if (badGuys2[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    else
+                    {
+                        badGuys2[i].attackLeftRect = new Rectangle((int)(badGuys2[i].position.X + badGuys2[i].Width * (.75)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+                        
+                        if (badGuys2[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                            badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
+                }
+
+                badGuys2[i].Update();
+
+                if (badGuys2[i].ttl <= 0 || badGuys2[i].health <= 0)
+                {
+                    badGuys2.RemoveAt(i);
+                    i--;
+                }
+            }
+            /*
+            for (int i = 0; i < badGuys2.Count; i++)
+            {
+                badGuys2[i].Update();
+
+                // 2nd try  // will work as temp
                 if (badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width)
                 {
                     badGuys2[i].velocity = new Vector2(-5f, badGuys2[i].velocity.Y);
@@ -497,19 +622,8 @@ namespace G_Shift
                     i--;
                     //scream_male.Play();
                 }
-                /*
-                if (badGuys[i].position.Y > gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, -2f);
-                else if (badGuys[i].position.Y <= gMan.Position.Y)
-                    badGuys[i].velocity = new Vector2(badGuys[i].velocity.X, 0f);
-                */
-                //if (badGuys[i].health <= 0)
-                //{
-                //    badGuys.RemoveAt(i);
-                //    i--;
-                //    //scream_male.Play();
-                //}
             }
+            */
 
             //*********************
             // Update badGuys3
@@ -683,6 +797,9 @@ namespace G_Shift
                     }
                     else
                     {
+                        //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                        badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width*(.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
+                        
                         if (badGuys4[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
@@ -734,7 +851,7 @@ namespace G_Shift
                 Vector2 startPos = new Vector2(tempX, tempY);
 
                 //badGuys2.Add(new Enemy2a(72, 72, startPos, eMotion, enemyBTexture, 0f, 0f));
-                badGuys2.Add(new Enemy2a(173, 207, startPos, eMotion, enemyBTexture, 0f, 0f));
+                badGuys2.Add(new Enemy2b(173, 207, startPos, eMotion, enemyBTexture, 0f, 0f));
                 badGuy2checkpoint = gameTime.TotalGameTime;
 
                 badGuy2spawnTime = TimeSpan.FromSeconds((float)badGuy2random.Next(1, 5));
@@ -891,7 +1008,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
                     badGuys2[i].Draw(spriteBatch);
-                    spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
+                    //spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)
@@ -902,7 +1019,10 @@ namespace G_Shift
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
                     badGuys4[i].Draw(spriteBatch);
-                    spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                    //spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+
+                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
+                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
             }
 
@@ -912,6 +1032,7 @@ namespace G_Shift
 
 
             spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
+            //spriteBatch.Draw(baseRectangle, gMan.hitBox, Color.Red);  // debug purposes
             spriteBatch.End();
 
             base.Draw(gameTime);
