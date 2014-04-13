@@ -855,16 +855,8 @@ namespace G_Shift
                         }
                         // If the player health is less than zero we died
                     }
-                }
-            
+                }            
         }
-
-
-
-
-
-
-
 
 
 

@@ -25,6 +25,10 @@ namespace G_Shift
             level = new List<Rectangle>();
             items = new List<Item>();
             StreamReader file = new StreamReader("testlevel.txt");
+<<<<<<< HEAD
+            //StreamReader file = new StreamReader("level.txt");
+=======
+>>>>>>> b4dc8a0a04f3678f83b5f9c480e906fa2fdd72fb
 
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
