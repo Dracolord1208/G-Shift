@@ -295,10 +295,7 @@ namespace G_Shift
                 }
             }
         }
-        public bool getDirection()
-        {
-            return facing;
-        }
+
         private void doAttack(GameTime gameTime)
         {
             if (isAttacking)
