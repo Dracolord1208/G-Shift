@@ -192,18 +192,14 @@ namespace G_Shift
                 //if (throwableHitbox.Y > 100 && goneUp)
                 if(speed.Y > 1 && goneUp)
                 {
-<<<<<<< HEAD
-                   // if (!gMan.getDirection())
-=======
                     if (charDirection)
->>>>>>> 04c8e06cfba7b345a559f6cf04ed1e4471f70cda
                     {
                         throwableHitbox.X += (int)speed.X;
                         throwableHitbox.Y -= (int)speed.Y;
                         inIfStatement = true;
                         speed.Y--;
                     }
-                   // /else
+                   else
                     {
                         throwableHitbox.X -= (int)speed.X;
                         throwableHitbox.Y -= (int)speed.Y;
@@ -218,18 +214,14 @@ namespace G_Shift
                     if(speed.Y < 30)
                     {
 
-<<<<<<< HEAD
-                        //if (!gMan.getDirection())
-=======
                         if (charDirection)
->>>>>>> 04c8e06cfba7b345a559f6cf04ed1e4471f70cda
                         {
                             throwableHitbox.X += (int)speed.X;
                             throwableHitbox.Y += (int)speed.Y;
                             inIfStatement = true;
                             speed.Y++;
                         }
-                       // else
+                        else
                         {
                             throwableHitbox.X -= (int)speed.X;
                             throwableHitbox.Y += (int)speed.Y;

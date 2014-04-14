@@ -37,7 +37,21 @@ namespace G_Shift
         // Keyboard states used to determine key presses
         KeyboardState currentKeyboardState;
         KeyboardState previousKeyboardState;
-
+        //menu stuff
+        Texture2D levelupTexture;
+        Texture2D EndMenuTexture;
+        private Texture2D startButton;
+        private Texture2D exitButton;
+        private Texture2D pauseButton;
+        private Texture2D resumeButton;
+        private Texture2D loadingScreen;
+        private Thread backgroundThread;
+        private Thread levelThread;
+        private Thread EndThread;
+        //private Vector2 orbPosition;
+        private Vector2 startButtonPosition;
+        private Vector2 exitButtonPosition;
+        private Vector2 resumeButtonPosition;
         // Gamepad states used to determine button presses
         GamePadState currentGamePadState;
         GamePadState previousGamePadState;
@@ -59,6 +73,9 @@ namespace G_Shift
         private bool pauseKeyDown = false;
         private bool pausedForGuide = false;
         Player gMan;
+        bool isLoading;
+                bool    finishend ;
+                bool endbool;
         //Interactable gMan;
         Texture2D gManTest;
         Texture2D gManTexture;
@@ -124,7 +141,7 @@ namespace G_Shift
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
 
-        Vector2 healthPosition;
+        //Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
@@ -192,7 +209,7 @@ namespace G_Shift
 
             IsMouseVisible = true;
             //set the gamestate to start menu
-            gameState = GameState.Playing;
+         //   gameState = GameState.Playing;
             //get the mouse state
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
@@ -237,7 +254,11 @@ namespace G_Shift
             badGuy4checkpoint = new TimeSpan();
             badGuy4checkpoint = TimeSpan.FromSeconds(0.0);
             badGuy4random = new Random();
-
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 250);
+            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 300);
+            //set the gamestate to start menu
+            gameState = GameState.StartMenu;
+            //get the mouse state
 
             base.Initialize();
         }
@@ -280,6 +301,12 @@ namespace G_Shift
             enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
 
+            levelupTexture = Content.Load<Texture2D>("levelupscreen");
+            EndMenuTexture = Content.Load<Texture2D>("endMenu");
+           startButton = Content.Load<Texture2D>(@"start");
+            //exitButton = Content.Load<Texture2D>(@"exit");
+            //load the loading screen
+            loadingScreen = Content.Load<Texture2D>(@"loading");
 
 
         }
@@ -352,6 +379,17 @@ namespace G_Shift
             // Allows the game to exit            
             if (currentKeyboardState.IsKeyDown(Keys.Escape))
                 this.Exit();
+            if (gameState == GameState.Loading && !isLoading) //isLoading bool is to prevent the LoadGame method from being called 60 times a seconds
+            {
+                //set backgroundthread
+                backgroundThread = new Thread(LoadGame);
+                isLoading = true;
+
+
+                //start backgroundthread
+                backgroundThread.Start();
+            }
+
             gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
             dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
@@ -412,7 +450,7 @@ namespace G_Shift
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
                 }
-            }
+        
 
 
             //*********************
@@ -905,12 +943,97 @@ namespace G_Shift
 
                 badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));
             }
-                        
+            
+            }
+            mouseState = Mouse.GetState();
+            if ((previousMouseState.LeftButton == ButtonState.Pressed &&
+                mouseState.LeftButton == ButtonState.Released))
+            {
+                //MediaPlayer.Pause();
+                MouseClicked(mouseState.X, mouseState.Y);
+            }
+            if (gameState == GameState.StartMenu)
+            {
+                //check the startmenu
+                if ((currentKeyboardState.IsKeyDown(Keys.Space) || currentKeyboardState.IsKeyDown(Keys.Enter) ||
+                currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
+                currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
+                {
+                    Exit();
+                }
+            }
+            previousMouseState = mouseState;
+
+            if (gameState == GameState.Playing && isLoading)
+            {
+                LoadGame();
+                isLoading = false;
+            }
+
+            //if (gameState == GameState.EndMenu && !endbool)
+            //{
+            //    //   MediaPlayer.Resume();
+            //    EndThread = new Thread(Endshow);
+            //    endbool = true;
+            //    EndThread.Start();
+
+            //}
+
+
+
+
 
 
             base.Update(gameTime);
         }
+        void MouseClicked(int x, int y)
+        {
+            //creates a rectangle of 10x10 around the place where the mouse was clicked
+            Rectangle mouseClickRect = new Rectangle(x, y, 10, 10);
 
+            //check the startmenu
+            if (gameState == GameState.StartMenu)
+            {
+                Rectangle startButtonRect = new Rectangle((int)startButtonPosition.X, (int)startButtonPosition.Y, 100, 20);
+                Rectangle exitButtonRect = new Rectangle((int)exitButtonPosition.X, (int)exitButtonPosition.Y, 100, 20);
+                if ((mouseClickRect.Intersects(startButtonRect))) //player clicked start button
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                else if (mouseClickRect.Intersects(exitButtonRect)) //player clicked exit button
+                {
+                    Exit();
+                }
+            }
+            /*
+            //check the pausebutton
+            if (gameState == GameState.Playing)
+            {
+                Rectangle pauseButtonRect = new Rectangle(0, 0, 70, 70);
+
+                if (mouseClickRect.Intersects(pauseButtonRect))
+                {
+                    gameState = GameState.Paused;
+                }
+            }
+
+            //check the resumebutton
+            if (gameState == GameState.Paused)
+            {
+                Rectangle resumeButtonRect = new Rectangle((int)resumeButtonPosition.X, (int)resumeButtonPosition.Y, 100, 20);
+
+                if (mouseClickRect.Intersects(resumeButtonRect))
+                {
+                    gameState = GameState.Playing;
+                }
+            }*/
+        }
 
         private void UpdateCollision()
         {
@@ -975,8 +1098,48 @@ namespace G_Shift
                 }            
         }
 
+        void LoadGame()
+        {
+            //load the game images into the content pipeline
+            // orb = Content.Load<Texture2D>(@"orb");
+            //pauseButton = Content.Load<Texture2D>(@"pause");
+           // resumeButton = Content.Load<Texture2D>(@"resume");
+            //resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - (resumeButton.Width / 2),
+               //                                (GraphicsDevice.Viewport.Height / 2) - (resumeButton.Height / 2));
 
+            //set the position of the orb in the middle of the gamewindow
+            // orbPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - (OrbWidth / 2), (GraphicsDevice.Viewport.Height / 2) - (OrbHeight / 2));
 
+            //since this will go to fast for this demo's purpose, wait for 3 seconds
+            Thread.Sleep(3000);
+
+            //start playing
+            gameState = GameState.Playing;
+            isLoading = false;
+        }
+
+        void Endshow()
+        {
+            //load the game images into the content pipeline
+            // orb = Content.Load<Texture2D>(@"orb");
+
+            //set the position of the orb in the middle of the gamewindow
+            // orbPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - (OrbWidth / 2), (GraphicsDevice.Viewport.Height / 2) - (OrbHeight / 2));
+
+            //since this will go to fast for this demo's purpose, wait for 3 seconds
+            Thread.Sleep(1000);
+
+            if ((currentKeyboardState.IsKeyDown(Keys.Space) ||
+                  currentGamePadState.Buttons.X == ButtonState.Pressed)) //player clicked start button
+            {
+                gameState = GameState.StartMenu;
+
+            }
+
+            //start playing
+            finishend = true;
+            endbool = false;
+        }
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -994,12 +1157,21 @@ namespace G_Shift
             int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
 
-            spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+            if (gameState == GameState.StartMenu)
+            {
+                spriteBatch.Draw(startButton, Vector2.Zero, Color.White);
+            }
+            if (gameState == GameState.Loading)
+            {
+                spriteBatch.Draw(loadingScreen, new Vector2((GraphicsDevice.Viewport.Width / 2) - (loadingScreen.Width / 2), (GraphicsDevice.Viewport.Height / 2) - (loadingScreen.Height / 2)), Color.White);
+            }
 
-            level.Draw(spriteBatch);
+
 
             if (gameState == GameState.Playing)
             {
+             spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+                level.Draw(spriteBatch);
              //   spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
                 gMan.Draw(spriteBatch);
                
@@ -1024,6 +1196,7 @@ namespace G_Shift
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
+                spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             }
 
 
@@ -1031,12 +1204,8 @@ namespace G_Shift
             //mainWeapon.Draw(spriteBatch);
 
 
-            spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
-<<<<<<< HEAD
-            spriteBatch.Draw(baseRectangle, dgs, Color.Black);
-=======
+
             //spriteBatch.Draw(baseRectangle, gMan.hitBox, Color.Red);  // debug purposes
->>>>>>> 04c8e06cfba7b345a559f6cf04ed1e4471f70cda
             spriteBatch.End();
 
             base.Draw(gameTime);
