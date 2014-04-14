@@ -1,4 +1,6 @@
 ﻿
+// tall robot, that charge-attacks
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -254,9 +256,9 @@ namespace G_Shift
             }
 
             // attack
-            if (attackFlag == true)
-            {
-            }
+            //if (attackFlag == true)
+            //{
+            //}
 
             if (holdPosFlag == false)
             {

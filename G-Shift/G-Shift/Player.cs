@@ -40,6 +40,7 @@ namespace G_Shift
         bool facing=true;//true==left false == right
         // Amount of hit points that player has
         public int Health;
+        public int maxHealth;
         public Vector2 motion { get; set; }
         // Get the width of the player ship
         /*public int Width
@@ -107,6 +108,7 @@ namespace G_Shift
             playerAnimation.Initialize(gManTest1, Vector2.Zero, 157, 200, 1, 30, Color.White, 1f, true);
             PlayerAnimation = playerAnimation;
             // Set the player health
+            maxHealth = 100;
             Health = 100;
             canMoveUp = true;
             canMoveDown = true;

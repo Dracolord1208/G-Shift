@@ -586,7 +586,8 @@ namespace G_Shift
                 */
 
                 //************************
-                // Complex behavior rules
+                // Complex behavior rules..
+                // Summary: Move to specified range away from Player, then pause and gather steam, then charge!
                 //
                 if (badGuys2[i].stance != Enemy2b.Stance.Charging && badGuys2[i].stance != Enemy2b.Stance.Preparing)
                 {
@@ -669,15 +670,41 @@ namespace G_Shift
                 //if(badGuys2[i].stance == Enemy2b.Stance.Preparing && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
                 if (badGuys2[i].stance == Enemy2b.Stance.Preparing && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
                 {
+                    // begin the charge-attack!
                     badGuys2[i].stance = Enemy2b.Stance.Charging;
                     badGuys2[i].ResetValues();
                     badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
                 }
                 else if (badGuys2[i].stance == Enemy2b.Stance.Charging && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > TimeSpan.FromSeconds(1f))
                 {
+                    // this is executed when the charge-attack completes
                     badGuys2[i].ResetValues();
                     badGuys2[i].stance = Enemy2b.Stance.Wait;
                     badGuys2[i].attackFlag = false;
+                }
+
+                if (badGuys2[i].stance == Enemy2b.Stance.Charging && badGuys2[i].isRightFlag == true)
+                {
+                    if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+                    {
+                        if (badGuys2[i].attackLeftRect.Intersects(gMan.hitBox))
+                        {
+                            gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
+                            gMan.playerStance = Player.Stance.hurt;
+                        }
+                    }
+                }
+
+                if (badGuys2[i].stance == Enemy2b.Stance.Charging && badGuys2[i].isRightFlag == false)
+                {
+                    if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+                    {
+                        if (badGuys2[i].attackRightRect.Intersects(gMan.hitBox))
+                        {
+                            gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
+                            gMan.playerStance = Player.Stance.hurt;
+                        }
+                    }
                 }
 
                 badGuys2[i].Update();
