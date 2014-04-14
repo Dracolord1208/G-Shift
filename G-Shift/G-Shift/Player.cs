@@ -221,7 +221,6 @@ namespace G_Shift
             }
 
             CollisionDetection(level);
-            
 
             hitBox = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
