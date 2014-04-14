@@ -469,7 +469,8 @@ namespace G_Shift
                 else
                     badGuys4[i].texture = enemy1bTexture;
                  */
-
+                 
+                /*  // moved below
                 if (badGuys2[i].position.X + badGuys2[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
                     badGuys2[i].isRightFlag = true;
@@ -478,47 +479,12 @@ namespace G_Shift
                 {
                     badGuys2[i].isRightFlag = false;
                 }
-
-
-                //Vector2 tempPos = badGuys4[i].position;
-
-
-                // general movement rules
-
-                // Adjust X-directional movement
-                /*
-                if (badGuys4[i].position.X < gMan.Position.X + gMan.Width + (badGuys4[i].Width) && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
-                {
-                    badGuys4[i].holdxPosFlag = true;
-                }
-                else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width + (badGuys4[i].Width * 2))
-                {
-                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                    badGuys4[i].moveLeftFlag = true;
-                }
-                else if (badGuys4[i].position.X < gMan.Position.X - (badGuys4[i].Width * 2))
-                {
-                    badGuys4[i].moveRightFlag = true;
-                }
-
-                // Adjust Y-directional movement
-                if (badGuys4[i].position.Y < gMan.Position.Y + badGuys4[i].baseHeight * 2 && badGuys4[i].position.Y > gMan.Position.Y - badGuys4[i].baseHeight * 2)
-                {
-                    badGuys4[i].holdyPosFlag = true;
-                }
-                else if (badGuys4[i].position.Y > gMan.Position.Y + badGuys4[i].baseHeight * 4)
-                {
-                    badGuys4[i].moveUpFlag = true;
-                }
-                else if (badGuys4[i].position.Y < gMan.Position.Y - badGuys4[i].baseHeight * 4)
-                {
-                    badGuys4[i].moveDownFlag = true;
-                }
                 */
 
                 //*************************
                 // Simple movement rules
                 //
+                /*
                 if (badGuys2[i].position.X < gMan.Position.X + gMan.Width && badGuys2[i].position.X > gMan.Position.X - (badGuys2[i].Width))
                 {
                     badGuys2[i].holdxPosFlag = true;
@@ -579,6 +545,102 @@ namespace G_Shift
                     }
                     //gMan.playerStance = G_Shift.Player.Stance.hurt;
                 }
+                */
+
+                //************************
+                // Complex behavior rules
+                //
+                if (badGuys2[i].stance != Enemy2b.Stance.Charging && badGuys2[i].stance != Enemy2b.Stance.Preparing)
+                {
+
+                    if (badGuys2[i].position.X + badGuys2[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
+                    {
+                        badGuys2[i].isRightFlag = true;
+                    }
+                    else
+                    {
+                        badGuys2[i].isRightFlag = false;
+                    }
+
+                    if (badGuys2[i].position.X > gMan.Position.X + gMan.Width && badGuys2[i].position.X < gMan.Position.X + gMan.Width + badGuys2[i].Width * 1)
+                    {
+                        if (badGuys2[i].stance != Enemy2b.Stance.Charging && badGuys2[i].stance != Enemy2b.Stance.Preparing)
+                        {
+                            badGuys2[i].moveRightFlag = true;
+                        }
+                    }
+                    else if (badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width * 2 && badGuys2[i].position.X < gMan.Position.X - badGuys2[i].Width * 1)
+                    {
+                        if (badGuys2[i].stance != Enemy2b.Stance.Charging && badGuys2[i].stance != Enemy2b.Stance.Preparing)
+                        {
+                            badGuys2[i].moveLeftFlag = true;
+                        }
+                    }
+
+
+                    if (badGuys2[i].position.X < gMan.Position.X + gMan.Width + badGuys2[i].Width * 2 && badGuys2[i].position.X > gMan.Position.X + gMan.Width + badGuys2[i].Width * 1)
+                    {
+                        badGuys2[i].holdxPosFlag = true;
+                        //badGuys2[i].stance = G_Shift.Enemy2b.Stance.Preparing;
+                    }
+
+                    else if (badGuys2[i].position.X < gMan.Position.X - badGuys2[i].Width * 2 && badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width * 3)
+                    {
+                        badGuys2[i].holdxPosFlag = true;
+                        //badGuys2[i].stance = G_Shift.Enemy2b.Stance.Preparing;
+                    }
+
+                    else if (badGuys2[i].position.X > gMan.Position.X + gMan.Width + badGuys2[i].Width * 2)
+                    {
+                        //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                        badGuys2[i].moveLeftFlag = true;
+                        badGuys2[i].stance = G_Shift.Enemy2b.Stance.Move;
+                    }
+                    else if (badGuys2[i].position.X < gMan.Position.X - badGuys2[i].Width * 2)
+                    {
+                        badGuys2[i].moveRightFlag = true;
+                        badGuys2[i].stance = G_Shift.Enemy2b.Stance.Move;
+                    }
+
+                    // Adjust Y-directional movement
+                    if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
+                    {
+                        badGuys2[i].holdyPosFlag = true;
+                    }
+                    else if (badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight)
+                    {
+                        badGuys2[i].moveUpFlag = true;
+                    }
+                    else if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
+                    {
+                        badGuys2[i].moveDownFlag = true;
+                    }
+
+                    // go into Preparing stance if holding still
+                    if (badGuys2[i].holdxPosFlag == true && badGuys2[i].holdyPosFlag == true)
+                    {
+                        if (badGuys2[i].attackFlag == false)
+                        {
+                            badGuys2[i].attackFlag = true;
+                            badGuys2[i].stance = G_Shift.Enemy2b.Stance.Preparing;
+                            badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                }
+
+                //if(badGuys2[i].stance == Enemy2b.Stance.Preparing && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
+                if (badGuys2[i].stance == Enemy2b.Stance.Preparing && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
+                {
+                    badGuys2[i].stance = Enemy2b.Stance.Charging;
+                    badGuys2[i].ResetValues();
+                    badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
+                }
+                else if (badGuys2[i].stance == Enemy2b.Stance.Charging && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > TimeSpan.FromSeconds(1f))
+                {
+                    badGuys2[i].ResetValues();
+                    badGuys2[i].stance = Enemy2b.Stance.Wait;
+                    badGuys2[i].attackFlag = false;
+                }
 
                 badGuys2[i].Update();
 
@@ -588,42 +650,6 @@ namespace G_Shift
                     i--;
                 }
             }
-            /*
-            for (int i = 0; i < badGuys2.Count; i++)
-            {
-                badGuys2[i].Update();
-
-                // 2nd try  // will work as temp
-                if (badGuys2[i].position.X > gMan.Position.X - badGuys2[i].Width)
-                {
-                    badGuys2[i].velocity = new Vector2(-5f, badGuys2[i].velocity.Y);
-                }
-                else if (badGuys2[i].position.X <= gMan.Position.X - (badGuys2[i].Width * .8f) && badGuys2[i].position.X >= gMan.Position.X - (badGuys2[i].Width + 10))
-                {
-                    badGuys2[i].texture = enemy2bTexture;
-                    badGuys2[i].velocity = new Vector2(0f, badGuys2[i].velocity.Y);
-
-                    if (badGuys2[i].position.Y > gMan.Position.Y - 10 && badGuys2[i].position.Y < gMan.Position.Y + 10)
-                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, 0f);
-                    if (badGuys2[i].position.Y > gMan.Position.Y+10)
-                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, -5f);
-                    else if (badGuys2[i].position.Y < gMan.Position.Y-10)
-                        badGuys2[i].velocity = new Vector2(badGuys2[i].velocity.X, 5f);
-                }
-                else if (badGuys2[i].position.X < gMan.Position.X - (badGuys2[i].Width + 10))
-                {
-                    //enemyBTexture = Content.Load<Texture2D>("gunEnemy 2b");
-                    badGuys2[i].texture = enemy2bTexture;
-                    badGuys2[i].velocity = new Vector2(5f, badGuys2[i].velocity.Y);
-                }
-                                if (badGuys2[i].health <= 0)
-                {
-                    badGuys2.RemoveAt(i);
-                    i--;
-                    //scream_male.Play();
-                }
-            }
-            */
 
             //*********************
             // Update badGuys3
@@ -690,15 +716,8 @@ namespace G_Shift
                     badGuys4[i].LoadContent(Content);
                     badGuys4[i].ContentLoadedFlag = true;
                 }
-                //badGuys4[i].Update();
                 badGuys4[i].ResetValues();
 
-                /*  // Working
-                if(badGuys4[i].position.X + badGuys4[i].Width*(0.5f) > gMan.Position.X + gMan.Width*(0.5f))
-                    badGuys4[i].texture = enemyATexture;
-                else
-                    badGuys4[i].texture = enemy1bTexture;
-                 */
 
                 if (badGuys4[i].position.X + badGuys4[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
@@ -710,41 +729,7 @@ namespace G_Shift
                 }
 
 
-                //Vector2 tempPos = badGuys4[i].position;
-
-
                 // general movement rules
-
-                // Adjust X-directional movement
-                /*
-                if (badGuys4[i].position.X < gMan.Position.X + gMan.Width + (badGuys4[i].Width) && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width))
-                {
-                    badGuys4[i].holdxPosFlag = true;
-                }
-                else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width + (badGuys4[i].Width * 2))
-                {
-                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                    badGuys4[i].moveLeftFlag = true;
-                }
-                else if (badGuys4[i].position.X < gMan.Position.X - (badGuys4[i].Width * 2))
-                {
-                    badGuys4[i].moveRightFlag = true;
-                }
-
-                // Adjust Y-directional movement
-                if (badGuys4[i].position.Y < gMan.Position.Y + badGuys4[i].baseHeight * 2 && badGuys4[i].position.Y > gMan.Position.Y - badGuys4[i].baseHeight * 2)
-                {
-                    badGuys4[i].holdyPosFlag = true;
-                }
-                else if (badGuys4[i].position.Y > gMan.Position.Y + badGuys4[i].baseHeight * 4)
-                {
-                    badGuys4[i].moveUpFlag = true;
-                }
-                else if (badGuys4[i].position.Y < gMan.Position.Y - badGuys4[i].baseHeight * 4)
-                {
-                    badGuys4[i].moveDownFlag = true;
-                }
-                */
 
                 //*************************
                 // Simple movement rules
@@ -841,7 +826,7 @@ namespace G_Shift
             }
 
             // badGuys2 spawn on random time interval
-            if (gameTime.TotalGameTime - badGuy2checkpoint > badGuy2spawnTime && badGuys2.Count <= 4)
+            if (gameTime.TotalGameTime - badGuy2checkpoint > badGuy2spawnTime && badGuys2.Count <= 2)
             {
                 Vector2 eMotion = new Vector2(-2.5f, 0f);
 

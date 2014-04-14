@@ -106,7 +106,9 @@ namespace G_Shift
             Wait,
             Move,
             Attack,
-            Stunned
+            Stunned,
+            Preparing,
+            Charging
         }
         public Stance stance { get; set; }
 
@@ -261,6 +263,14 @@ namespace G_Shift
                 moveLeftAnimation.Update();
                 moveRightAnimation.Update();
             }
+
+            if(stance == Stance.Charging)
+            {
+                if(isRightFlag == true)
+                    velocity = new Vector2(-12f, 0f);
+                else
+                    velocity = new Vector2(12f, 0f);
+            }
         }
 
         public void ResetValues()
@@ -272,7 +282,7 @@ namespace G_Shift
             holdPosFlag = false;
             holdxPosFlag = false;
             holdyPosFlag = false;
-            attackFlag = false;
+            //attackFlag = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
