@@ -214,11 +214,11 @@ namespace G_Shift
                 // animateWhip(gameTime);
                 playerStance = Stance.heavyAttack;
                 Combo=0;
-            } 
+            }
 
             // gMan y-boundaries
             if (Position.Y <= level.level[0].Y)
-                Position = new Vector2(Position.X, level.level[0].Y );
+                Position = new Vector2(Position.X, level.level[0].Y);
             if (Position.Y >= level.level[0].Y + level.level[0].Height)
                 Position = new Vector2(Position.X, level.level[0].Y + level.level[0].Height); //300);
 
@@ -231,6 +231,7 @@ namespace G_Shift
 
             hitBox = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
+
 
         public void StanceMoves(GameTime gameTime)
         {
@@ -315,6 +316,11 @@ namespace G_Shift
 
         }
 
+
+        public bool getDirection()
+        {
+            return facing;
+        }
 
         // Draw the player
         public void Draw(SpriteBatch spriteBatch)
