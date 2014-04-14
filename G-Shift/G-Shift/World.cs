@@ -17,6 +17,14 @@ namespace G_Shift
 {
     class World
     {
+        public struct Track
+        {
+            public Vector2 topLeft;
+            public Vector2 topRight;
+            public Vector2 botLeft;
+            public Vector2 botRight;
+        }
+        public List<Track> tracks;
         public List<Rectangle> level;
         public List<Item> items;
 
@@ -24,6 +32,7 @@ namespace G_Shift
         {
             level = new List<Rectangle>();
             items = new List<Item>();
+            tracks = new List<Track>();
             StreamReader file = new StreamReader("testlevel.txt");
             //StreamReader file = new StreamReader("level.txt");
 
@@ -53,6 +62,20 @@ namespace G_Shift
                     item.setItemPosition(vec);
 
                     items.Add(item);
+                }
+                if (data[x] == "Track")
+                {
+                    Track track = new Track();
+                    track.topLeft.X = Convert.ToInt32(data[++x]);
+                    track.topLeft.Y = Convert.ToInt32(data[++x]);
+                    track.topRight.X = Convert.ToInt32(data[++x]);
+                    track.topRight.Y = Convert.ToInt32(data[++x]);
+                    track.botLeft.X = Convert.ToInt32(data[++x]);
+                    track.botLeft.Y = Convert.ToInt32(data[++x]);
+                    track.botRight.X = Convert.ToInt32(data[++x]);
+                    track.botRight.Y = Convert.ToInt32(data[++x]);
+
+                    tracks.Add(track);
                 }
                 if (data[x] == "/*")
                 {

@@ -14,14 +14,16 @@ namespace G_Shift
 {
     class Player 
     {
-       public  enum Stance { 
+       public  enum Stance{ 
             Standing,
             Left,
             Right,
             lightAttack,
             heavyAttack,
             hurt
-        }
+       }
+       public bool withinRect = true;
+       public int currentRect = 0, currentPath;
         public float scrollPosition = 0;
         float playerMoveSpeed = 4f;
         const int SCREEN_WIDTH = 1000;
@@ -218,22 +220,55 @@ namespace G_Shift
                 Combo=0;
             }
 
-            // gMan y-boundaries
-            if (Position.Y <= level.level[0].Y)
-                Position = new Vector2(Position.X, level.level[0].Y);
-            if (Position.Y >= level.level[0].Y + level.level[0].Height)
-                Position = new Vector2(Position.X, level.level[0].Y + level.level[0].Height); //300);
-
-
-            // gMan x-boundaries
-            if (Position.X <= level.level[0].X)
-                Position = new Vector2(level.level[0].X, Position.Y);
-            if (Position.X >= level.level[0].X + level.level[0].Width)
-                Position = new Vector2(level.level[0].X + level.level[0].Width, Position.Y);
+            CollisionDetection(level);
+            
 
             hitBox = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
+        public void CollisionDetection(World level)
+        {
+            if (withinRect)
+            {
+                // gMan y-boundaries
+                if (Position.Y <= level.level[currentRect].Y)
+                    Position = new Vector2(Position.X, level.level[currentRect].Y);
+                if (Position.Y >= level.level[currentRect].Y + level.level[currentRect].Height)
+                    Position = new Vector2(Position.X, level.level[currentRect].Y + level.level[currentRect].Height);
+
+                // gMan x-boundaries
+                if (Position.X <= level.level[currentRect].X)
+                {
+                    if (currentRect == 0)
+                    {
+                        Position = new Vector2(level.level[0].X, Position.Y);
+                    }
+                    else
+                    {
+                        currentPath = currentRect - 1;
+                        withinRect = false;
+                    }
+                }
+
+                if (Position.X >= level.level[currentRect].X + level.level[currentRect].Width)
+                {
+                    if (currentRect == level.level.Count - 1)
+                    {
+                        Position = new Vector2(level.level[currentRect].X + level.level[currentRect].Width, Position.Y);
+                    }
+                    else
+                    {
+                        currentPath = currentRect + 1;
+                        withinRect = false;
+                    }
+                }
+            }
+            else
+            {
+
+            }
+
+        }
 
         public void StanceMoves(GameTime gameTime)
         {

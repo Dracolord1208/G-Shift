@@ -84,7 +84,7 @@ namespace G_Shift
             charDirection = false;
             throwCount = 0;
 
-            speed = new Vector2(10,20);
+            speed = new Vector2(10, 20);
         }
 
         public void setItemPosition(Vector2 position)
@@ -151,7 +151,7 @@ namespace G_Shift
             //int xDistance = Math.Abs(throwableHitbox.X - (int)gMan.motion.X);
             //int yDistance = Math.Abs(throwableHitbox.Y - (int)gMan.motion.Y);
 
-            if(playerPosition.Intersects(throwableHitbox) && Keyboard.GetState().IsKeyDown(Keys.X))
+            if (playerPosition.Intersects(throwableHitbox) && Keyboard.GetState().IsKeyDown(Keys.X))
             {
                 //if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 //{
@@ -163,13 +163,13 @@ namespace G_Shift
                     throwable.Name = "barrel2";
                 }
 
-                    throwableHitbox.X = (int)gMan.Position.X + 10;
-                    throwableHitbox.Y = (int)gMan.Position.Y - 300;
-                    pickedUp = true;
-                    stillIntersects = true;
+                throwableHitbox.X = (int)gMan.Position.X + 10;
+                throwableHitbox.Y = (int)gMan.Position.Y - 300;
+                pickedUp = true;
+                stillIntersects = true;
                 //}
 
-                    
+
             }
 
             if (pickedUp && !spacePressed)
@@ -190,10 +190,11 @@ namespace G_Shift
             if (goUp && pickedUp)
             {
                 //if (throwableHitbox.Y > 100 && goneUp)
-                if(speed.Y > 1 && goneUp)
+                if (speed.Y > 1 && goneUp)
                 {
-                    /*
-                    if (!gMan.getDirection())
+
+                    // if (!gMan.getDirection())
+
                     if (charDirection)
                     {
                         throwableHitbox.X += (int)speed.X;
@@ -201,23 +202,23 @@ namespace G_Shift
                         inIfStatement = true;
                         speed.Y--;
                     }
-                   else
+                    else
                     {
                         throwableHitbox.X -= (int)speed.X;
                         throwableHitbox.Y -= (int)speed.Y;
                         //inIfStatement = true;
                         speed.Y--;
                     }
-                    */
                 }
                 else
                 {
                     goneUp = false;
                     //if (throwableHitbox.Y < 350)
-                    if(speed.Y < 30)
+                    if (speed.Y < 30)
                     {
-                        /*
-                        if (!gMan.getDirection())
+
+
+                        //if (!gMan.getDirection())
 
                         if (charDirection)
                         {
@@ -233,7 +234,7 @@ namespace G_Shift
                             //inIfStatement = true;
                             speed.Y++;
                         }
-                        */
+
                         //throwableHitbox.X += (int)speed.X;
                         //throwableHitbox.Y += (int)speed.Y;
                         //speed.Y++;
@@ -250,7 +251,7 @@ namespace G_Shift
                     {
                         throwable = content.Load<Texture2D>("laser");
                     }
-                } 
+                }
             }
 
             if (throwCount == 1 && throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
@@ -270,14 +271,14 @@ namespace G_Shift
                         offScreen = true;
                 }
             }
-            
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             //if (turnNinetyDegrees)
             //{
-                //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
+            //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
             //}
             //else
             spriteBatch.Draw(throwable, throwableHitbox, Color.White);

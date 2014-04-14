@@ -394,7 +394,7 @@ namespace G_Shift
             dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
             healthRectange = new Rectangle((int)gMan.Position.X - 37,
-    (int)gMan.Position.Y + 37, gMan.Health, 7);
+                            (int)gMan.Position.Y + 37, gMan.Health, 7);
 
 
 
@@ -425,7 +425,7 @@ namespace G_Shift
                     //Update the player
                     //UpdatePlayer(gameTime);
 
-                   // gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
+                    // gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
                     //gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
 
@@ -435,38 +435,129 @@ namespace G_Shift
                     // Update the collision
                     UpdateCollision();
                     // Update the projectiles
-                    gMan.Update(gameTime,currentKeyboardState,previousKeyboardState,currentGamePadState, allItems, level);
+                    gMan.Update(gameTime, currentKeyboardState, previousKeyboardState, currentGamePadState, allItems, level);
 
                     for (int i = 0; i < allItems.Count; i++)
                     {
                         allItems[i].Update(gMan, Content, graphics);
                     }
 
-                        //aCrate.Update(gMan);
-                        // Update the gravies
-                        //UpdateEnemies(gameTime);
-                        // Update the collision
-                        // Update the projectiles
+                    //aCrate.Update(gMan);
+                    // Update the gravies
+                    //UpdateEnemies(gameTime);
+                    // Update the collision
+                    // Update the projectiles
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
+
+                    UpdateEnemies(gameTime);
+
+                    spawnEnemies(gameTime);
                 }
-        
+            
+            }
+            mouseState = Mouse.GetState();
+            if ((previousMouseState.LeftButton == ButtonState.Pressed &&
+                mouseState.LeftButton == ButtonState.Released))
+            {
+                //MediaPlayer.Pause();
+                MouseClicked(mouseState.X, mouseState.Y);
+            }
+            if (gameState == GameState.StartMenu)
+            {
+                //check the startmenu
+                if ((currentKeyboardState.IsKeyDown(Keys.Space) || currentKeyboardState.IsKeyDown(Keys.Enter) ||
+                currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
+                currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
+                {
+                    Exit();
+                }
+            }
+            previousMouseState = mouseState;
+
+            if (gameState == GameState.Playing && isLoading)
+            {
+                LoadGame();
+                isLoading = false;
+            }
+
+            //if (gameState == GameState.EndMenu && !endbool)
+            //{
+            //    //   MediaPlayer.Resume();
+            //    EndThread = new Thread(Endshow);
+            //    endbool = true;
+            //    EndThread.Start();
+
+            //}
 
 
-            //*********************
-            // Update badGuys
-            // (check if beaten?)
-            //
+
+
+
+
+            base.Update(gameTime);
+        }
+        void MouseClicked(int x, int y)
+        {
+            //creates a rectangle of 10x10 around the place where the mouse was clicked
+            Rectangle mouseClickRect = new Rectangle(x, y, 10, 10);
+
+            //check the startmenu
+            if (gameState == GameState.StartMenu)
+            {
+                Rectangle startButtonRect = new Rectangle((int)startButtonPosition.X, (int)startButtonPosition.Y, 100, 20);
+                Rectangle exitButtonRect = new Rectangle((int)exitButtonPosition.X, (int)exitButtonPosition.Y, 100, 20);
+                if ((mouseClickRect.Intersects(startButtonRect))) //player clicked start button
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+                else if (mouseClickRect.Intersects(exitButtonRect)) //player clicked exit button
+                {
+                    Exit();
+                }
+            }
+            /*
+            //check the pausebutton
+            if (gameState == GameState.Playing)
+            {
+                Rectangle pauseButtonRect = new Rectangle(0, 0, 70, 70);
+
+                if (mouseClickRect.Intersects(pauseButtonRect))
+                {
+                    gameState = GameState.Paused;
+                }
+            }
+
+            //check the resumebutton
+            if (gameState == GameState.Paused)
+            {
+                Rectangle resumeButtonRect = new Rectangle((int)resumeButtonPosition.X, (int)resumeButtonPosition.Y, 100, 20);
+
+                if (mouseClickRect.Intersects(resumeButtonRect))
+                {
+                    gameState = GameState.Playing;
+                }
+            }*/
+        }
+
+        public void UpdateEnemies(GameTime gameTime)
+        {
             for (int i = 0; i < badGuys.Count; i++)
             {
                 badGuys[i].Update();
-                
+
 
                 // 3rd try
                 if (badGuys[i].position.X <= gMan.Position.X + badGuys[i].Width && badGuys[i].position.X >= gMan.Position.X + gMan.Width)
                     badGuys[i].velocity = new Vector2(0f, badGuys[i].velocity.Y);
                 else if (badGuys[i].position.X > gMan.Position.X + badGuys[i].Width)
-                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);                
+                    badGuys[i].velocity = new Vector2(-2f, badGuys[i].velocity.Y);
                 else if (badGuys[i].position.X < gMan.Position.X + gMan.Width)
                     badGuys[i].velocity = new Vector2(2f, badGuys[i].velocity.Y);
 
@@ -507,7 +598,7 @@ namespace G_Shift
                 else
                     badGuys4[i].texture = enemy1bTexture;
                  */
-                 
+
                 /*  // moved below
                 if (badGuys2[i].position.X + badGuys2[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
@@ -728,7 +819,7 @@ namespace G_Shift
 
                 ///*
                 // decision making (on direction of movement)
-                if(gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].decisionTime)
+                if (gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].decisionTime)
                 {
                     badGuys3[i].decisionTimeFlag = true;
                     badGuys3[i].lastDecisionTime = gameTime.TotalGameTime;
@@ -832,7 +923,7 @@ namespace G_Shift
                 {
                     badGuys4[i].attackFlag = true;
                 }
-                if(badGuys4[i].attackFlag == true)
+                if (badGuys4[i].attackFlag == true)
                 {
                     if (badGuys4[i].isRightFlag == true)
                     {
@@ -848,8 +939,8 @@ namespace G_Shift
                     else
                     {
                         //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
-                        badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width*(.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
-                        
+                        badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width * (.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
+
                         if (badGuys4[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
@@ -869,10 +960,73 @@ namespace G_Shift
                     i--;
                 }
             }
+        }
 
+        private void UpdateCollision()
+        {
+            // Use the Rectangle's built-in intersect function to 
+            // determine if two objects are overlapping
+            Rectangle rectangle1;
+            Rectangle rectangle2;
 
-            //////////////////////////////////////////////  Spawn Enemies
+            rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
 
+            // Do the collision between the player and the gravies
+            for (int i = 0; i < badGuys4.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)badGuys4[i].position.X ,
+                (int)badGuys4[i].position.Y ,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X,
+                (int)badGuys4[i].position.Y ,
+                badGuys4[i].Width,
+                badGuys4[i].Height);
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
+                {
+                    //the player can hit the enemy
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                    {
+                        //the player hit the robot
+                        badGuys4[i].health -= gMan.heavyHit;
+                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                    }
+                    // If the player health is less than zero we died
+                    if (gMan.Health <= 0)
+                        gMan.Active = false;
+                }
+            }
+                // Do the collision between the player and the gravies
+                for (int i = 0; i < badGuys2.Count; i++)
+                {
+                    rectangle2 = new Rectangle((int)badGuys2[i].position.X,
+                    (int)badGuys2[i].position.Y,
+                    badGuys2[i].Width,
+                    badGuys2[i].Height);
+                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X,
+                    (int)badGuys2[i].position.Y,
+                    badGuys2[i].Width,
+                    badGuys2[i].Height);
+                    // Determine if the two objects collided with each
+                    // other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        //the player can hit the enemy
+                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack )//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                        {
+                            //the player hit the robot
+                            badGuys2[i].health -= gMan.heavyHit;
+                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                        }
+                        // If the player health is less than zero we died
+                    }
+                }            
+        }
+
+        public void spawnEnemies(GameTime gameTime)
+        {
             // badGuys spawn on random time interval
             if (gameTime.TotalGameTime - badGuycheckpoint > badGuyspawnTime && badGuys.Count <= 4)
             {
@@ -884,7 +1038,7 @@ namespace G_Shift
                 Vector2 startPos = new Vector2(tempX, tempY);
 
                 //badGuys.Add(new Enemy1a(72, 72, startPos, eMotion, enemyATexture, 0f, 0f));   // old placehoder size
-                badGuys.Add(new Enemy1a(158,87, startPos, eMotion, enemyATexture, 0f, 0f));
+                badGuys.Add(new Enemy1a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
                 badGuycheckpoint = gameTime.TotalGameTime;
 
                 badGuyspawnTime = TimeSpan.FromSeconds((float)badGuyrandom.Next(1, 5));
@@ -955,159 +1109,6 @@ namespace G_Shift
 
                 badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));
             }
-            
-            }
-            mouseState = Mouse.GetState();
-            if ((previousMouseState.LeftButton == ButtonState.Pressed &&
-                mouseState.LeftButton == ButtonState.Released))
-            {
-                //MediaPlayer.Pause();
-                MouseClicked(mouseState.X, mouseState.Y);
-            }
-            if (gameState == GameState.StartMenu)
-            {
-                //check the startmenu
-                if ((currentKeyboardState.IsKeyDown(Keys.Space) || currentKeyboardState.IsKeyDown(Keys.Enter) ||
-                currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
-                {
-                    gameState = GameState.Loading;
-                    isLoading = false;
-                }
-                else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
-                currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
-                {
-                    Exit();
-                }
-            }
-            previousMouseState = mouseState;
-
-            if (gameState == GameState.Playing && isLoading)
-            {
-                LoadGame();
-                isLoading = false;
-            }
-
-            //if (gameState == GameState.EndMenu && !endbool)
-            //{
-            //    //   MediaPlayer.Resume();
-            //    EndThread = new Thread(Endshow);
-            //    endbool = true;
-            //    EndThread.Start();
-
-            //}
-
-
-
-
-
-
-            base.Update(gameTime);
-        }
-        void MouseClicked(int x, int y)
-        {
-            //creates a rectangle of 10x10 around the place where the mouse was clicked
-            Rectangle mouseClickRect = new Rectangle(x, y, 10, 10);
-
-            //check the startmenu
-            if (gameState == GameState.StartMenu)
-            {
-                Rectangle startButtonRect = new Rectangle((int)startButtonPosition.X, (int)startButtonPosition.Y, 100, 20);
-                Rectangle exitButtonRect = new Rectangle((int)exitButtonPosition.X, (int)exitButtonPosition.Y, 100, 20);
-                if ((mouseClickRect.Intersects(startButtonRect))) //player clicked start button
-                {
-                    gameState = GameState.Loading;
-                    isLoading = false;
-                }
-                else if (mouseClickRect.Intersects(exitButtonRect)) //player clicked exit button
-                {
-                    Exit();
-                }
-            }
-            /*
-            //check the pausebutton
-            if (gameState == GameState.Playing)
-            {
-                Rectangle pauseButtonRect = new Rectangle(0, 0, 70, 70);
-
-                if (mouseClickRect.Intersects(pauseButtonRect))
-                {
-                    gameState = GameState.Paused;
-                }
-            }
-
-            //check the resumebutton
-            if (gameState == GameState.Paused)
-            {
-                Rectangle resumeButtonRect = new Rectangle((int)resumeButtonPosition.X, (int)resumeButtonPosition.Y, 100, 20);
-
-                if (mouseClickRect.Intersects(resumeButtonRect))
-                {
-                    gameState = GameState.Playing;
-                }
-            }*/
-        }
-
-        private void UpdateCollision()
-        {
-            // Use the Rectangle's built-in intersect function to 
-            // determine if two objects are overlapping
-            Rectangle rectangle1;
-            Rectangle rectangle2;
-
-            rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
-
-            // Do the collision between the player and the gravies
-            for (int i = 0; i < badGuys4.Count; i++)
-            {
-                rectangle2 = new Rectangle((int)badGuys4[i].position.X ,
-                (int)badGuys4[i].position.Y ,
-                badGuys4[i].Width,
-                badGuys4[i].Height);
-                enemy1Rec = new Rectangle((int)badGuys4[i].position.X,
-                (int)badGuys4[i].position.Y ,
-                badGuys4[i].Width,
-                badGuys4[i].Height);
-                // Determine if the two objects collided with each
-                // other
-                if (rectangle1.Intersects(rectangle2))
-                {
-                    //the player can hit the enemy
-                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
-                    {
-                        //the player hit the robot
-                        badGuys4[i].health -= gMan.heavyHit;
-                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
-                    }
-                    // If the player health is less than zero we died
-                    if (gMan.Health <= 0)
-                        gMan.Active = false;
-                }
-            }
-                // Do the collision between the player and the gravies
-                for (int i = 0; i < badGuys2.Count; i++)
-                {
-                    rectangle2 = new Rectangle((int)badGuys2[i].position.X,
-                    (int)badGuys2[i].position.Y,
-                    badGuys2[i].Width,
-                    badGuys2[i].Height);
-                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X,
-                    (int)badGuys2[i].position.Y,
-                    badGuys2[i].Width,
-                    badGuys2[i].Height);
-                    // Determine if the two objects collided with each
-                    // other
-                    if (rectangle1.Intersects(rectangle2))
-                    {
-                        //the player can hit the enemy
-                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack )//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
-                        {
-                            //the player hit the robot
-                            badGuys2[i].health -= gMan.heavyHit;
-                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
-                        }
-                        // If the player health is less than zero we died
-                    }
-                }            
         }
 
         void LoadGame()

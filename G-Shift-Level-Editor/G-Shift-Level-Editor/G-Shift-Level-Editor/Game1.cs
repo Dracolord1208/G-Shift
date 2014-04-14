@@ -151,16 +151,17 @@ namespace G_Shift_Level_Editor
 
             MouseState mState = Mouse.GetState();
             KeyboardState kState = Keyboard.GetState();
-
-            if (mState.X < 40 && mState.X >= 0)
-                translation.X -= 5;
-            else if (mState.X > 960 && mState.X <= 1000)
-                translation.X += 5;
-
-            if (mState.Y < 40 && mState.Y >= 0)
+            if (mState.Y > 40)
+            {
+                if (mState.X < 40 && mState.X >= 0)
+                    translation.X -= 5;
+                else if (mState.X > 960 && mState.X <= 1000)
+                    translation.X += 5;
+            }
+            /*if (mState.Y < 40 && mState.Y >= 0)
                 translation.Y -= 2;
             else if (mState.Y > 560 && mState.Y <= 600)
-                translation.Y += 2;
+                translation.Y += 2;*/
 
             if (itemDrag)
             {
