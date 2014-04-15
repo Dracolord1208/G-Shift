@@ -188,7 +188,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-            gMan.Initialize(gManTest, new Vector2(0, 200));
+            gMan.Initialize(gManTest, new Vector2(300, 500));
     
 
             //aCrate = new Item();
@@ -413,8 +413,8 @@ namespace G_Shift
             }
             //dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
-            healthRectange = new Rectangle((int)gMan.Position.X - 37,
-                            (int)gMan.Position.Y + 37, gMan.Health, 7);
+            healthRectange = new Rectangle((int)gMan.StartPosition.X - 37,
+                            (int)gMan.StartPosition.Y + 37, gMan.Health, 7);
 
 
 
@@ -1394,11 +1394,18 @@ namespace G_Shift
 
             if (gameState == GameState.Playing)
             {
+                spriteBatch.End();
+
+                Vector2 translation = gMan.Position - gMan.StartPosition;
+                spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
              spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
-               spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
-             //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
+                spriteBatch.End();
 
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+               //spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
+             //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
+               
                
 
                 // draw badGuys2

@@ -32,6 +32,7 @@ namespace G_Shift
         public Animation PlayerAnimation;
         // Position of the Player relative to the upper left side of the screen
         public Vector2 Position;
+        public Vector2 StartPosition;
         public bool hasBeenHit = false;
         bool canMoveUp;
         bool canMoveDown;
@@ -102,7 +103,7 @@ namespace G_Shift
             //set animation
             fireTime = TimeSpan.FromSeconds(.30f);
             // Set the starting position of the player around the middle of the screen and to the back
-            Position = position;
+            StartPosition = Position = position;
             playerAnimation = new Animation();
             // Set the player to be active
             Active = true;
@@ -122,7 +123,7 @@ namespace G_Shift
         public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, List<Item> allItems, World level)
 
         {
-            PlayerAnimation.Position = Position;
+            PlayerAnimation.Position = new Vector2(StartPosition.X, Position.Y);
             PlayerAnimation.Update(gameTime);
            //  currentKeyboardState=   Keyboard.GetState();
            // Move background texture 400 pixels each second 

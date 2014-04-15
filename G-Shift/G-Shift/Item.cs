@@ -283,13 +283,13 @@ namespace G_Shift
             //}
             //else
             spriteBatch.Draw(throwable, throwableHitbox, Color.White);
-            spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
+            /*spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
             spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
             spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
             spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
             spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
             spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
-            //spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);
+            //spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);*/
             //spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
             //spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
             //spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
