@@ -74,8 +74,8 @@ namespace G_Shift
         private bool pausedForGuide = false;
         Player gMan;
         bool isLoading;
-                bool    finishend ;
-                bool endbool;
+        bool finishend ;
+        bool endbool;
         //Interactable gMan;
         Texture2D gManTest;
         Texture2D gManTexture;
@@ -954,7 +954,7 @@ namespace G_Shift
                     else
                     {
                         //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
-                        badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width * (.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
+                        badGuys4[i].attackRightRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width * (.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
 
                         if (badGuys4[i].attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
@@ -1285,8 +1285,8 @@ namespace G_Shift
                     badGuys4[i].Draw(spriteBatch);
                  //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
-                    spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
-                    spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
+                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
+                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
               
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
