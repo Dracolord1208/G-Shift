@@ -23,7 +23,7 @@ namespace G_Shift
             hurt
        }
        public bool withinRect = true;
-       public int currentRect = 0, currentPath;
+       public int location = 0;
         public float scrollPosition = 0;
         float playerMoveSpeed = 4f;
         const int SCREEN_WIDTH = 1000;
@@ -230,36 +230,36 @@ namespace G_Shift
             if (withinRect)
             {
                 // gMan y-boundaries
-                if (Position.Y < level.level[currentRect].Y)
-                    Position.Y = level.level[currentRect].Y;
+                if (Position.Y < level.level[location / 2].Y)
+                    Position.Y = level.level[location / 2].Y;
                 else
-                if (Position.Y > level.level[currentRect].Y + level.level[currentRect].Height)
-                    Position.Y = level.level[currentRect].Y + level.level[currentRect].Height;
+                    if (Position.Y > level.level[location / 2].Y + level.level[location / 2].Height)
+                        Position.Y = level.level[location / 2].Y + level.level[location / 2].Height;
 
                 // gMan x-boundaries
-                if (Position.X < level.level[currentRect].X)
+                if (Position.X < level.level[location / 2].X)
                 {
-                    if (currentRect == 0)
+                    if (location == 0)
                     {
                         Position = new Vector2(level.level[0].X, Position.Y);
                     }
                     else
                     {
-                        currentPath = currentRect - 1;
+                        location--;
                         withinRect = false;
                         return;
                     }
                 }
                 else
-                if (Position.X > level.level[currentRect].X + level.level[currentRect].Width)
+                if (Position.X > level.level[location/2].X + level.level[location/2].Width)
                 {
-                    if (currentRect == level.level.Count - 1)
+                    if (location/2 == level.level.Count - 1)
                     {
-                        Position = new Vector2(level.level[currentRect].X + level.level[currentRect].Width, Position.Y);
+                        Position = new Vector2(level.level[location/2].X + level.level[location/2].Width, Position.Y);
                     }
                     else
                     {
-                        currentPath = currentRect;
+                        location++;
                         withinRect = false;
                         return;
                     }
@@ -268,26 +268,27 @@ namespace G_Shift
             else
             {
                 float topB, botB, topM, botM, topY, botY;
-                topM = (level.tracks[currentPath].topLeft.Y - level.tracks[currentPath].topRight.Y)
-                    / (level.tracks[currentPath].topLeft.X - level.tracks[currentPath].topRight.X);
-                topB = (topM * (-level.tracks[currentPath].topLeft.X)) + level.tracks[currentPath].topLeft.Y;
+                topM = (level.tracks[location / 2].topLeft.Y - level.tracks[location / 2].topRight.Y)
+                    / (level.tracks[location / 2].topLeft.X - level.tracks[location / 2].topRight.X);
+                topB = (topM * (-level.tracks[location / 2].topLeft.X)) + level.tracks[location / 2].topLeft.Y;
                 topY = topM * Position.X + topB;
 
-                botM = (level.tracks[currentPath].botLeft.Y - level.tracks[currentPath].botRight.Y)
-                   / (level.tracks[currentPath].botLeft.X - level.tracks[currentPath].botRight.X);
-                botB = (botM * (-level.tracks[currentPath].botLeft.X)) + level.tracks[currentPath].botLeft.Y;
+                botM = (level.tracks[location / 2].botLeft.Y - level.tracks[location / 2].botRight.Y)
+                   / (level.tracks[location / 2].botLeft.X - level.tracks[location / 2].botRight.X);
+                botB = (botM * (-level.tracks[location / 2].botLeft.X)) + level.tracks[location / 2].botLeft.Y;
                 botY = botM * Position.X + botB;
 
-                if (Position.X <= level.tracks[currentPath].topLeft.X)
+                if (Position.X <= level.tracks[location / 2].topLeft.X)
                 {
                     withinRect = true;
+                    location--;
                     return;
                 }
                 else
-                if (Position.X >= level.tracks[currentPath].topRight.X)
+                    if (Position.X >= level.tracks[location / 2].topRight.X)
                 {
                     withinRect = true;
-                    currentRect = currentPath + 1;
+                    location++;
                     return;
                 }
 

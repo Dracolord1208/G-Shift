@@ -141,8 +141,8 @@ namespace G_Shift
             bottomObjectHitbox.Width = throwableHitbox.Width;
 
 
-            int absDistanceX = Math.Abs(playerPosition.X - throwableHitbox.X);
-            int absDistanceY = Math.Abs(playerPosition.Y - throwableHitbox.Y);
+            //int absDistanceX = Math.Abs(playerPosition.X - throwableHitbox.X);
+            //int absDistanceY = Math.Abs(playerPosition.Y - throwableHitbox.Y);
 
             Collision();
 
@@ -166,6 +166,7 @@ namespace G_Shift
                 throwableHitbox.X = (int)gMan.Position.X + 10;
                 throwableHitbox.Y = (int)gMan.Position.Y - 300;
                 pickedUp = true;
+                spacePressed = false;
                 stillIntersects = true;
                 //}
 
@@ -187,7 +188,7 @@ namespace G_Shift
                 charDirection = gMan.getDirection();
             }
 
-            if (goUp && pickedUp)
+            if (goUp && pickedUp && spacePressed)
             {
                 //if (throwableHitbox.Y > 100 && goneUp)
                 if (speed.Y > 1 && goneUp)
@@ -247,10 +248,10 @@ namespace G_Shift
                         throwCount++;
                     }
 
-                    if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)
-                    {
-                        throwable = content.Load<Texture2D>("laser");
-                    }
+                    //if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)
+                    //{
+                        //throwable = content.Load<Texture2D>("laser");
+                    //}
                 }
             }
 
