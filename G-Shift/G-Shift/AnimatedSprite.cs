@@ -68,7 +68,7 @@ public class AnimatedSprite
     }
      */
 
-    public void Draw(SpriteBatch spriteBatch, Vector2 location, Color color, int depth)
+    public void Draw(SpriteBatch spriteBatch, Vector2 location, Color color, float depth)
     {
         int width = Texture.Width / Columns;
         int height = Texture.Height / Rows;

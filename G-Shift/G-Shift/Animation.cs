@@ -46,6 +46,7 @@ namespace G_Shift
         // Determines if the animation will keep playing or deactivate after one run
         public bool Looping;
 
+        //public float depth;
         // Width of a given frame
         public Vector2 Position;
 
@@ -129,12 +130,12 @@ namespace G_Shift
             (int)(FrameWidth * scale),
             (int)(FrameHeight * scale));
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch,float depth)
         {
             // Only draw the animation when we are active
             if (Active)
             {
-                spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color);
+                spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color, 0,    Vector2.Zero,   SpriteEffects.None,    depth);
             }
         }
     }

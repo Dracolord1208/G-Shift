@@ -1169,7 +1169,7 @@ namespace G_Shift
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             //spriteBatch.Draw(background, new Rectangle(0, 0, 1000, 600), Color.White);    // !!WORKING
 
@@ -1194,12 +1194,20 @@ namespace G_Shift
                 level.Draw(spriteBatch);
                //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
              //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
-                gMan.Draw(spriteBatch);
+
                
 
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
+                    if (badGuys2[i].position.Y < gMan.Position.Y)
+                    {
+                        badGuys2[i].depth = .2f;
+                    }
+                    else
+                    {
+                        badGuys2[i].depth = .8f;
+                    }
                     badGuys2[i].Draw(spriteBatch);
               //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
@@ -1208,15 +1216,26 @@ namespace G_Shift
                 {
                     //badGuys3[i].Draw(spriteBatch);
                 }
+
+                gMan.Draw(spriteBatch, .5f);
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
+                    if (badGuys4[i].position.Y < gMan.Position.Y)
+                    {
+                        badGuys4[i].depth = .2f;
+                    }
+                    else
+                    {
+                        badGuys4[i].depth = .8f;
+                    }
                     badGuys4[i].Draw(spriteBatch);
              //       spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
+              
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             }
 

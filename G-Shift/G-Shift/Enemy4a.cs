@@ -35,7 +35,7 @@ namespace G_Shift
         //float size;
         public int ttl { get; set; }
         public int health { get; set; }
-        public int depth { get; set; }
+        public float depth { get; set; }
 
         public bool jumpFlag { get; set; }
         public float gravity;

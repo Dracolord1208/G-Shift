@@ -111,7 +111,7 @@ namespace G_Shift
         public void Draw(SpriteBatch spriteBatch)
         {
             // Draw the animation
-            EnemyAnimation.Draw(spriteBatch);
+           // EnemyAnimation.Draw(spriteBatch);
         }
 
     }

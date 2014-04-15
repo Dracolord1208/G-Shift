@@ -359,9 +359,9 @@ namespace G_Shift
         }
 
         // Draw the player
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, float depth)
         {
-            PlayerAnimation.Draw(spriteBatch);
+            PlayerAnimation.Draw(spriteBatch, depth);
         }
     }
 }

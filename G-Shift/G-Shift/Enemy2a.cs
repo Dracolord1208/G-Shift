@@ -33,7 +33,7 @@ namespace G_Shift
         //public int health;
         public int health { get; set; }
 
-        public int depth { get; set; }
+        public float depth { get; set; }
 
         public TimeSpan chargeTime { get; set; }
         public TimeSpan chargeCheckpoint { get; set; }
