@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="Boss1a.cs" />
     <Compile Include="enemy.cs" />
     <Compile Include="Enemy1a.cs" />
     <Compile Include="Enemy2a.cs" />

@@ -462,7 +462,12 @@ namespace G_Shift
 
                     UpdateEnemies(gameTime);
 
-                    spawnEnemies(gameTime);
+                    //spawnEnemies(gameTime);
+
+                    if (currentKeyboardState.IsKeyDown(Keys.D1))
+                    {
+                        spawnSmallRobot1(gameTime);
+                    }
                 }
             
             }
@@ -979,6 +984,7 @@ namespace G_Shift
             Rectangle rectangle1;
             Rectangle rectangle2;
 
+            // use this for collision with enemy attacks; same as gMan.base
             rectangle1 = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 200, 50);
 
             // Do the collision between the player and the gravies
@@ -1118,6 +1124,50 @@ namespace G_Shift
                 badGuy4checkpoint = gameTime.TotalGameTime;
 
                 badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));
+            }
+        }
+
+        public void spawnSmallRobot1(GameTime gameTime)
+        {
+            // badGuys4 spawn on button press, (ideal for level editor)
+            if (gameTime.TotalGameTime - badGuy4checkpoint > badGuy4spawnTime && badGuys4.Count <= 3)
+            {
+                Vector2 eMotion = new Vector2(-6f, 0f);
+
+                float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempXleft = (float)badGuy4random.Next(-258, -158);
+                //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+                float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+
+                float tempX = (100f);
+
+                Vector2 startPos = new Vector2(0, 0);
+            /*
+                if (random.Next(1, 3) == 1)
+                {
+                    startPos = new Vector2(tempXleft, tempY);
+                    eMotion = new Vector2(6f, 0f);
+                    //badGuys4[i].texture = enemy1bTexture;
+                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
+                }
+                else
+                {
+                    startPos = new Vector2(tempXright, tempY);
+                    eMotion = new Vector2(-6f, 0f);
+                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                }
+             */
+
+                startPos = new Vector2(tempX, tempY);
+                eMotion = new Vector2(0f, 0f);
+                badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+
+
+                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                badGuy4checkpoint = gameTime.TotalGameTime;
+
+                //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
+                badGuy4spawnTime = TimeSpan.FromSeconds(1f);
             }
         }
 
