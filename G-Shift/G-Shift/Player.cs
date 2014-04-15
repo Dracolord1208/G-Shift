@@ -114,7 +114,7 @@ namespace G_Shift
             Health = 100;
             canMoveUp = true;
             canMoveDown = true;
-            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
+            hitBox = new Rectangle((int)Position.X - 100, (int)Position.Y - 30, 200, 50);
         }
 
         // Update the player animation

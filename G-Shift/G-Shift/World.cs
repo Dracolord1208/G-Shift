@@ -33,7 +33,7 @@ namespace G_Shift
             level = new List<Rectangle>();
             items = new List<Item>();
             tracks = new List<Track>();
-            StreamReader file = new StreamReader("level.txt");
+            StreamReader file = new StreamReader("testlevel.txt");
 
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);

@@ -389,9 +389,16 @@ namespace G_Shift
                 //start backgroundthread
                 backgroundThread.Start();
             }
-
-            gManbase = new Rectangle((int)gMan.Position.X-100, (int)gMan.Position.Y -30 , 200, 50);
-            dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
+            if (gMan.getDirection())
+            {
+                gManbase = new Rectangle((int)gMan.Position.X - 65, (int)gMan.Position.Y - 30, 150, 50);
+            }
+            else 
+            {
+                gManbase = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 150, 50);
+                
+            }
+            //dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
             healthRectange = new Rectangle((int)gMan.Position.X - 37,
                             (int)gMan.Position.Y + 37, gMan.Health, 7);
@@ -778,7 +785,7 @@ namespace G_Shift
                 {
                     if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
                     {
-                        if (badGuys2[i].attackLeftRect.Intersects(gMan.hitBox))
+                        if (badGuys2[i].attackLeftRect.Intersects(gManbase))
                         {
                             gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
                             gMan.playerStance = Player.Stance.hurt;
@@ -790,7 +797,7 @@ namespace G_Shift
                 {
                     if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
                     {
-                        if (badGuys2[i].attackRightRect.Intersects(gMan.hitBox))
+                        if (badGuys2[i].attackRightRect.Intersects(gManbase))
                         {
                             gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
                             gMan.playerStance = Player.Stance.hurt;
@@ -929,7 +936,7 @@ namespace G_Shift
                     {
                         //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
                         badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
-                        if (badGuys4[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        if (badGuys4[i].attackLeftRect.Intersects(gManbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
@@ -941,7 +948,7 @@ namespace G_Shift
                         //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
                         badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width * (.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
 
-                        if (badGuys4[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        if (badGuys4[i].attackRightRect.Intersects(gManbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
@@ -974,14 +981,14 @@ namespace G_Shift
             // Do the collision between the player and the gravies
             for (int i = 0; i < badGuys4.Count; i++)
             {
-                rectangle2 = new Rectangle((int)badGuys4[i].position.X ,
-                (int)badGuys4[i].position.Y ,
-                badGuys4[i].Width,
-                badGuys4[i].Height);
-                enemy1Rec = new Rectangle((int)badGuys4[i].position.X,
-                (int)badGuys4[i].position.Y ,
-                badGuys4[i].Width,
-                badGuys4[i].Height);
+                rectangle2 = new Rectangle((int)badGuys4[i].position.X + 60,
+                (int)badGuys4[i].position.Y + 40,
+                badGuys4[i].Width - 90,
+                badGuys4[i].Height - 40);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X+60,
+                (int)badGuys4[i].position.Y+40 ,
+                badGuys4[i].Width-90,
+                badGuys4[i].Height-40);
                 // Determine if the two objects collided with each
                 // other
                 if (rectangle1.Intersects(rectangle2))
@@ -1001,14 +1008,14 @@ namespace G_Shift
                 // Do the collision between the player and the gravies
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
-                    rectangle2 = new Rectangle((int)badGuys2[i].position.X,
-                    (int)badGuys2[i].position.Y,
-                    badGuys2[i].Width,
-                    badGuys2[i].Height);
-                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X,
-                    (int)badGuys2[i].position.Y,
-                    badGuys2[i].Width,
-                    badGuys2[i].Height);
+                    rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
+                    (int)badGuys2[i].position.Y + 150,
+                    badGuys2[i].Width - 80,
+                    badGuys2[i].Height - 160);
+                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X+50,
+                    (int)badGuys2[i].position.Y+150,
+                    badGuys2[i].Width-80,
+                    badGuys2[i].Height-160);
                     // Determine if the two objects collided with each
                     // other
                     if (rectangle1.Intersects(rectangle2))
@@ -1185,7 +1192,8 @@ namespace G_Shift
             {
              spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
-             //   spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+               //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+             //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
                 gMan.Draw(spriteBatch);
                
 
@@ -1193,7 +1201,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
                     badGuys2[i].Draw(spriteBatch);
-                    //spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
+              //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)
@@ -1204,7 +1212,7 @@ namespace G_Shift
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
                     badGuys4[i].Draw(spriteBatch);
-                    //spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+             //       spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
