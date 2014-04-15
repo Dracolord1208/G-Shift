@@ -143,6 +143,7 @@ namespace G_Shift
 
         //Vector2 healthPosition;
         public Rectangle gManbase;
+        public Rectangle hitbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
@@ -392,10 +393,12 @@ namespace G_Shift
             if (gMan.getDirection())
             {
                 gManbase = new Rectangle((int)gMan.Position.X - 65, (int)gMan.Position.Y - 30, 150, 50);
+                hitbase = new Rectangle((int)gMan.Position.X - 85, (int)gMan.Position.Y - 200, 150, 200);
             }
             else 
             {
                 gManbase = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 150, 50);
+                hitbase = new Rectangle((int)gMan.Position.X - 65, (int)gMan.Position.Y - 200, 150, 200);
                 
             }
             //dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
@@ -785,7 +788,7 @@ namespace G_Shift
                 {
                     if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
                     {
-                        if (badGuys2[i].attackLeftRect.Intersects(gManbase))
+                        if (badGuys2[i].attackLeftRect.Intersects(hitbase))
                         {
                             gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
                             gMan.playerStance = Player.Stance.hurt;
@@ -797,7 +800,7 @@ namespace G_Shift
                 {
                     if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
                     {
-                        if (badGuys2[i].attackRightRect.Intersects(gManbase))
+                        if (badGuys2[i].attackRightRect.Intersects(hitbase))
                         {
                             gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
                             gMan.playerStance = Player.Stance.hurt;
@@ -936,7 +939,7 @@ namespace G_Shift
                     {
                         //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
                         badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
-                        if (badGuys4[i].attackLeftRect.Intersects(gManbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
@@ -948,7 +951,7 @@ namespace G_Shift
                         //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
                         badGuys4[i].attackLeftRect = new Rectangle((int)(badGuys4[i].position.X + badGuys4[i].Width * (.75)), (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
 
-                        if (badGuys4[i].attackRightRect.Intersects(gManbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
+                        if (badGuys4[i].attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
@@ -1192,7 +1195,7 @@ namespace G_Shift
             {
              spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
-               //spriteBatch.Draw(backgroundTexture, gManbase, Color.White);
+               spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
              //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
 
                
@@ -1230,10 +1233,10 @@ namespace G_Shift
                         badGuys4[i].depth = .8f;
                     }
                     badGuys4[i].Draw(spriteBatch);
-             //       spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                 //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
-                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
-                    //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
+                    spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
+                    spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
               
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
