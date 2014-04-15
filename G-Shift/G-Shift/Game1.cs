@@ -283,7 +283,7 @@ namespace G_Shift
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gMan.LoadContent(Content);
             // TODO: use this.Content to load your game content here
-            backgroundTexture = Content.Load<Texture2D>("LEVEL OUTSIDE copy");
+            backgroundTexture = Content.Load<Texture2D>("Map");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
             baseRectangle = Content.Load<Texture2D>("Rectangle");
@@ -1397,7 +1397,7 @@ namespace G_Shift
                 spriteBatch.End();
 
                 Vector2 translation = gMan.Position - gMan.StartPosition;
-                spriteBatch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
              spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
                 spriteBatch.End();
