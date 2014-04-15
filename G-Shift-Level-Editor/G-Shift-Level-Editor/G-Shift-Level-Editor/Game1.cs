@@ -34,6 +34,8 @@ namespace G_Shift_Level_Editor
             public Vector2 topRight;
             public Vector2 botLeft;
             public Vector2 botRight;
+            public bool direction1;
+            public bool direction2;
         }
 
         struct MenuBox
@@ -395,6 +397,8 @@ namespace G_Shift_Level_Editor
         public void Pathify()
         {
             Track temp = new Track();
+
+            
 
             temp.topLeft = new Vector2(
                             mapRects[mapRects.Count - 2].Right,

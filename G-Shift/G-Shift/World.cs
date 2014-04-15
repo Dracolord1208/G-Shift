@@ -23,6 +23,8 @@ namespace G_Shift
             public Vector2 topRight;
             public Vector2 botLeft;
             public Vector2 botRight;
+            /*public bool direction1;
+            public bool direction2;*/
         }
         public List<Track> tracks;
         public List<Rectangle> level;
@@ -73,6 +75,14 @@ namespace G_Shift
                     track.botLeft.Y = Convert.ToInt32(data[++x]);
                     track.botRight.X = Convert.ToInt32(data[++x]);
                     track.botRight.Y = Convert.ToInt32(data[++x]);
+                    /*if (data[++x] == "true")
+                        track.direction1 = true;
+                    else
+                        track.direction1 = false;
+                    if (data[++x] == "true")
+                        track.direction2 = true;
+                    else
+                        track.direction2 = false;*/
 
                     tracks.Add(track);
                 }

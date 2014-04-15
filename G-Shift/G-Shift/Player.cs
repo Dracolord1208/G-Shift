@@ -264,7 +264,7 @@ namespace G_Shift
             }
             else
             {
-
+                float topB, botB;
             }
 
         }
