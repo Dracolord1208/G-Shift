@@ -42,6 +42,7 @@ namespace G_Shift
         public Rectangle baseRect { get; set; }
         public Rectangle attackLeftRect { get; set; }
         public Rectangle attackRightRect { get; set; }
+        public Rectangle hitBox { get; set; }
 
         
         public bool decisionTimeFlag { get; set; }
@@ -142,6 +143,8 @@ namespace G_Shift
             attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
             attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
 
+            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
+
             ContentLoadedFlag = false;
 
             isRightFlag = false;
@@ -153,8 +156,10 @@ namespace G_Shift
         {
             spriteSheetmoveRight = content.Load<Texture2D>("BossSheet1cRight");
             spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet1c");
-            moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
-            moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
+            //moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
+            //moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
+            moveLeftAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
+            moveRightAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
         }
 
         //(Update v.2)
@@ -208,6 +213,9 @@ namespace G_Shift
             if (holdPosFlag == true)
             {
                 velocity = new Vector2(0f, 0f);
+
+                moveLeftAnimation.Update();
+                moveRightAnimation.Update();
             }
 
             // attack
@@ -217,9 +225,11 @@ namespace G_Shift
 
             if (holdPosFlag == false)
             {
-                moveLeftAnimation.Update();
-                moveRightAnimation.Update();
+                //moveLeftAnimation.Update();
+                //moveRightAnimation.Update();
             }
+
+            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
         }
 
         public void ResetValues()

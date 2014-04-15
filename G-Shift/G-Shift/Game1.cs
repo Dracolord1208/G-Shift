@@ -11,13 +11,9 @@ using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using System.Timers;
 
-// Test comment [by: Antonio]
 
 namespace G_Shift
 {
-    //public class gMan : Interactable { }
-    //public class Gun : Interactable { }
-
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -85,6 +81,7 @@ namespace G_Shift
         Texture2D enemyBTexture;
         Texture2D enemy2bTexture;
         Texture2D enemyCTexture;
+        Texture2D bossATexture;
 
         List<Item> allItems;
         //Item aCrate;
@@ -140,6 +137,12 @@ namespace G_Shift
         public TimeSpan badGuy4spawnTime;
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
+
+        public Boss1a theBoss1;
+        //public TimeSpan theBoss1spawnTime;
+        //public TimeSpan theBoss1checkpoint;
+        public Random theBoss1random;
+        public bool bossFlag;   // if Boss exists or not
 
         //Vector2 healthPosition;
         public Rectangle gManbase;
@@ -255,6 +258,12 @@ namespace G_Shift
             badGuy4checkpoint = new TimeSpan();
             badGuy4checkpoint = TimeSpan.FromSeconds(0.0);
             badGuy4random = new Random();
+
+            //theBoss1 = new Boss1a();
+            theBoss1random = new Random();
+            bossFlag = false;
+
+
             startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 250);
             exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 300);
             //set the gamestate to start menu
@@ -301,6 +310,7 @@ namespace G_Shift
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
             enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
+            bossATexture = Content.Load<Texture2D>("Boss1a");
 
             levelupTexture = Content.Load<Texture2D>("levelupscreen");
             EndMenuTexture = Content.Load<Texture2D>("endMenu");
@@ -467,6 +477,12 @@ namespace G_Shift
                     if (currentKeyboardState.IsKeyDown(Keys.D1))
                     {
                         spawnSmallRobot1(gameTime);
+                    }
+
+                    if (currentKeyboardState.IsKeyDown(Keys.D0))
+                    {
+                        if(bossFlag == false)
+                            spawntheBoss1();
                     }
                 }
             
@@ -975,6 +991,108 @@ namespace G_Shift
                     i--;
                 }
             }
+
+            //*********************
+            // Update theBoss1
+            // 
+            //for (int i = 0; i < badGuys4.Count; i++)
+            if (bossFlag == true)
+            {
+                if (theBoss1.ContentLoadedFlag == false)
+                {
+                    theBoss1.LoadContent(Content);
+                    theBoss1.ContentLoadedFlag = true;
+                }
+                theBoss1.ResetValues();
+
+
+                if (theBoss1.position.X + theBoss1.Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
+                {
+                    theBoss1.isRightFlag = true;
+                }
+                else
+                {
+                    theBoss1.isRightFlag = false;
+                }
+
+
+                // general movement rules
+
+                //*************************
+                // Simple movement rules
+                //
+                if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
+                {
+                    theBoss1.holdxPosFlag = true;
+                }
+                else if (theBoss1.position.X > gMan.Position.X + gMan.Width)
+                {
+                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                    theBoss1.moveLeftFlag = true;
+                }
+                else if (theBoss1.position.X < gMan.Position.X - theBoss1.Width)
+                {
+                    theBoss1.moveRightFlag = true;
+                }
+
+                // Adjust Y-directional movement
+                if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                {
+                    theBoss1.holdyPosFlag = true;
+                }
+                else if (theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height + theBoss1.baseHeight)
+                {
+                    theBoss1.moveUpFlag = true;
+                }
+                else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                {
+                    theBoss1.moveDownFlag = true;
+                }
+
+                // go into attack stance if holding still
+                if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true)
+                {
+                    theBoss1.attackFlag = true;
+                }
+                if (theBoss1.attackFlag == true)
+                {
+                    if (theBoss1.isRightFlag == true)
+                    {
+                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                        theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+                        if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    else
+                    {
+                        //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                        theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+
+                        if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                            theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
+                }
+
+                theBoss1.Update();
+
+                if (theBoss1.ttl <= 0 || theBoss1.health <= 0)
+                {
+                    //theBoss1.Remove();
+                    //i--;
+
+                    bossFlag = false;
+                }
+            }
         }
 
         private void UpdateCollision()
@@ -1171,6 +1289,39 @@ namespace G_Shift
             }
         }
 
+        public void spawntheBoss1()
+        {
+            // theBoss1 spawn on button press, (ideal for level editor)
+            //if (gameTime.TotalGameTime - badGuy4checkpoint > badGuy4spawnTime && badGuys4.Count <= 3)
+            //if(theBoss1..)
+            //{
+                Vector2 eMotion = new Vector2(0f, 0f);
+
+                float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempXleft = (float)badGuy4random.Next(-258, -158);
+                //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+                float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+
+                float tempX = (400f);
+
+                Vector2 startPos = new Vector2(0, 0);
+
+                startPos = new Vector2(tempX, tempY);
+                eMotion = new Vector2(0f, 0f);
+
+                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                theBoss1 = new Boss1a(381,446, startPos, eMotion, bossATexture, 0f, 0f);
+
+                bossFlag = true;
+
+                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                //theBoss1acheckpoint = gameTime.TotalGameTime;
+
+                //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
+                //badGuy4spawnTime = TimeSpan.FromSeconds(1f);
+            //}
+        }
+
         void LoadGame()
         {
             //load the game images into the content pipeline
@@ -1287,6 +1438,11 @@ namespace G_Shift
 
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
+                }
+
+                if (bossFlag == true)
+                {
+                    theBoss1.Draw(spriteBatch);
                 }
               
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
