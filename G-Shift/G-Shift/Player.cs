@@ -230,13 +230,14 @@ namespace G_Shift
             if (withinRect)
             {
                 // gMan y-boundaries
-                if (Position.Y <= level.level[currentRect].Y)
-                    Position = new Vector2(Position.X, level.level[currentRect].Y);
-                if (Position.Y >= level.level[currentRect].Y + level.level[currentRect].Height)
-                    Position = new Vector2(Position.X, level.level[currentRect].Y + level.level[currentRect].Height);
+                if (Position.Y < level.level[currentRect].Y)
+                    Position.Y = level.level[currentRect].Y;
+                else
+                if (Position.Y > level.level[currentRect].Y + level.level[currentRect].Height)
+                    Position.Y = level.level[currentRect].Y + level.level[currentRect].Height;
 
                 // gMan x-boundaries
-                if (Position.X <= level.level[currentRect].X)
+                if (Position.X < level.level[currentRect].X)
                 {
                     if (currentRect == 0)
                     {
@@ -246,10 +247,11 @@ namespace G_Shift
                     {
                         currentPath = currentRect - 1;
                         withinRect = false;
+                        return;
                     }
                 }
-
-                if (Position.X >= level.level[currentRect].X + level.level[currentRect].Width)
+                else
+                if (Position.X > level.level[currentRect].X + level.level[currentRect].Width)
                 {
                     if (currentRect == level.level.Count - 1)
                     {
@@ -257,14 +259,43 @@ namespace G_Shift
                     }
                     else
                     {
-                        currentPath = currentRect + 1;
+                        currentPath = currentRect;
                         withinRect = false;
+                        return;
                     }
                 }
             }
             else
             {
-                float topB, botB;
+                float topB, botB, topM, botM, topY, botY;
+                topM = (level.tracks[currentPath].topLeft.Y - level.tracks[currentPath].topRight.Y)
+                    / (level.tracks[currentPath].topLeft.X - level.tracks[currentPath].topRight.X);
+                topB = (topM * (-level.tracks[currentPath].topLeft.X)) + level.tracks[currentPath].topLeft.Y;
+                topY = topM * Position.X + topB;
+
+                botM = (level.tracks[currentPath].botLeft.Y - level.tracks[currentPath].botRight.Y)
+                   / (level.tracks[currentPath].botLeft.X - level.tracks[currentPath].botRight.X);
+                botB = (botM * (-level.tracks[currentPath].botLeft.X)) + level.tracks[currentPath].botLeft.Y;
+                botY = botM * Position.X + botB;
+
+                if (Position.X <= level.tracks[currentPath].topLeft.X)
+                {
+                    withinRect = true;
+                    return;
+                }
+                else
+                if (Position.X >= level.tracks[currentPath].topRight.X)
+                {
+                    withinRect = true;
+                    currentRect = currentPath + 1;
+                    return;
+                }
+
+                if (Position.Y < topY)
+                    Position.Y = topY;
+                else
+                    if (Position.Y > botY)
+                        Position.Y = botY;
             }
 
         }
