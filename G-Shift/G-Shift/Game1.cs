@@ -188,7 +188,7 @@ namespace G_Shift
 
             // Initialize Gallagher
             gMan = new Player ();
-            gMan.Initialize(gManTest, new Vector2(300, 500));
+            gMan.Initialize(gManTest, new Vector2(500, 500));
     
 
             //aCrate = new Item();
@@ -413,8 +413,8 @@ namespace G_Shift
             }
             //dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
-            healthRectange = new Rectangle((int)gMan.StartPosition.X - 37,
-                            (int)gMan.StartPosition.Y + 37, gMan.Health, 7);
+            healthRectange = new Rectangle(10,
+                            10, gMan.Health, 20);
 
 
 
@@ -1445,6 +1445,7 @@ namespace G_Shift
                     {
                         badGuys2[i].depth = .8f;
                     }
+                    badGuys2[i].screenPosition = new Vector2(badGuys2[i].position.X - translation.X, badGuys2[i].position.Y);
                     badGuys2[i].Draw(spriteBatch);
               //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
@@ -1466,6 +1467,7 @@ namespace G_Shift
                     {
                         badGuys4[i].depth = .8f;
                     }
+                    badGuys4[i].screenPosition = new Vector2(badGuys4[i].position.X - translation.X, badGuys4[i].position.Y);
                     badGuys4[i].Draw(spriteBatch);
                  //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
@@ -1475,9 +1477,10 @@ namespace G_Shift
 
                 if (bossFlag == true)
                 {
+                    theBoss1.screenPosition = new Vector2(theBoss1.position.X - translation.X, theBoss1.position.Y);
                     theBoss1.Draw(spriteBatch);
                 }
-              
+
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             }
 

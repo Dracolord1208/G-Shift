@@ -27,6 +27,7 @@ namespace G_Shift
         public int Width { get; set; }
         public Vector2 startPosition { get; set; }
         public Vector2 position { get; set; }
+        public Vector2 screenPosition { get; set; }
         public Vector2 velocity { get; set; }
         public Texture2D texture { get; set; }
         float angle;
@@ -312,11 +313,11 @@ namespace G_Shift
 
                 if (isRightFlag == true)
                 {
-                    moveRightAnimation.Draw(spriteBatch, position, Color.White, depth);
+                    moveRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
                 }
                 else
                 {
-                    moveLeftAnimation.Draw(spriteBatch, position, Color.White, depth);
+                    moveLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
                 }
 
             }
