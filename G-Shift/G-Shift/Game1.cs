@@ -479,6 +479,11 @@ namespace G_Shift
                         spawnSmallRobot1(gameTime);
                     }
 
+                    if (currentKeyboardState.IsKeyDown(Keys.D2))
+                    {
+                        spawnMedRobot1(gameTime);
+                    }
+
                     if (currentKeyboardState.IsKeyDown(Keys.D0))
                     {
                         if(bossFlag == false)
@@ -1286,6 +1291,27 @@ namespace G_Shift
 
                 //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
                 badGuy4spawnTime = TimeSpan.FromSeconds(1f);
+            }
+        }
+
+        public void spawnMedRobot1(GameTime gameTime)
+        {
+            // badGuys2 spawn on random time interval
+            if (gameTime.TotalGameTime - badGuy2checkpoint > badGuy2spawnTime && badGuys2.Count <= 2)
+            {
+                Vector2 eMotion = new Vector2(0f, 0f);
+
+                float tempX = (float)badGuy2random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+
+                Vector2 startPos = new Vector2(tempX, tempY);
+
+                //badGuys2.Add(new Enemy2a(72, 72, startPos, eMotion, enemyBTexture, 0f, 0f));
+                badGuys2.Add(new Enemy2b(173, 207, startPos, eMotion, enemyBTexture, 0f, 0f));
+                badGuy2checkpoint = gameTime.TotalGameTime;
+
+                //badGuy2spawnTime = TimeSpan.FromSeconds((float)badGuy2random.Next(1, 5));
+                badGuy2spawnTime = TimeSpan.FromSeconds(1f);
             }
         }
 
