@@ -264,8 +264,8 @@ namespace G_Shift
             bossFlag = false;
 
 
-            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 250);
-            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 300);
+            startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 265);
+            exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 315);
             //set the gamestate to start menu
             gameState = GameState.StartMenu;
             //get the mouse state
