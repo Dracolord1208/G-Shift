@@ -1013,6 +1013,7 @@ namespace G_Shift
                     theBoss1.LoadContent(Content);
                     theBoss1.ContentLoadedFlag = true;
                 }
+
                 theBoss1.ResetValues();
 
                 // Is theBoss1 positiong to the right of the Player? (or left?)
@@ -1039,8 +1040,7 @@ namespace G_Shift
 
                 if (theBoss1.stance != Boss1a.Stance.Wait)
                 {
-
-
+                    // if close enough to hit.. hold xPos
                     if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
                     {
                         theBoss1.holdxPosFlag = true;
@@ -1056,6 +1056,7 @@ namespace G_Shift
                     }
 
                     // Adjust Y-directional movement
+                    // if close enough to hit.. hold yPos
                     if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
                     {
                         theBoss1.holdyPosFlag = true;
@@ -1081,15 +1082,18 @@ namespace G_Shift
                     //if (theBoss1.attackFlag == true)
                     if(theBoss1.stance == Boss1a.Stance.Attack)
                     {
+                        //theBoss1.holdPosFlag = true;
+
                         if (theBoss1.isRightFlag == true)
                         {
                             //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
                             theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-                            if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            if (theBoss1.attackLeftRect.Intersects(hitbase))                            
                             {
                                 gMan.Health -= 10;
                                 gMan.playerStance = G_Shift.Player.Stance.hurt;
-                                theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                                //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
                             }
                         }
                         else
@@ -1097,12 +1101,13 @@ namespace G_Shift
                             //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
                             theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
 
-                            if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            if (theBoss1.attackRightRect.Intersects(hitbase))  
                             {
                                 gMan.Health -= 10;
                                 gMan.playerStance = G_Shift.Player.Stance.hurt;
                                 //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
-                                theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                                //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
                             }
                         }
 

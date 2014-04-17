@@ -159,7 +159,8 @@ namespace G_Shift
 
             isRightFlag = false;
 
-            stance = Stance.Wait;
+            //stance = Stance.Wait;
+            stance = Stance.Move;
         }
 
         public void LoadContent(ContentManager content)
@@ -181,22 +182,40 @@ namespace G_Shift
             // move left
             if (moveLeftFlag == true)
             {
-                velocity = new Vector2(-4f, velocity.Y);
+                if(stance == Stance.Attack)
+                    velocity = new Vector2(-2f, velocity.Y);
+                else
+                    velocity = new Vector2(-4f, velocity.Y);
             }
             // move right
             else if (moveRightFlag == true)
             {
-                velocity = new Vector2(4f, velocity.Y);
+                //velocity = new Vector2(4f, velocity.Y);
+
+                if (stance == Stance.Attack)
+                    velocity = new Vector2(2f, velocity.Y);
+                else
+                    velocity = new Vector2(4f, velocity.Y);
             }
             // move up
             if (moveUpFlag == true)
             {
-                velocity = new Vector2(velocity.X, -4f);
+                //velocity = new Vector2(velocity.X, -4f);
+
+                if (stance == Stance.Attack)
+                    velocity = new Vector2(velocity.X, -2f);
+                else
+                    velocity = new Vector2(velocity.X, -4f);
             }
             // move down
             else if (moveDownFlag == true)
             {
-                velocity = new Vector2(velocity.X, 4f);
+                //velocity = new Vector2(velocity.X, 4f);
+
+                if (stance == Stance.Attack)
+                    velocity = new Vector2(velocity.X, 2f);
+                else
+                    velocity = new Vector2(velocity.X, 4f);
             }
 
             /*
@@ -224,14 +243,20 @@ namespace G_Shift
             {
                 velocity = new Vector2(0f, 0f);
 
-                moveLeftAnimation.Update();
-                moveRightAnimation.Update();
+                //moveLeftAnimation.Update();
+                //moveRightAnimation.Update();
             }
 
             // attack
             if (attackFlag == true)
             {
                 
+            }
+
+            if(stance == Stance.Attack)
+            {
+                moveLeftAnimation.Update();
+                moveRightAnimation.Update();
             }
 
             if (holdPosFlag == false)
