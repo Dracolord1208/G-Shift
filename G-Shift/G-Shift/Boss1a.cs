@@ -50,8 +50,12 @@ namespace G_Shift
 
         public TimeSpan decisionTime { get; set; }
         public TimeSpan lastDecisionTime { get; set; }
+        public TimeSpan minimumAttackTime { get; set; }
+        public TimeSpan lastAttackTime { get; set; }
         public TimeSpan reverseDecisionTime { get; set; }
         public Random randomDecisionTime { get; set; }
+
+        public TimeSpan sawBladeAttackTime { get; set; }
 
         public TimeSpan attackCheckpoint { get; set; }
         public TimeSpan attackTimeSpan { get; set; }
@@ -121,10 +125,15 @@ namespace G_Shift
             decisionTimeFlag = false;
 
             lastDecisionTime = TimeSpan.FromSeconds(0.0f);
+            lastAttackTime = TimeSpan.FromSeconds(0.0f);
+            minimumAttackTime = TimeSpan.FromSeconds(1.0f);
             reverseDecisionTime = TimeSpan.FromSeconds(1.0f);
 
+            sawBladeAttackTime = TimeSpan.FromSeconds(2.0f);
+
             randomDecisionTime = new Random();
-            decisionTime = TimeSpan.FromSeconds((float)randomDecisionTime.Next(1, 5));
+            //decisionTime = TimeSpan.FromSeconds((float)randomDecisionTime.Next(1, 5));
+            decisionTime = TimeSpan.FromSeconds(1.0f);
 
             attackCheckpoint = TimeSpan.FromSeconds(0.0f);
             attackTimeSpan = TimeSpan.FromSeconds(2.0f);
@@ -222,6 +231,7 @@ namespace G_Shift
             // attack
             if (attackFlag == true)
             {
+                
             }
 
             if (holdPosFlag == false)
@@ -229,6 +239,89 @@ namespace G_Shift
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
             }
+
+            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
+        }
+
+        //(Update v.3)
+        public void Update(GameTime gameTime)
+        {
+            ttl--;
+            position += velocity;
+
+            if (stance == Stance.Wait && gameTime.TotalGameTime - lastDecisionTime > decisionTime)
+            {
+                stance = Stance.Move;
+            }
+
+            if (stance != Stance.Wait)
+            {
+
+                // move left
+                if (moveLeftFlag == true)
+                {
+                    velocity = new Vector2(-4f, velocity.Y);
+                }
+                // move right
+                else if (moveRightFlag == true)
+                {
+                    velocity = new Vector2(4f, velocity.Y);
+                }
+                // move up
+                if (moveUpFlag == true)
+                {
+                    velocity = new Vector2(velocity.X, -4f);
+                }
+                // move down
+                else if (moveDownFlag == true)
+                {
+                    velocity = new Vector2(velocity.X, 4f);
+                }
+
+                /*
+                if (holdPosFlag == true)
+                {
+                    velocity = new Vector2(0f, 0f);
+                }
+                */
+                if (holdxPosFlag == true)
+                {
+                    velocity = new Vector2(0f, velocity.Y);
+                }
+                if (holdyPosFlag == true)
+                {
+                    velocity = new Vector2(velocity.X, 0f);
+                }
+
+                if (holdyPosFlag == true && holdxPosFlag == true)
+                {
+                    holdPosFlag = true;
+                }
+
+                // stop/hold position
+                if (holdPosFlag == true)
+                {
+                    velocity = new Vector2(0f, 0f);
+
+                    moveLeftAnimation.Update();
+                    moveRightAnimation.Update();
+                }
+
+                // attack
+                if (attackFlag == true)
+                {
+                    moveLeftAnimation.Update();
+                    moveRightAnimation.Update();
+                    lastAttackTime = gameTime.TotalGameTime;
+                }
+
+                if (holdPosFlag == false)
+                {
+                    //moveLeftAnimation.Update();
+                    //moveRightAnimation.Update();
+                }
+
+            }  // end of:  if (stance != Stance.Stunned)
 
             hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
         }

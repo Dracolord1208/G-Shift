@@ -999,10 +999,15 @@ namespace G_Shift
 
             //*********************
             // Update theBoss1
-            // 
-            //for (int i = 0; i < badGuys4.Count; i++)
+            //
+ 
+            //if()
+            //{
+            //}
+
             if (bossFlag == true)
             {
+                // load sprite sheets, setup animations
                 if (theBoss1.ContentLoadedFlag == false)
                 {
                     theBoss1.LoadContent(Content);
@@ -1010,7 +1015,7 @@ namespace G_Shift
                 }
                 theBoss1.ResetValues();
 
-
+                // Is theBoss1 positiong to the right of the Player? (or left?)
                 if (theBoss1.position.X + theBoss1.Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
                     theBoss1.isRightFlag = true;
@@ -1026,69 +1031,95 @@ namespace G_Shift
                 //*************************
                 // Simple movement rules
                 //
-                if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
+
+                if (theBoss1.stance == Boss1a.Stance.Wait && gameTime.TotalGameTime - theBoss1.lastDecisionTime > TimeSpan.FromSeconds(2f))
                 {
-                    theBoss1.holdxPosFlag = true;
-                }
-                else if (theBoss1.position.X > gMan.Position.X + gMan.Width)
-                {
-                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                    theBoss1.moveLeftFlag = true;
-                }
-                else if (theBoss1.position.X < gMan.Position.X - theBoss1.Width)
-                {
-                    theBoss1.moveRightFlag = true;
+                    theBoss1.stance = Boss1a.Stance.Move;
                 }
 
-                // Adjust Y-directional movement
-                if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                if (theBoss1.stance != Boss1a.Stance.Wait)
                 {
-                    theBoss1.holdyPosFlag = true;
-                }
-                else if (theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height + theBoss1.baseHeight)
-                {
-                    theBoss1.moveUpFlag = true;
-                }
-                else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
-                {
-                    theBoss1.moveDownFlag = true;
-                }
 
-                // go into attack stance if holding still
-                if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true)
-                {
-                    theBoss1.attackFlag = true;
-                }
-                if (theBoss1.attackFlag == true)
-                {
-                    if (theBoss1.isRightFlag == true)
+
+                    if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
                     {
-                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-                        theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-                        if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                        }
+                        theBoss1.holdxPosFlag = true;
                     }
-                    else
+                    else if (theBoss1.position.X > gMan.Position.X + gMan.Width)
                     {
-                        //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
-                        theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-
-                        if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
-                            theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                        }
+                        //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                        theBoss1.moveLeftFlag = true;
                     }
-                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
-                }
+                    else if (theBoss1.position.X < gMan.Position.X - theBoss1.Width)
+                    {
+                        theBoss1.moveRightFlag = true;
+                    }
+
+                    // Adjust Y-directional movement
+                    if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                    {
+                        theBoss1.holdyPosFlag = true;
+                    }
+                    else if (theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height + theBoss1.baseHeight)
+                    {
+                        theBoss1.moveUpFlag = true;
+                    }
+                    else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                    {
+                        theBoss1.moveDownFlag = true;
+                    }
+
+                    // go into attack stance if holding still
+                    if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true && gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime)
+                    {
+                        theBoss1.attackFlag = true;
+                        theBoss1.stance = Boss1a.Stance.Attack;
+                        theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                        theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                    }
+
+                    //if (theBoss1.attackFlag == true)
+                    if(theBoss1.stance == Boss1a.Stance.Attack)
+                    {
+                        if (theBoss1.isRightFlag == true)
+                        {
+                            //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                            theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+                            if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            {
+                                gMan.Health -= 10;
+                                gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                            }
+                        }
+                        else
+                        {
+                            //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                            theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+
+                            if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                            {
+                                gMan.Health -= 10;
+                                gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                                theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                            }
+                        }
+
+
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
+                        {
+                            theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
+
+                            theBoss1.stance = Boss1a.Stance.Wait;
+                            theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                        }
+
+                    }
+                } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
 
                 theBoss1.Update();
+                //theBoss1.Update(gameTime);
 
                 if (theBoss1.ttl <= 0 || theBoss1.health <= 0)
                 {
@@ -1262,7 +1293,8 @@ namespace G_Shift
                 //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
                 float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
 
-                float tempX = (100f);
+                //float tempX = (100f);
+                float tempX = gMan.Position.X + 500;
 
                 Vector2 startPos = new Vector2(0, 0);
             /*
@@ -1301,7 +1333,8 @@ namespace G_Shift
             {
                 Vector2 eMotion = new Vector2(0f, 0f);
 
-                float tempX = (float)badGuy2random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                //float tempX = (float)badGuy2random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                float tempX = gMan.Position.X + 500;
                 float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
 
                 Vector2 startPos = new Vector2(tempX, tempY);
@@ -1323,12 +1356,16 @@ namespace G_Shift
             //{
                 Vector2 eMotion = new Vector2(0f, 0f);
 
-                float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                //float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+                //float tempXright = (float)badGuy4random.Next((int)gMan.scrollPosition + 300, (int)gMan.scrollPosition + 350);
                 float tempXleft = (float)badGuy4random.Next(-258, -158);
                 //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
-                float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+                //float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+                float tempY = (float) theBoss1random.Next(0, SCREEN_HEIGHT - 446); // whole screen
 
-                float tempX = (400f);
+                //float tempX = (400f);
+                //float tempX = gMan.scrollPosition + 100;
+                float tempX = gMan.Position.X + 500;
 
                 Vector2 startPos = new Vector2(0, 0);
 
