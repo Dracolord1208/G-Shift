@@ -219,13 +219,13 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Galager\WALKING 2.png">
-      <Name>WALKING 2</Name>
+    <Compile Include="Galager\WALKING2.png">
+      <Name>WALKING2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Galager\WALKING 2_2.png">
-      <Name>WALKING 2_2</Name>
+    <Compile Include="Galager\WALKING2_2.png">
+      <Name>WALKING2_2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -333,6 +333,35 @@
     </Compile>
     <Compile Include="buttonRed1a.png">
       <Name>buttonRed1a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Galager\DEATH.png">
+      <Name>DEATH</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Galager\FALLANIMATON.png">
+      <Name>FALLANIMATON</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Galager\WALKINGNOGUN.png">
+      <Name>WALKINGNOGUN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Galager\WALKINGWITHGUN.png">
+      <Name>WALKINGWITHGUN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Galager\Attack1.png">
+      <Name>Attack1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
