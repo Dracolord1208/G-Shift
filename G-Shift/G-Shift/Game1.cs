@@ -267,7 +267,7 @@ namespace G_Shift
             startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 265);
             exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 315);
             //set the gamestate to start menu
-            gameState = GameState.StartMenu;
+            gameState = GameState.Playing;
             //get the mouse state
 
             base.Initialize();
@@ -433,12 +433,12 @@ namespace G_Shift
                     if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
                         currentGamePadState.DPad.Left == ButtonState.Pressed)
                     {
-                        scrollPosition -= moveFactorPerSecond;
+                      //  scrollPosition -= moveFactorPerSecond;
                     }
                     if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
                     currentGamePadState.DPad.Right == ButtonState.Pressed)
                     {
-                        scrollPosition += moveFactorPerSecond;
+                      //  scrollPosition += moveFactorPerSecond;
                     }
 
                     //      MediaPlayer.Resume();
