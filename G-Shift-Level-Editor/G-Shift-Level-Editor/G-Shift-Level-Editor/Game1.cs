@@ -22,6 +22,11 @@ namespace G_Shift_Level_Editor
 
         Vector2 topLeft, botRight;
 
+        struct BattleEvent
+        {
+            public List<float> locs;
+        }
+
         struct Item
         {
             public Vector2 loc;
@@ -49,6 +54,7 @@ namespace G_Shift_Level_Editor
         List<Item> items;
         List<Track> tracks;
         List<MenuBox> menuChoices;
+        List<BattleEvent> battleEvents;
 
         Texture2D outline;
         Texture2D pathUp;
@@ -87,6 +93,7 @@ namespace G_Shift_Level_Editor
             items = new List<Item>();
             tracks = new List<Track>();
             menuChoices = new List<MenuBox>();
+            battleEvents = new List<BattleEvent>();
 
             translation = new Vector2();
 
@@ -182,6 +189,7 @@ namespace G_Shift_Level_Editor
             }
             else
             {
+
                 if (mState.LeftButton == ButtonState.Pressed &&
                     prevMouseState.LeftButton == ButtonState.Released &&
                     topLeft.X == -1 && mState.Y > 40)
@@ -288,7 +296,7 @@ namespace G_Shift_Level_Editor
 
             foreach(Rectangle rect in mapRects)
             {
-                spriteBatch.Draw(outline, rect, Color.White);
+                spriteBatch.Draw(outline, rect, Color.Pink);
             }
 
             for(int x = 0; x < mapRects.Count-1; x++)
@@ -302,7 +310,7 @@ namespace G_Shift_Level_Editor
                     rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                     rect.Height = (int)(tracks[x].topLeft.Y - tracks[x].topRight.Y);
 
-                    spriteBatch.Draw(pathUp, rect, Color.White);
+                    spriteBatch.Draw(pathUp, rect, Color.Blue);
 
                     if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
                     {
@@ -311,7 +319,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
 
-                        spriteBatch.Draw(pathUp, rect, Color.White);
+                        spriteBatch.Draw(pathUp, rect, Color.Blue);
                     }
                     else
                     {
@@ -320,7 +328,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
 
-                        spriteBatch.Draw(pathDown, rect, Color.White);
+                        spriteBatch.Draw(pathDown, rect, Color.Blue);
                     }
                 }
                 else
@@ -330,7 +338,7 @@ namespace G_Shift_Level_Editor
                     rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                     rect.Height = (int)(tracks[x].topRight.Y - tracks[x].topLeft.Y);
 
-                    spriteBatch.Draw(pathDown, rect, Color.White);
+                    spriteBatch.Draw(pathDown, rect, Color.Blue);
 
                     if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
                     {
@@ -339,7 +347,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
 
-                        spriteBatch.Draw(pathUp, rect, Color.White);
+                        spriteBatch.Draw(pathUp, rect, Color.Blue);
                     }
                     else
                     {
@@ -348,7 +356,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
 
-                        spriteBatch.Draw(pathDown, rect, Color.White);
+                        spriteBatch.Draw(pathDown, rect, Color.Blue);
                     }
                 }
             }
