@@ -108,7 +108,7 @@ namespace G_Shift
             {
                 if (unlocked[0] == true)
                 {
-                    levelThatWasChosen = choose;
+                    levelThatWasChosen = 0;
                     selected = false;
                 }
             }
@@ -116,7 +116,7 @@ namespace G_Shift
             {
                 if (unlocked[1] == true)
                 {
-                    levelThatWasChosen = choose;
+                    levelThatWasChosen = 1;
                     selected = false;
                 }
             }
@@ -124,7 +124,7 @@ namespace G_Shift
             {
                 if (unlocked[2] == true)
                 {
-                    levelThatWasChosen = choose;
+                    levelThatWasChosen = 2;
                     selected = false;
                 }
             }
@@ -132,7 +132,7 @@ namespace G_Shift
             {
                 if (unlocked[3] == true)
                 {
-                    levelThatWasChosen = choose;
+                    levelThatWasChosen = 3;
                     selected = false;
                 }
             }
