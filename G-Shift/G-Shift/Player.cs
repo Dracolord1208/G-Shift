@@ -94,7 +94,7 @@ namespace G_Shift
         bool gun;
         TimeSpan fireTime;
         TimeSpan previousFireTime;
-        int elapsedTime;
+        int elapsedTime=0;
         public Vector2 galPosition;//= new Vector2((int)Position.X - 85, (int)Position.Y - 200);
         public Rectangle hitBox;
         //public Rectangle hitbox { get; set; }
@@ -215,7 +215,7 @@ namespace G_Shift
             //  currentKeyboardState=   Keyboard.GetState();
             // Move background texture 400 pixels each second 
             StanceMoves(gameTime);
-            playerStance = Stance.Standing;
+           
             motion = new Vector2(0, 0);
             Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
             Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
@@ -396,7 +396,98 @@ namespace G_Shift
 
         }
         public void StanceMoves(GameTime gameTime)
-        { }
+        { 
+               ADeathLeft.Update(gameTime);
+            ADeathRight.Update(gameTime);
+            AFallLeft.Update(gameTime);
+            AFallRight.Update(gameTime);
+            ALifeLeft.Update(gameTime);
+            ALifeRight.Update(gameTime);
+            ARiseRight.Update(gameTime);
+            ARiseLeft.Update(gameTime);
+            if (facing)
+            {
+                if (playerStance == Stance.Standing)
+                            {
+                                AStillleft.Update(gameTime);
+                            }
+                            if (playerStance == Stance.Right||playerStance==Stance.moving)
+                            {
+                                if (gun)
+                                {
+                                  AWalkGunRight.Update(gameTime);
+                                    
+                                }
+                                else
+                                {
+                                    AWalkNoGunRight.Update(gameTime);
+                                   
+                                }
+                            }
+                            if (playerStance == Stance.lightAttack)
+                            {
+                            } 
+                            if (playerStance == Stance.hurt)
+                            {
+                            }
+                            if (playerStance == Stance.heavyAttack)
+                            {
+                                 AAttack1Right.Update(gameTime);
+                              
+                            }
+                            if (fire == false)
+                                playerStance = Stance.Standing;
+                //ADeathRight.Draw(spriteBatch, depth);
+                //AFallRight.Draw(spriteBatch, depth);
+                //ALifeRight.Draw(spriteBatch, depth);
+                //ARiseRight.Draw(spriteBatch, depth);
+                            //playerStance = Stance.Standing;
+                
+            }
+            else
+            {
+                if (playerStance == Stance.Standing)
+                {
+                     AStillRight.Update(gameTime);
+                }
+                if (playerStance == Stance.Left||playerStance==Stance.moving)
+                {
+                    if (gun)
+                    {
+                        AWalkGunLeft.Update(gameTime);
+           
+                      
+                    }
+                    else
+                    {
+                        AWalkNoGunLeft.Update(gameTime);
+                    }
+                }
+                
+                if (playerStance == Stance.lightAttack)
+                {
+                }
+                if (playerStance == Stance.hurt)
+                {
+                }
+                if (playerStance == Stance.heavyAttack||fire==true)
+                {
+                        AAttack1Left.Update(gameTime);
+                }
+               if(fire==false)
+                   playerStance = Stance.Standing;
+                //AStillleft.Draw(spriteBatch, depth);
+                //ALifeLeft.Draw(spriteBatch, depth);
+                //AFallLeft.Draw(spriteBatch, depth);
+                //ADeathLeft.Draw(spriteBatch, depth);
+                //ARiseLeft.Draw(spriteBatch, depth);
+
+
+               // playerStance = Stance.Standing;
+                
+            }
+            
+        }
         //public void StanceMoves(GameTime gameTime)
         //{
         //        if (playerStance == Stance.Standing)

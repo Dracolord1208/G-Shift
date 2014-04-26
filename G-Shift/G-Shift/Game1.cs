@@ -28,7 +28,8 @@ namespace G_Shift
             EndMenu,
             Playing,
             leveledup,
-            Paused
+            Paused,
+            levelSelect
         }
         // Keyboard states used to determine key presses
         KeyboardState currentKeyboardState;
@@ -37,9 +38,6 @@ namespace G_Shift
         Texture2D levelupTexture;
         Texture2D EndMenuTexture;
         private Texture2D startButton;
-        private Texture2D exitButton;
-        private Texture2D pauseButton;
-        private Texture2D resumeButton;
         private Texture2D loadingScreen;
         private Thread backgroundThread;
         private Thread levelThread;
@@ -65,6 +63,7 @@ namespace G_Shift
         MouseState mouseState;
         MouseState previousMouseState;
         SpriteFont font;
+        SpriteFont font1;
         private bool paused = false;
         private bool pauseKeyDown = false;
         private bool pausedForGuide = false;
@@ -101,7 +100,7 @@ namespace G_Shift
      //   private SpriteFont font;
         //private int score = 0;
        //private int lives = 3;
-
+        Texture2D badge;
         public Texture2D backgroundTexture;
         public Texture2D backgroundTexture2;
         public float scrollPosition = 0;
@@ -143,13 +142,14 @@ namespace G_Shift
         //public TimeSpan theBoss1checkpoint;
         public Random theBoss1random;
         public bool bossFlag;   // if Boss exists or not
-
+        Texture2D exitButton;
         //Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle hitbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
+        LevelSelect levelselectclass;
 
         public Game1()
         {
@@ -262,12 +262,15 @@ namespace G_Shift
             //theBoss1 = new Boss1a();
             theBoss1random = new Random();
             bossFlag = false;
-
+            int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
+            int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
+            levelselectclass = new LevelSelect();
+            levelselectclass.Initialize(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 265);
             exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 315);
             //set the gamestate to start menu
-            gameState = GameState.Playing;
+            gameState = GameState.StartMenu;
             //get the mouse state
 
             base.Initialize();
@@ -290,14 +293,16 @@ namespace G_Shift
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
-
+            exitButton = Content.Load<Texture2D>("exit1");
+            badge = Content.Load<Texture2D>("US_Park_Police_badge");
             // Load the player resources
             projectileTexture = Content.Load<Texture2D>("laser");
             // Load the score font
+            font1 = Content.Load<SpriteFont>("gameFont_2");
             font = Content.Load<SpriteFont>("gameFont");
             // Load the laser and explosion sound effect
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
-
+            levelselectclass.LoadCont(exitButton,font1,badge);
             /*
             enemyATexture = Content.Load<Texture2D>("gunEnemy 1a");
             enemyBTexture = Content.Load<Texture2D>("gunEnemy 2a");
@@ -502,11 +507,11 @@ namespace G_Shift
             if (gameState == GameState.StartMenu)
             {
                 //check the startmenu
-                if ((currentKeyboardState.IsKeyDown(Keys.Space) || currentKeyboardState.IsKeyDown(Keys.Enter) ||
+                if ((currentKeyboardState.IsKeyDown(Keys.Space) || 
                 currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
                 {
-                    gameState = GameState.Loading;
-                    isLoading = false;
+                    gameState = GameState.levelSelect;
+                    
                 }
                 else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
                 currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
@@ -532,6 +537,16 @@ namespace G_Shift
             //}
 
 
+            if (gameState == GameState.levelSelect)
+            {
+                levelselectclass.Update(gameTime,currentKeyboardState, previousKeyboardState);
+                if (levelselectclass.selected == false)
+                {
+                    gameState = GameState.Loading;
+                    isLoading = false;
+                }
+            }
+
 
 
 
@@ -550,7 +565,7 @@ namespace G_Shift
                 Rectangle exitButtonRect = new Rectangle((int)exitButtonPosition.X, (int)exitButtonPosition.Y, 100, 20);
                 if ((mouseClickRect.Intersects(startButtonRect))) //player clicked start button
                 {
-                    gameState = GameState.Loading;
+                    gameState = GameState.levelSelect;
                     isLoading = false;
                 }
                 else if (mouseClickRect.Intersects(exitButtonRect)) //player clicked exit button
@@ -1525,7 +1540,8 @@ namespace G_Shift
 
                 spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
             }
-
+            if (gameState == GameState.levelSelect)
+                levelselectclass.Draw(spriteBatch);
 
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);
