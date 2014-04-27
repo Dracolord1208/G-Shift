@@ -64,6 +64,8 @@ namespace G_Shift
         MouseState previousMouseState;
         SpriteFont font;
         SpriteFont font1;
+        Texture2D explosionTexture;
+        List<Animation> explosions;
         private bool paused = false;
         private bool pauseKeyDown = false;
         private bool pausedForGuide = false;
@@ -175,7 +177,7 @@ namespace G_Shift
             level = new World(0, Content);
 
             allItems = new List<Item>();
-
+            explosions = new List<Animation>();
             for (int i = 0; i < level.getForUpdate().Count; i++)
             {
                 allItems.Add(level.getForUpdate()[i]);
@@ -309,7 +311,9 @@ namespace G_Shift
             enemy2bTexture = Content.Load<Texture2D>("gunEnemy 2b");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
             */
+            explosionTexture = Content.Load<Texture2D>("explosion");
 
+            
             enemyATexture = Content.Load<Texture2D>("smallRobot1a");
             enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
@@ -474,7 +478,7 @@ namespace G_Shift
                     // Update the projectiles
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
-
+                    UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
 
                     //spawnEnemies(gameTime);
@@ -983,6 +987,7 @@ namespace G_Shift
                         if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
+                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
                         }
@@ -995,6 +1000,8 @@ namespace G_Shift
                         if (badGuys4[i].attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
+                          //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
+                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
@@ -1150,7 +1157,31 @@ namespace G_Shift
                 }
             }
         }
+        private void AddExplosion(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(explosionTexture, position, 134, 134, 12, 45, Color.White, 1f, false);
+            explosions.Add(explosion);
+        }
+        private void AddSmallExplosion(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(explosionTexture, position, 134, 134, 12, 45, Color.White, .5f, false);
+            explosions.Add(explosion);
+        }
+        private void UpdateExplosions(GameTime gameTime)
+        {
+            for (int i = explosions.Count - 1; i >= 0; i--)
+            {
+                explosions[i].Update(gameTime);
+                if (explosions[i].Active == false)
+                {
+                    explosions.RemoveAt(i);
+                }
 
+
+            }
+        }
         private void UpdateCollision()
         {
             // Use the Rectangle's built-in intersect function to 
@@ -1513,6 +1544,10 @@ namespace G_Shift
                 }
 
                 gMan.Draw(spriteBatch, .5f);
+                for (int i = 0; i < explosions.Count; i++)
+                {
+                    explosions[i].Draw(spriteBatch,.6f);
+                }
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
