@@ -35,6 +35,7 @@ namespace G_Shift
 
         public int ttl { get; set; }
         public int health { get; set; }
+        public int maxHealth { get; set; }
         public int depth { get; set; }
 
         public bool jumpFlag { get; set; }
@@ -54,6 +55,12 @@ namespace G_Shift
         public TimeSpan lastAttackTime { get; set; }
         public TimeSpan reverseDecisionTime { get; set; }
         public Random randomDecisionTime { get; set; }
+
+        public TimeSpan turnAroundCheckpoint { get; set; }
+        public TimeSpan turnAroundTime { get; set; }
+        public bool turnAroundFlag { get; set; }
+        public TimeSpan onRightCheckpoint { get; set; }
+        public TimeSpan onLeftCheckpoint { get; set; }
 
         public TimeSpan sawBladeAttackTime { get; set; }
 
@@ -83,26 +90,37 @@ namespace G_Shift
         public bool ContentLoadedFlag { get; set; }
         
         public Texture2D spriteSheet;
-        private AnimatedSprite moveAnimation;
+        //private AnimatedSprite moveAnimation;
 
         public Texture2D spriteSheetmoveRight;
         public Texture2D spriteSheetmoveLeft;
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
 
+        //Vector2 home;
+        public Vector2 laserStartPos { get; set; }
+        public Vector2 laserPos { get; set; }
+        public Rectangle laserBeam { get; set; }
+        public bool laserOn { get; set; }
+        public int laserPosX { get; set; }
+        public float laserWidth { get; set; }
+        public float laserHeight { get; set; }
+
         public enum Stance
         {
             Wait,
             Move,
             Attack,
-            Stunned
+            Stunned,
+            ReturnHome
         }
         public Stance stance { get; set; }
 
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            health = 10;
+            health = 500;
+            maxHealth = 500;
             Height = height;
             Width = width;
             startPosition = pos;
@@ -117,7 +135,8 @@ namespace G_Shift
             color = new Color(255, 100, 100);
             //ttl = 160;
             //ttl = 320;
-            ttl = 960;
+            //ttl = 960;
+            ttl = 1920;
 
             jumpFlag = false;
             gravity = 10f;
@@ -137,6 +156,12 @@ namespace G_Shift
 
             attackCheckpoint = TimeSpan.FromSeconds(0.0f);
             attackTimeSpan = TimeSpan.FromSeconds(2.0f);
+
+            turnAroundCheckpoint = TimeSpan.FromSeconds(0.0f);
+            turnAroundTime = TimeSpan.FromSeconds(1.5f);
+            turnAroundFlag = false;
+            onRightCheckpoint = TimeSpan.FromSeconds(0.0f);
+            onLeftCheckpoint = TimeSpan.FromSeconds(0.0f);
 
             moveLeftFlag = false;
             moveRightFlag = false;
@@ -161,6 +186,16 @@ namespace G_Shift
 
             //stance = Stance.Wait;
             stance = Stance.Move;
+
+            //home = new Vector2();
+            laserStartPos = new Vector2(pos.X + 50, pos.Y + 50);
+            laserPos = new Vector2(pos.X + 50, pos.Y + 50);
+            laserBeam = new Rectangle((int)laserPos.X, (int)laserPos.Y, 10, 20);
+            laserOn = false;
+            laserPosX = (int)laserStartPos.X;
+            laserWidth = 0;
+            laserHeight = 20;
+            //laserBeam = new Rectangle(500, 25, theBoss1.health, 20);
         }
 
         public void LoadContent(ContentManager content)
@@ -173,11 +208,13 @@ namespace G_Shift
             moveRightAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
         }
 
-        //(Update v.2)
+        //
         public void Update()
         {
             ttl--;
             position += velocity;
+
+            laserStartPos = new Vector2(position.X + 150, position.Y + 150);
 
             // move left
             if (moveLeftFlag == true)
@@ -248,10 +285,12 @@ namespace G_Shift
             }
 
             // attack
+            /*
             if (attackFlag == true)
             {
                 
             }
+            */
 
             if(stance == Stance.Attack)
             {
@@ -268,7 +307,7 @@ namespace G_Shift
             hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
         }
 
-        //(Update v.3)
+        // not being used.. yet
         public void Update(GameTime gameTime)
         {
             ttl--;
