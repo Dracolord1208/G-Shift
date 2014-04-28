@@ -116,9 +116,9 @@ namespace G_Shift
             RiseRight = content.Load<Texture2D>("Galager/LIFTANIMATONright");
             RiseLeft = content.Load<Texture2D>("Galager/LIFTANIMATON");
             WalkNoGunLeft = content.Load<Texture2D>("Galager/WALKINGNOGUN");
-            WalkNoGunRight = content.Load<Texture2D>("Galager/WALKINGNOGUNRight");
+            WalkNoGunRight = content.Load<Texture2D>("Galager/WALKINGNOGUNRight1");
             WalkGunLeft = content.Load<Texture2D>("Galager/WALKINGWITHGUN");
-            WalkGunRight = content.Load<Texture2D>("Galager/WALKINGWITHGUNRight");
+            WalkGunRight = content.Load<Texture2D>("Galager/WALKINGWITHGUNRight1");
             AAttack1Right.Initialize(Attack1Left, galPosition, 225, 250, 8, 90, Color.White, 1f, true);
             AAttack1Left.Initialize(Attack1Right, galPosition, 225, 250, 8, 90, Color.White, 1f, true);
             ADeathLeft.Initialize(DeathRight, galPosition, 225, 250, 8, 60, Color.White, 1f, true);
