@@ -167,8 +167,8 @@ namespace G_Shift
 
           //  PlayerAnimation = playerAnimation;
             // Set the player health
-            maxHealth = 100;
-            Health = 100;
+            maxHealth = 500;
+            Health = 500;
             canMoveUp = true;
             canMoveDown = true;
             hitBox = new Rectangle((int)Position.X - 100, (int)Position.Y - 30, 200, 50);

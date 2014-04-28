@@ -185,7 +185,7 @@ namespace G_Shift
                 if(stance == Stance.Attack)
                     velocity = new Vector2(-2f, velocity.Y);
                 else
-                    velocity = new Vector2(-4f, velocity.Y);
+                    velocity = new Vector2(-2f, velocity.Y);
             }
             // move right
             else if (moveRightFlag == true)
@@ -195,7 +195,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(2f, velocity.Y);
                 else
-                    velocity = new Vector2(4f, velocity.Y);
+                    velocity = new Vector2(2f, velocity.Y);
             }
             // move up
             if (moveUpFlag == true)
@@ -205,7 +205,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(velocity.X, -2f);
                 else
-                    velocity = new Vector2(velocity.X, -4f);
+                    velocity = new Vector2(velocity.X, -2f);
             }
             // move down
             else if (moveDownFlag == true)
@@ -215,7 +215,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(velocity.X, 2f);
                 else
-                    velocity = new Vector2(velocity.X, 4f);
+                    velocity = new Vector2(velocity.X, 2f);
             }
 
             /*
