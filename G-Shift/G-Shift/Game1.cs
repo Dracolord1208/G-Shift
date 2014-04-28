@@ -73,6 +73,8 @@ namespace G_Shift
         bool isLoading;
         bool finishend ;
         bool endbool;
+        public bool translate = true;
+        public Vector2 translation;
         //Interactable gMan;
         Texture2D gManTest;
         Texture2D gManTexture;
@@ -1614,10 +1616,14 @@ namespace G_Shift
             {
                 spriteBatch.End();
 
-                Vector2 translation = gMan.Position - gMan.StartPosition;
+                if(translate)
+                    translation = gMan.Position - gMan.StartPosition;
+                
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
-             spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+                
+                spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
+                
                 spriteBatch.End();
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
