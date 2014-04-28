@@ -99,7 +99,9 @@ namespace G_Shift
 
         //Vector2 home;
         public Vector2 laserStartPos { get; set; }
-        public Vector2 laserPos { get; set; }
+        public Vector2 laserStartScreenPos { get; set; }    // scrolling
+        public Vector2 laserCurrentPos { get; set; }
+        public Vector2 laserCurrentScreenPos { get; set; }  // updated for scrolling
         public Rectangle laserBeam { get; set; }
         public bool laserOn { get; set; }
         public int laserPosX { get; set; }
@@ -189,8 +191,8 @@ namespace G_Shift
 
             //home = new Vector2();
             laserStartPos = new Vector2(pos.X + 50, pos.Y + 50);
-            laserPos = new Vector2(pos.X + 50, pos.Y + 50);
-            laserBeam = new Rectangle((int)laserPos.X, (int)laserPos.Y, 10, 20);
+            laserCurrentPos = new Vector2(pos.X + 50, pos.Y + 50);
+            laserBeam = new Rectangle((int)laserCurrentPos.X, (int)laserCurrentPos.Y, 10, 20);
             laserOn = false;
             laserPosX = (int)laserStartPos.X;
             laserWidth = 0;

@@ -1693,7 +1693,12 @@ namespace G_Shift
 
                     if (theBoss1.laserOn == true)
                     {
+                        /*
+                        theBoss1.laserScreenPos = new Vector2(theBoss1.laserStartPos.X - translation.X, theBoss1.laserStartPos.Y);
+                        //theBoss1.laserPosX = (int)theBoss1.laserStartPos.X;   // may have to update based on screenPos
+                        theBoss1.laserBeam = new Rectangle((int)(theBoss1.laserPosX - translation.X), (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
                         spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Aquamarine);
+                        */
                     }
                 }
                 
