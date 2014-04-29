@@ -157,6 +157,13 @@ namespace G_Shift
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
         LevelSelect levelselectclass;
+        Song punch1;
+        Song punch2;
+        Song punch3;
+        Song timeBomb;
+        Song menuMusic;
+        Song gameMusic;
+        bool playSong;
 
         public Game1()
         {
@@ -337,8 +344,14 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-
-
+            punch1 = Content.Load<Song>("Music/weakpunch_1");
+            punch2 = Content.Load<Song>("Music/weakpunch_2");
+            punch3 = Content.Load<Song>("Music/weakpunch_3");
+            timeBomb = Content.Load<Song>("Music/TickingTimeBomb");
+            menuMusic = Content.Load<Song>("Music/MenuBackground");
+            gameMusic = Content.Load<Song>("Music/BattleBackground");
+            PlayMusic(menuMusic);
+            
         }
 
         /// <summary>
@@ -446,8 +459,14 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
+            if (playSong == true)
+            {
+                PlayMusic(gameMusic);
+            }
+
             if (gameState == GameState.Playing)
             {
+
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
@@ -461,7 +480,8 @@ namespace G_Shift
                     {
                       //  scrollPosition += moveFactorPerSecond;
                     }
-
+                    playSong = true;
+                
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -573,6 +593,7 @@ namespace G_Shift
                 if (levelselectclass.selected == false)
                 {
                     gameState = GameState.Loading;
+                    stopMusic();
                     isLoading = false;
                 }
             }
@@ -1498,6 +1519,23 @@ namespace G_Shift
 
             }
         }
+
+        private void PlayMusic(Song song)
+        {
+            // Due to the way the MediaPlayer plays music,
+            // we have to catch the exception. Music will play when the game is not tethered
+            try
+            {
+                // Play the music
+                MediaPlayer.Play(song);
+
+                // Loop the currently playing song
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
+
+
         private void UpdateCollision()
         {
             // Use the Rectangle's built-in intersect function to 
@@ -1561,7 +1599,10 @@ namespace G_Shift
                     }
                 }            
         }
-
+        public void stopMusic()
+        {
+            MediaPlayer.Stop();
+        }
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
