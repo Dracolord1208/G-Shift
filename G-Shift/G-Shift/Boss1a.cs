@@ -104,9 +104,14 @@ namespace G_Shift
         public Vector2 laserCurrentScreenPos { get; set; }  // updated for scrolling
         public Rectangle laserBeam { get; set; }
         public bool laserOn { get; set; }
-        public int laserPosX { get; set; }
+        public int laserCurrentPosX { get; set; }
         public float laserWidth { get; set; }
         public float laserHeight { get; set; }
+
+        public bool healthHigh;
+        public bool healthMed;
+        public bool healthLow;
+        public bool velocityChanged;
 
         public enum Stance
         {
@@ -121,7 +126,8 @@ namespace G_Shift
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            health = 500;
+            //health = 500;
+            health = 160;
             maxHealth = 500;
             Height = height;
             Width = width;
@@ -190,14 +196,19 @@ namespace G_Shift
             stance = Stance.Move;
 
             //home = new Vector2();
-            laserStartPos = new Vector2(pos.X + 50, pos.Y + 50);
-            laserCurrentPos = new Vector2(pos.X + 50, pos.Y + 50);
+            laserStartPos = new Vector2(pos.X + 150, pos.Y + 150);
+            laserCurrentPos = new Vector2(pos.X + 150, pos.Y + 150);
             laserBeam = new Rectangle((int)laserCurrentPos.X, (int)laserCurrentPos.Y, 10, 20);
             laserOn = false;
-            laserPosX = (int)laserStartPos.X;
+            laserCurrentPosX = (int)laserStartPos.X;
             laserWidth = 0;
             laserHeight = 20;
             //laserBeam = new Rectangle(500, 25, theBoss1.health, 20);
+
+            healthHigh = true;
+            healthMed = false;
+            healthLow = false;
+            velocityChanged = false;  // used for changing movement behavior when healthLow == true
         }
 
         public void LoadContent(ContentManager content)
@@ -216,7 +227,27 @@ namespace G_Shift
             ttl--;
             position += velocity;
 
+            if (health >= maxHealth * .66f)
+            {
+                healthHigh = true;
+                healthMed = false;
+                healthLow = false;
+            }
+            else if (health < maxHealth * .33f)
+            {
+                healthHigh = false;
+                healthMed = false;
+                healthLow = true;
+            }
+            else
+            {
+                healthHigh = false;
+                healthMed = true;
+                healthLow = false;
+            }
+
             laserStartPos = new Vector2(position.X + 150, position.Y + 150);
+            //laserCurrentPosX = (int)laserStartPos.X;
 
             // move left
             if (moveLeftFlag == true)
@@ -306,7 +337,7 @@ namespace G_Shift
                 //moveRightAnimation.Update();
             }
 
-            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
+            hitBox = new Rectangle((int)position.X+50, (int)position.Y, Width-100, Height);
         }
 
         // not being used.. yet
