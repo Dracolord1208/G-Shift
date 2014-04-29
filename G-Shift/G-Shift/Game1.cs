@@ -1870,10 +1870,13 @@ namespace G_Shift
             if (gameState == GameState.Playing)
             {
                 spriteBatch.End();
+                Vector2 translation = gMan.Position - gMan.StartPosition;
 
-                if(translate)
-                    translation = gMan.Position - gMan.StartPosition;
-                
+
+                //if (translate)
+                //{
+                //    translation = gMan.Position - gMan.StartPosition;
+                //}
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
                 
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
