@@ -41,6 +41,7 @@ namespace G_Shift
         bool turnNinetyDegrees;
         bool offScreen;
         bool charDirection;
+        bool inAir;
         int throwCount;
         Vector2 speed;
 
@@ -82,6 +83,7 @@ namespace G_Shift
             //turnNinetyDegrees = false;
             offScreen = false;
             charDirection = false;
+            inAir = false;
             throwCount = 0;
 
             speed = new Vector2(10, 20);
@@ -163,11 +165,20 @@ namespace G_Shift
                     throwable.Name = "barrel2";
                 }
 
-                throwableHitbox.X = (int)gMan.Position.X + 10;
-                throwableHitbox.Y = (int)gMan.Position.Y - 300;
-                pickedUp = true;
-                spacePressed = false;
-                stillIntersects = true;
+                if (throwable.Name.CompareTo("BOXLARGE1") == 0)
+                {
+                    gMan.Position.X = throwableHitbox.X;
+                    gMan.Position.Y = throwableHitbox.Y;
+                }
+                else
+                {
+                    throwableHitbox.X = (int)gMan.Position.X + 10;
+                    throwableHitbox.Y = (int)gMan.Position.Y - 300;
+                    pickedUp = true;
+                    spacePressed = false;
+                    stillIntersects = true;
+                    inAir = false;
+                }
                 //}
 
 
@@ -182,10 +193,13 @@ namespace G_Shift
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                goUp = true;
-                stillIntersects = false;
-                spacePressed = true;
-                charDirection = gMan.getDirection();
+                if (throwable.Name.CompareTo("BOXLARGE1") != 0)
+                {
+                    goUp = true;
+                    stillIntersects = false;
+                    spacePressed = true;
+                    charDirection = gMan.getDirection();
+                }
             }
 
             if (goUp && pickedUp && spacePressed)
@@ -210,6 +224,8 @@ namespace G_Shift
                         //inIfStatement = true;
                         speed.Y--;
                     }
+
+                    inAir = true;
                 }
                 else
                 {
@@ -239,13 +255,16 @@ namespace G_Shift
                         //throwableHitbox.X += (int)speed.X;
                         //throwableHitbox.Y += (int)speed.Y;
                         //speed.Y++;
+                        inAir = true;
                     }
                     else
                     {
                         goUp = false;
                         pickedUp = false;
                         spacePressed = false;
+                        inAir = false;
                         throwCount++;
+                        speed.Y = 20;
                     }
 
                     //if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)

@@ -35,6 +35,7 @@ namespace G_Shift
 
         public int ttl { get; set; }
         public int health { get; set; }
+        public int maxHealth { get; set; }
         public int depth { get; set; }
 
         public bool jumpFlag { get; set; }
@@ -54,6 +55,12 @@ namespace G_Shift
         public TimeSpan lastAttackTime { get; set; }
         public TimeSpan reverseDecisionTime { get; set; }
         public Random randomDecisionTime { get; set; }
+
+        public TimeSpan turnAroundCheckpoint { get; set; }
+        public TimeSpan turnAroundTime { get; set; }
+        public bool turnAroundFlag { get; set; }
+        public TimeSpan onRightCheckpoint { get; set; }
+        public TimeSpan onLeftCheckpoint { get; set; }
 
         public TimeSpan sawBladeAttackTime { get; set; }
 
@@ -83,26 +90,45 @@ namespace G_Shift
         public bool ContentLoadedFlag { get; set; }
         
         public Texture2D spriteSheet;
-        private AnimatedSprite moveAnimation;
+        //private AnimatedSprite moveAnimation;
 
         public Texture2D spriteSheetmoveRight;
         public Texture2D spriteSheetmoveLeft;
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
 
+        //Vector2 home;
+        public Vector2 laserStartPos { get; set; }
+        public Vector2 laserStartScreenPos { get; set; }    // scrolling
+        public Vector2 laserCurrentPos { get; set; }
+        public Vector2 laserCurrentScreenPos { get; set; }  // updated for scrolling
+        public Rectangle laserBeam { get; set; }
+        public bool laserOn { get; set; }
+        public int laserCurrentPosX { get; set; }
+        public float laserWidth { get; set; }
+        public float laserHeight { get; set; }
+
+        public bool healthHigh;
+        public bool healthMed;
+        public bool healthLow;
+        public bool velocityChanged;
+
         public enum Stance
         {
             Wait,
             Move,
             Attack,
-            Stunned
+            Stunned,
+            ReturnHome
         }
         public Stance stance { get; set; }
 
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            health = 10;
+            //health = 500;
+            health = 160;
+            maxHealth = 500;
             Height = height;
             Width = width;
             startPosition = pos;
@@ -117,7 +143,8 @@ namespace G_Shift
             color = new Color(255, 100, 100);
             //ttl = 160;
             //ttl = 320;
-            ttl = 960;
+            //ttl = 960;
+            ttl = 1920;
 
             jumpFlag = false;
             gravity = 10f;
@@ -137,6 +164,12 @@ namespace G_Shift
 
             attackCheckpoint = TimeSpan.FromSeconds(0.0f);
             attackTimeSpan = TimeSpan.FromSeconds(2.0f);
+
+            turnAroundCheckpoint = TimeSpan.FromSeconds(0.0f);
+            turnAroundTime = TimeSpan.FromSeconds(1.5f);
+            turnAroundFlag = false;
+            onRightCheckpoint = TimeSpan.FromSeconds(0.0f);
+            onLeftCheckpoint = TimeSpan.FromSeconds(0.0f);
 
             moveLeftFlag = false;
             moveRightFlag = false;
@@ -161,6 +194,21 @@ namespace G_Shift
 
             //stance = Stance.Wait;
             stance = Stance.Move;
+
+            //home = new Vector2();
+            laserStartPos = new Vector2(pos.X + 150, pos.Y + 150);
+            laserCurrentPos = new Vector2(pos.X + 150, pos.Y + 150);
+            laserBeam = new Rectangle((int)laserCurrentPos.X, (int)laserCurrentPos.Y, 10, 20);
+            laserOn = false;
+            laserCurrentPosX = (int)laserStartPos.X;
+            laserWidth = 0;
+            laserHeight = 20;
+            //laserBeam = new Rectangle(500, 25, theBoss1.health, 20);
+
+            healthHigh = true;
+            healthMed = false;
+            healthLow = false;
+            velocityChanged = false;  // used for changing movement behavior when healthLow == true
         }
 
         public void LoadContent(ContentManager content)
@@ -173,11 +221,33 @@ namespace G_Shift
             moveRightAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
         }
 
-        //(Update v.2)
+        //
         public void Update()
         {
             ttl--;
             position += velocity;
+
+            if (health >= maxHealth * .66f)
+            {
+                healthHigh = true;
+                healthMed = false;
+                healthLow = false;
+            }
+            else if (health < maxHealth * .33f)
+            {
+                healthHigh = false;
+                healthMed = false;
+                healthLow = true;
+            }
+            else
+            {
+                healthHigh = false;
+                healthMed = true;
+                healthLow = false;
+            }
+
+            laserStartPos = new Vector2(position.X + 150, position.Y + 150);
+            //laserCurrentPosX = (int)laserStartPos.X;
 
             // move left
             if (moveLeftFlag == true)
@@ -185,7 +255,7 @@ namespace G_Shift
                 if(stance == Stance.Attack)
                     velocity = new Vector2(-2f, velocity.Y);
                 else
-                    velocity = new Vector2(-4f, velocity.Y);
+                    velocity = new Vector2(-2f, velocity.Y);
             }
             // move right
             else if (moveRightFlag == true)
@@ -195,7 +265,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(2f, velocity.Y);
                 else
-                    velocity = new Vector2(4f, velocity.Y);
+                    velocity = new Vector2(2f, velocity.Y);
             }
             // move up
             if (moveUpFlag == true)
@@ -205,7 +275,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(velocity.X, -2f);
                 else
-                    velocity = new Vector2(velocity.X, -4f);
+                    velocity = new Vector2(velocity.X, -2f);
             }
             // move down
             else if (moveDownFlag == true)
@@ -215,7 +285,7 @@ namespace G_Shift
                 if (stance == Stance.Attack)
                     velocity = new Vector2(velocity.X, 2f);
                 else
-                    velocity = new Vector2(velocity.X, 4f);
+                    velocity = new Vector2(velocity.X, 2f);
             }
 
             /*
@@ -248,10 +318,12 @@ namespace G_Shift
             }
 
             // attack
+            /*
             if (attackFlag == true)
             {
                 
             }
+            */
 
             if(stance == Stance.Attack)
             {
@@ -265,10 +337,10 @@ namespace G_Shift
                 //moveRightAnimation.Update();
             }
 
-            hitBox = new Rectangle((int)position.X, (int)position.Y, Width, Height);
+            hitBox = new Rectangle((int)position.X+50, (int)position.Y, Width-100, Height);
         }
 
-        //(Update v.3)
+        // not being used.. yet
         public void Update(GameTime gameTime)
         {
             ttl--;

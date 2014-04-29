@@ -194,7 +194,7 @@ namespace G_Shift
             // move left
             if (moveLeftFlag == true)
             {
-                velocity = new Vector2(-4f, velocity.Y);
+                velocity = new Vector2(-3f, velocity.Y);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -202,7 +202,7 @@ namespace G_Shift
             // move right
             else if (moveRightFlag == true)
             {
-                velocity = new Vector2(4f, velocity.Y);
+                velocity = new Vector2(3f, velocity.Y);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -210,7 +210,7 @@ namespace G_Shift
             // move up
             if (moveUpFlag == true)
             {
-                velocity = new Vector2(velocity.X, -4f);
+                velocity = new Vector2(velocity.X, -3f);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -218,7 +218,7 @@ namespace G_Shift
             // move down
             else if (moveDownFlag == true)
             {
-                velocity = new Vector2(velocity.X, 4f);
+                velocity = new Vector2(velocity.X, 3f);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();

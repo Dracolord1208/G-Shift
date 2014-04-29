@@ -28,7 +28,8 @@ namespace G_Shift
             EndMenu,
             Playing,
             leveledup,
-            Paused
+            Paused,
+            levelSelect
         }
         // Keyboard states used to determine key presses
         KeyboardState currentKeyboardState;
@@ -37,9 +38,6 @@ namespace G_Shift
         Texture2D levelupTexture;
         Texture2D EndMenuTexture;
         private Texture2D startButton;
-        private Texture2D exitButton;
-        private Texture2D pauseButton;
-        private Texture2D resumeButton;
         private Texture2D loadingScreen;
         private Thread backgroundThread;
         private Thread levelThread;
@@ -52,7 +50,6 @@ namespace G_Shift
         GamePadState currentGamePadState;
         GamePadState previousGamePadState;
         Texture2D enemyTexture;
-        List<enemy> enemies;
         TimeSpan enemySpawnTime;
         TimeSpan previousSpawnTime;
         Random random;
@@ -65,6 +62,9 @@ namespace G_Shift
         MouseState mouseState;
         MouseState previousMouseState;
         SpriteFont font;
+        SpriteFont font1;
+        Texture2D explosionTexture;
+        List<Animation> explosions;
         private bool paused = false;
         private bool pauseKeyDown = false;
         private bool pausedForGuide = false;
@@ -72,6 +72,8 @@ namespace G_Shift
         bool isLoading;
         bool finishend ;
         bool endbool;
+        public bool translate = true;
+        public Vector2 translation;
         //Interactable gMan;
         Texture2D gManTest;
         Texture2D gManTexture;
@@ -93,6 +95,7 @@ namespace G_Shift
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
         Rectangle healthRectange;
+        Rectangle fullHealthRect;
         Rectangle dgs;
         //private Texture2D backgroundTexture;
 
@@ -101,7 +104,7 @@ namespace G_Shift
      //   private SpriteFont font;
         //private int score = 0;
        //private int lives = 3;
-
+        Texture2D badge;
         public Texture2D backgroundTexture;
         public Texture2D backgroundTexture2;
         public float scrollPosition = 0;
@@ -139,17 +142,28 @@ namespace G_Shift
         public Random badGuy4random;
 
         public Boss1a theBoss1;
+        public Vector2 boss1HomePoint;
+        public Rectangle boss1HealthBar;
+        public Rectangle boss1MaxHealthBar;
         //public TimeSpan theBoss1spawnTime;
         //public TimeSpan theBoss1checkpoint;
         public Random theBoss1random;
         public bool bossFlag;   // if Boss exists or not
-
+        Texture2D exitButton;
         //Vector2 healthPosition;
         public Rectangle gManbase;
         public Rectangle hitbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
+        LevelSelect levelselectclass;
+        Song punch1;
+        Song punch2;
+        Song punch3;
+        Song timeBomb;
+        Song menuMusic;
+        Song gameMusic;
+        bool playSong;
 
         public Game1()
         {
@@ -175,7 +189,7 @@ namespace G_Shift
             level = new World(0, Content);
 
             allItems = new List<Item>();
-
+            explosions = new List<Animation>();
             for (int i = 0; i < level.getForUpdate().Count; i++)
             {
                 allItems.Add(level.getForUpdate()[i]);
@@ -202,7 +216,6 @@ namespace G_Shift
             fireTimeEnemy = TimeSpan.FromSeconds(.15f);
             // Set a constant player move speed
             // Initialize the gravies list
-            enemies = new List<enemy>();
             // Set the time keepers to zero
             previousSpawnTime = TimeSpan.Zero;
             // Used to determine how fast enemy respawns
@@ -261,14 +274,23 @@ namespace G_Shift
 
             //theBoss1 = new Boss1a();
             theBoss1random = new Random();
+            boss1HomePoint = new Vector2(SCREEN_WIDTH*0.95f, SCREEN_HEIGHT*.5f);
             bossFlag = false;
-
+            int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
+            int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
+            levelselectclass = new LevelSelect();
+            levelselectclass.Initialize(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             startButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 265);
             exitButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - 50, 315);
             //set the gamestate to start menu
             gameState = GameState.StartMenu;
             //get the mouse state
+
+            fullHealthRect = new Rectangle(10,
+                            10, gMan.maxHealth, 20);
+
+            //boss1MaxHealthBar = new Rectangle(500,10,theBoss1.maxHealth,20);
 
             base.Initialize();
         }
@@ -290,21 +312,25 @@ namespace G_Shift
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
-
+            exitButton = Content.Load<Texture2D>("exit1");
+            badge = Content.Load<Texture2D>("US_Park_Police_badge");
             // Load the player resources
             projectileTexture = Content.Load<Texture2D>("laser");
             // Load the score font
+            font1 = Content.Load<SpriteFont>("gameFont_2");
             font = Content.Load<SpriteFont>("gameFont");
             // Load the laser and explosion sound effect
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
-
+            levelselectclass.LoadCont(exitButton,font1,badge);
             /*
             enemyATexture = Content.Load<Texture2D>("gunEnemy 1a");
             enemyBTexture = Content.Load<Texture2D>("gunEnemy 2a");
             enemy2bTexture = Content.Load<Texture2D>("gunEnemy 2b");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
             */
+            explosionTexture = Content.Load<Texture2D>("explosion");
 
+            
             enemyATexture = Content.Load<Texture2D>("smallRobot1a");
             enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
@@ -318,8 +344,14 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-
-
+            punch1 = Content.Load<Song>("Music/weakpunch_1");
+            punch2 = Content.Load<Song>("Music/weakpunch_2");
+            punch3 = Content.Load<Song>("Music/weakpunch_3");
+            timeBomb = Content.Load<Song>("Music/TickingTimeBomb");
+            menuMusic = Content.Load<Song>("Music/MenuBackground");
+            gameMusic = Content.Load<Song>("Music/BattleBackground");
+            PlayMusic(menuMusic);
+            
         }
 
         /// <summary>
@@ -418,6 +450,8 @@ namespace G_Shift
 
 
 
+
+
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
             previousGamePadState = currentGamePadState;
@@ -425,22 +459,29 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
+            if (playSong == true)
+            {
+                PlayMusic(gameMusic);
+            }
+
             if (gameState == GameState.Playing)
             {
+
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
                     if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
                         currentGamePadState.DPad.Left == ButtonState.Pressed)
                     {
-                        scrollPosition -= moveFactorPerSecond;
+                      //  scrollPosition -= moveFactorPerSecond;
                     }
                     if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
                     currentGamePadState.DPad.Right == ButtonState.Pressed)
                     {
-                        scrollPosition += moveFactorPerSecond;
+                      //  scrollPosition += moveFactorPerSecond;
                     }
-
+                    playSong = true;
+                
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -469,7 +510,7 @@ namespace G_Shift
                     // Update the projectiles
                     // Update the enemy projectiles
                     //UpdateEnemyProjectiles();
-
+                    UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
 
                     //spawnEnemies(gameTime);
@@ -489,6 +530,20 @@ namespace G_Shift
                         if(bossFlag == false)
                             spawntheBoss1();
                     }
+
+                    if (currentKeyboardState.IsKeyDown(Keys.Delete))
+                    {
+                        // boss1 Fire the Laser!!
+                        if (bossFlag == true)
+                        {
+                            theBoss1.laserOn = true;
+
+                            theBoss1.holdPosFlag = true;
+                            //theBoss1.laserStartPos = new Vector2(theBoss1.position.X + 150, theBoss1.position.Y + 150);
+                            theBoss1.laserCurrentPosX = (int)theBoss1.laserStartPos.X;
+                            
+                        }
+                    }
                 }
             
             }
@@ -502,11 +557,11 @@ namespace G_Shift
             if (gameState == GameState.StartMenu)
             {
                 //check the startmenu
-                if ((currentKeyboardState.IsKeyDown(Keys.Space) || currentKeyboardState.IsKeyDown(Keys.Enter) ||
+                if ((currentKeyboardState.IsKeyDown(Keys.Space) || 
                 currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
                 {
-                    gameState = GameState.Loading;
-                    isLoading = false;
+                    gameState = GameState.levelSelect;
+                    
                 }
                 else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
                 currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
@@ -532,6 +587,17 @@ namespace G_Shift
             //}
 
 
+            if (gameState == GameState.levelSelect)
+            {
+                levelselectclass.Update(gameTime,currentKeyboardState, previousKeyboardState);
+                if (levelselectclass.selected == false)
+                {
+                    gameState = GameState.Loading;
+                    stopMusic();
+                    isLoading = false;
+                }
+            }
+
 
 
 
@@ -550,7 +616,7 @@ namespace G_Shift
                 Rectangle exitButtonRect = new Rectangle((int)exitButtonPosition.X, (int)exitButtonPosition.Y, 100, 20);
                 if ((mouseClickRect.Intersects(startButtonRect))) //player clicked start button
                 {
-                    gameState = GameState.Loading;
+                    gameState = GameState.levelSelect;
                     isLoading = false;
                 }
                 else if (mouseClickRect.Intersects(exitButtonRect)) //player clicked exit button
@@ -627,90 +693,7 @@ namespace G_Shift
                 }
                 //badGuys4[i].Update();
                 badGuys2[i].ResetValues();
-
-                /*  // Working
-                if(badGuys4[i].position.X + badGuys4[i].Width*(0.5f) > gMan.Position.X + gMan.Width*(0.5f))
-                    badGuys4[i].texture = enemyATexture;
-                else
-                    badGuys4[i].texture = enemy1bTexture;
-                 */
-
-                /*  // moved below
-                if (badGuys2[i].position.X + badGuys2[i].Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
-                {
-                    badGuys2[i].isRightFlag = true;
-                }
-                else
-                {
-                    badGuys2[i].isRightFlag = false;
-                }
-                */
-
-                //*************************
-                // Simple movement rules
-                //
-                /*
-                if (badGuys2[i].position.X < gMan.Position.X + gMan.Width && badGuys2[i].position.X > gMan.Position.X - (badGuys2[i].Width))
-                {
-                    badGuys2[i].holdxPosFlag = true;
-                }
-                else if (badGuys2[i].position.X > gMan.Position.X + gMan.Width)
-                {
-                    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                    badGuys2[i].moveLeftFlag = true;
-                }
-                else if (badGuys2[i].position.X < gMan.Position.X - badGuys2[i].Width)
-                {
-                    badGuys2[i].moveRightFlag = true;
-                }
-
-                // Adjust Y-directional movement
-                if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
-                {
-                    badGuys2[i].holdyPosFlag = true;
-                }
-                else if (badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height + badGuys2[i].baseHeight)
-                {
-                    badGuys2[i].moveUpFlag = true;
-                }
-                else if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height - badGuys2[i].baseHeight)
-                {
-                    badGuys2[i].moveDownFlag = true;
-                }
-
-                // go into attack stance if holding still
-                if (badGuys2[i].holdxPosFlag == true && badGuys2[i].holdyPosFlag == true)
-                {
-                    badGuys2[i].attackFlag = true;
-                }
-                if (badGuys2[i].attackFlag == true)
-                {
-                    if (badGuys2[i].isRightFlag == true)
-                    {
-                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-                        badGuys2[i].attackLeftRect = new Rectangle((int)badGuys2[i].position.X, (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
-                        if (badGuys2[i].attackLeftRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
-                        }
-                    }
-                    else
-                    {
-                        badGuys2[i].attackLeftRect = new Rectangle((int)(badGuys2[i].position.X + badGuys2[i].Width * (.75)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
-                        
-                        if (badGuys2[i].attackRightRect.Intersects(gMan.hitBox) && gameTime.TotalGameTime - badGuys2[i].attackCheckpoint > badGuys2[i].attackTimeSpan)
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
-                            badGuys2[i].attackCheckpoint = gameTime.TotalGameTime;
-                        }
-                    }
-                    //gMan.playerStance = G_Shift.Player.Stance.hurt;
-                }
-                */
+                
 
                 //************************
                 // Complex behavior rules..
@@ -843,60 +826,6 @@ namespace G_Shift
                 }
             }
 
-            //*********************
-            // Update badGuys3
-            // (check if beaten?)
-            //
-            for (int i = 0; i < badGuys3.Count; i++)
-            {
-                badGuys3[i].Update();
-
-                Vector2 tempPos = badGuys3[i].position;
-
-                ///*
-                // decision making (on direction of movement)
-                if (gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].decisionTime)
-                {
-                    badGuys3[i].decisionTimeFlag = true;
-                    badGuys3[i].lastDecisionTime = gameTime.TotalGameTime;
-                }
-
-                if (badGuys3[i].decisionTimeFlag == true && gameTime.TotalGameTime - badGuys3[i].lastDecisionTime >= badGuys3[i].reverseDecisionTime)
-                {
-                    badGuys3[i].decisionTimeFlag = false;
-                }
-                //*/
-
-                // general movement rules
-                if (badGuys3[i].position.X > gMan.Position.X - badGuys3[i].Width)
-                {
-                    badGuys3[i].velocity = new Vector2(-5f, badGuys3[i].velocity.Y);
-                }
-                else if (badGuys3[i].position.X <= gMan.Position.X - (badGuys3[i].Width * .8f) && badGuys3[i].position.X >= gMan.Position.X - (badGuys3[i].Width + 10))
-                {
-                    badGuys3[i].texture = enemy1bTexture;
-                    badGuys3[i].velocity = new Vector2(0f, badGuys3[i].velocity.Y);
-
-                    if (badGuys3[i].position.Y > gMan.Position.Y - 10 && badGuys3[i].position.Y < gMan.Position.Y + 10)
-                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 0f);
-                    if (badGuys3[i].position.Y > gMan.Position.Y + 10)
-                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, -5f);
-                    else if (badGuys3[i].position.Y < gMan.Position.Y - 10)
-                        badGuys3[i].velocity = new Vector2(badGuys3[i].velocity.X, 5f);
-                }
-                else if (badGuys3[i].position.X < gMan.Position.X - (badGuys3[i].Width + 10))
-                {
-                    //enemyBTexture = Content.Load<Texture2D>("gunEnemy 2b");
-                    badGuys3[i].texture = enemy1bTexture;
-                    badGuys3[i].velocity = new Vector2(5f, badGuys3[i].velocity.Y);
-                }
-
-                if (badGuys3[i].ttl <= 0)
-                {
-                    badGuys3.RemoveAt(i);
-                    i--;
-                }
-            }
 
             //*********************
             // Update badGuys4
@@ -968,6 +897,7 @@ namespace G_Shift
                         if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
+                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
                         }
@@ -980,6 +910,8 @@ namespace G_Shift
                         if (badGuys4[i].attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
+                          //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
+                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
@@ -997,14 +929,10 @@ namespace G_Shift
                 }
             }
 
-            //*********************
+
+            //**************************
             // Update theBoss1
             //
- 
-            //if()
-            //{
-            //}
-
             if (bossFlag == true)
             {
                 // load sprite sheets, setup animations
@@ -1016,29 +944,495 @@ namespace G_Shift
 
                 theBoss1.ResetValues();
 
+                //theBoss1.laserPosX = (int)theBoss1.laserPos.X;
+
+                // fire the laser!
+                if (theBoss1.laserOn == true)
+                {
+                    //if (theBoss1.laserWidth > 4000)
+                    if (theBoss1.laserWidth > 6000)
+                    {
+                        theBoss1.laserOn = false;
+                        theBoss1.laserWidth = 0;
+                        theBoss1.laserHeight = 20;
+                        theBoss1.holdPosFlag = false;
+                    }
+                    else
+                    {
+                        theBoss1.holdPosFlag = true;
+                        //theBoss1.laserStartPos = new Vector2(theBoss1.position.X + 150, theBoss1.position.Y + 150);
+                        //theBoss1.laserStartPos = new Vector2(theBoss1.position.X, theBoss1.position.Y + 150); // good chest height
+                        theBoss1.laserStartPos = new Vector2(theBoss1.position.X, theBoss1.position.Y + 200);   // waist height laserBeam
+                        //theBoss1.laserPos.X -= 10;
+                        theBoss1.laserCurrentPosX -= 50;
+                        theBoss1.laserWidth += 50;
+                        if (theBoss1.laserWidth > 2000)
+                        {
+                            //theBoss1.laserStartPos
+                            theBoss1.laserStartPos = new Vector2(theBoss1.position.X, theBoss1.position.Y + 125);
+                            theBoss1.laserHeight = 150;
+                        }
+                        theBoss1.laserBeam = new Rectangle((int)theBoss1.laserCurrentPosX, (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
+                    }
+
+                    //if (theBoss1.attackLeftRect.Intersects(hitbase))
+                    //if (theBoss1.laserBeam.Intersects(hitbase))   // works!
+                    if (theBoss1.laserBeam.Intersects(hitbase))
+                    {
+                        if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + 50 && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - 50)
+                        {
+                            gMan.Health -= 2;
+                        }
+                    }
+                }
+
                 // Is theBoss1 positiong to the right of the Player? (or left?)
                 if (theBoss1.position.X + theBoss1.Width * (0.5f) > gMan.Position.X + gMan.Width * (0.5f))
                 {
-                    theBoss1.isRightFlag = true;
+                    //theBoss1.isRightFlag = true;
+
+                    // time delay before turning around
+                    if (gameTime.TotalGameTime - theBoss1.onLeftCheckpoint > theBoss1.turnAroundTime)
+                    {
+                        theBoss1.isRightFlag = true;
+                        //theBoss1.stance = Boss1a.Stance.Move;
+                        theBoss1.onRightCheckpoint = gameTime.TotalGameTime;
+                    }
+                    else
+                    {
+                        theBoss1.stance = Boss1a.Stance.Wait;
+                    }
+
+                    //theBoss1.onRightCheckpoint = gameTime.TotalGameTime;
+
+                    /*
+                    if (gameTime.TotalGameTime - theBoss1.turnAroundCheckpoint > theBoss1.turnAroundTime)
+                    {
+                        theBoss1.isRightFlag = true;
+                        theBoss1.turnAroundCheckpoint = gameTime.TotalGameTime;
+                    }
+                    */
                 }
                 else
                 {
-                    theBoss1.isRightFlag = false;
+                    //theBoss1.isRightFlag = false;
+
+                    // time delay before turning around
+                    if (gameTime.TotalGameTime - theBoss1.onRightCheckpoint > theBoss1.turnAroundTime)
+                    {
+                        theBoss1.isRightFlag = false;
+                        //theBoss1.stance = Boss1a.Stance.Move;
+                        theBoss1.onLeftCheckpoint = gameTime.TotalGameTime;
+                    }
+                    else
+                    {
+                        theBoss1.stance = Boss1a.Stance.Wait;
+                    }
                 }
 
 
-                // general movement rules
-
+                
                 //*************************
-                // Simple movement rules
+                // Boss1 movement rules
                 //
 
-                if (theBoss1.stance == Boss1a.Stance.Wait && gameTime.TotalGameTime - theBoss1.lastDecisionTime > TimeSpan.FromSeconds(2f))
+                if (theBoss1.stance == Boss1a.Stance.Wait)
+                    theBoss1.holdPosFlag = true;
+
+                if (theBoss1.stance == Boss1a.Stance.Wait && gameTime.TotalGameTime - theBoss1.lastDecisionTime > TimeSpan.FromSeconds(1.5f))
                 {
                     theBoss1.stance = Boss1a.Stance.Move;
-                }
+                }                
+                
 
+                // if not in Wait mode, do something!
                 if (theBoss1.stance != Boss1a.Stance.Wait)
+                {
+                    // will need to adjust this once Josh incorporates screen locking
+                    // return to boss1HomePoint if travelled to far
+                    //if (theBoss1.position.X < SCREEN_WIDTH * 0.45f && theBoss1.stance != Boss1a.Stance.Attack)
+                    //if (theBoss1.position.X < boss1HomePoint.X - 150 && theBoss1.stance != Boss1a.Stance.Attack)
+                    //{
+                    //    theBoss1.stance = Boss1a.Stance.ReturnHome;
+                    //}
+
+                    if (theBoss1.healthHigh == true)
+                    {
+
+                        // Adjust X-directional movement
+                        if (theBoss1.holdxPosFlag == false && theBoss1.holdPosFlag == false)
+                        {
+                            if (theBoss1.position.X > gMan.Position.X + gMan.Width)
+                            {
+                                //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                                theBoss1.moveLeftFlag = true;
+                            }
+                            else if (theBoss1.position.X < gMan.Position.X - theBoss1.Width)
+                            {
+                                theBoss1.moveRightFlag = true;
+                            }
+                        }
+
+                        // Adjust Y-directional movement
+                        // if close enough to hit.. hold yPos
+                        if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                        {
+                            theBoss1.holdyPosFlag = true;
+                        }
+                        else if (theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height + theBoss1.baseHeight)
+                        {
+                            theBoss1.moveUpFlag = true;
+                        }
+                        else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                        {
+                            theBoss1.moveDownFlag = true;
+                        }
+
+
+                        // go into attack stance if holding still
+                        /*
+                        if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true && gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime)
+                        {
+                            theBoss1.attackFlag = true;
+                            theBoss1.stance = Boss1a.Stance.Attack;
+                            theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                            theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                        }
+                        */
+
+                        // go into attack stance if Player is almost in range (within 25 pixels)
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime && theBoss1.isRightFlag == true)
+                            if (theBoss1.position.X - gMan.Position.X < gMan.Width + 25)
+                            {
+                                theBoss1.attackFlag = true;
+                                theBoss1.stance = Boss1a.Stance.Attack;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                            }
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime && theBoss1.isRightFlag == false)
+                            if (gMan.Position.X - theBoss1.position.X < theBoss1.Width + 25)
+                            {
+                                theBoss1.attackFlag = true;
+                                theBoss1.stance = Boss1a.Stance.Attack;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                            }
+
+                        //if (theBoss1.attackFlag == true)
+                        if (theBoss1.stance == Boss1a.Stance.Attack)
+                        {
+
+                            if (theBoss1.isRightFlag == true)
+                            {
+                                //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                                theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X + 150, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), (int)(theBoss1.Height * (.75)));
+                                //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                                if (theBoss1.attackLeftRect.Intersects(hitbase))
+                                {
+                                    gMan.Health -= 1;
+                                    gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                    //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+
+                                    theBoss1.holdxPosFlag = true;
+                                }
+                                else
+                                    theBoss1.holdxPosFlag = false;
+                            }
+                            else
+                            {
+                                //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                                theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)) - 150, (int)(theBoss1.Height * (.75)));
+
+                                //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                                if (theBoss1.attackRightRect.Intersects(hitbase))
+                                {
+                                    gMan.Health -= 1;
+                                    gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                    //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                                    //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                                }
+                            }
+
+
+                            if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
+                            {
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
+
+                                theBoss1.stance = Boss1a.Stance.Wait;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                            }
+
+                        }
+                    }   // end of if(healthHigh == true)
+
+                    else if (theBoss1.healthLow == true)
+                    {
+                        //boss1HomePoint = new Vector2(gMan.Position.X + 200, gMan.Position.Y);
+                        boss1HomePoint = new Vector2(SCREEN_WIDTH-200, SCREEN_HEIGHT*.5f);
+                        //boss1HomePoint = new Vector2(800, 350);
+
+                        // Adjust X-directional movement
+                        if (theBoss1.holdxPosFlag == false && theBoss1.holdPosFlag == false)
+                        {
+                            if (theBoss1.position.X > boss1HomePoint.X + 10)
+                            {
+                                //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                                theBoss1.moveLeftFlag = true;
+                            }
+                            else if (theBoss1.position.X < boss1HomePoint.X - 10)
+                            {
+                                theBoss1.moveRightFlag = true;
+                            }
+                            else
+                            {
+                                theBoss1.holdxPosFlag = true;
+                            }
+                        }
+
+                        // Adjust Y-directional movement
+                        // move up and down, firing laser
+                        // seems to work, more or less
+                        if (theBoss1.position.Y + theBoss1.Height < SCREEN_HEIGHT - 10 && theBoss1.velocityChanged == false)
+                        {
+                            theBoss1.moveDownFlag = true;
+                            theBoss1.moveUpFlag = false;
+
+                            theBoss1.velocityChanged = false;
+                        }
+                        
+                        if (theBoss1.position.Y + theBoss1.Height < SCREEN_HEIGHT - 10 && theBoss1.velocityChanged == true)
+                        {
+                            theBoss1.moveDownFlag = false;
+                            theBoss1.moveUpFlag = true;
+
+                            theBoss1.velocityChanged = true;
+                        }
+
+                        if (theBoss1.position.Y + theBoss1.Height > SCREEN_HEIGHT - 10 && theBoss1.velocityChanged == false)
+                        {
+                            theBoss1.moveDownFlag = false;
+                            theBoss1.moveUpFlag = true;
+
+                            theBoss1.velocityChanged = true;
+                        }
+                        if (theBoss1.position.Y <= 10 && theBoss1.velocityChanged == false)
+                        {
+                            theBoss1.moveDownFlag = true;
+                            theBoss1.moveUpFlag = false;
+
+                            theBoss1.velocityChanged = false;
+                        }
+                        if (theBoss1.position.Y <= 10 && theBoss1.velocityChanged == true)
+                        {
+                            theBoss1.moveDownFlag = true;
+                            theBoss1.moveUpFlag = false;
+
+                            theBoss1.velocityChanged = false;
+
+                        }
+                        
+                        /*
+                        else if(theBoss1.velocityChanged == true)
+                        {
+                            theBoss1.velocityChanged = false;
+                        }
+                        else if (theBoss1.velocityChanged == false)
+                        {
+                            theBoss1.velocityChanged = true;
+                        }
+                        */
+
+                        // nothing happens >_<
+                        /*
+                        if (theBoss1.velocityChanged == false)
+                        {
+                            theBoss1.velocity = new Vector2(2, 0);
+                            theBoss1.velocityChanged = true;
+                        }
+                        if (theBoss1.position.Y + theBoss1.Height >= SCREEN_HEIGHT - 10)
+                        {
+                            theBoss1.velocity *= -1;
+                        }
+                        else if(theBoss1.position.Y <= 0)
+                        {
+                            theBoss1.velocity *= -1;
+                        }
+                        */
+
+                        /*
+                        if (theBoss1.position.Y + theBoss1.Height >= SCREEN_HEIGHT-10)
+                        {
+                            theBoss1.moveDownFlag = false;
+                            theBoss1.moveUpFlag = true;
+                        }
+                        else if (theBoss1.position.Y <= 0)
+                        {
+                            theBoss1.moveUpFlag = false;
+                            theBoss1.moveDownFlag = true;
+                        }
+                        */
+
+                        // laser Attack
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime && theBoss1.holdxPosFlag == true)
+                        {
+                            theBoss1.laserOn = true;
+                            theBoss1.holdPosFlag = true;
+                            theBoss1.laserCurrentPosX = (int)theBoss1.laserStartPos.X;
+                            //theBoss1.minimumAttackTime = TimeSpan.FromSeconds((float)theBoss1.randomDecisionTime.Next(1, 4));
+
+                            theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                            theBoss1.minimumAttackTime = TimeSpan.FromSeconds((float)theBoss1.randomDecisionTime.Next(4, 7));
+                        }
+
+                        /*  // return to homePoint
+                        if (theBoss1.position.Y + theBoss1.Height*.5f < boss1HomePoint.Y - 10)
+                        {
+                            theBoss1.moveDownFlag = true;
+                        }
+                        else if (theBoss1.position.Y + theBoss1.Height*.5f > boss1HomePoint.Y + 10)
+                        {
+                            theBoss1.moveUpFlag = true;
+                        }
+                        else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
+                        {
+                            theBoss1.holdyPosFlag = true;
+                        }
+                        */
+
+                        // go into attack stance if holding still
+                        /*
+                        if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true && gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime)
+                        {
+                            theBoss1.attackFlag = true;
+                            theBoss1.stance = Boss1a.Stance.Attack;
+                            theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                            theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                        }
+                        */
+
+                        /*
+                        // go into attack stance if Player is almost in range (within 25 pixels)
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime && theBoss1.isRightFlag == true)
+                            if (theBoss1.position.X - gMan.Position.X < gMan.Width + 25)
+                            {
+                                theBoss1.attackFlag = true;
+                                theBoss1.stance = Boss1a.Stance.Attack;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                            }
+                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime && theBoss1.isRightFlag == false)
+                            if (gMan.Position.X - theBoss1.position.X < theBoss1.Width + 25)
+                            {
+                                theBoss1.attackFlag = true;
+                                theBoss1.stance = Boss1a.Stance.Attack;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;
+                            }
+
+                        //if (theBoss1.attackFlag == true)
+                        if (theBoss1.stance == Boss1a.Stance.Attack)
+                        {
+
+                            if (theBoss1.isRightFlag == true)
+                            {
+                                //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                                theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X + 150, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), (int)(theBoss1.Height * (.75)));
+                                //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                                if (theBoss1.attackLeftRect.Intersects(hitbase))
+                                {
+                                    gMan.Health -= 1;
+                                    gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                    //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+
+                                    theBoss1.holdxPosFlag = true;
+                                }
+                                else
+                                    theBoss1.holdxPosFlag = false;
+                            }
+                            else
+                            {
+                                //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                                theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)) - 150, (int)(theBoss1.Height * (.75)));
+
+                                //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                                if (theBoss1.attackRightRect.Intersects(hitbase))
+                                {
+                                    gMan.Health -= 1;
+                                    gMan.playerStance = G_Shift.Player.Stance.hurt;
+                                    //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                                    //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                                }
+                            }
+
+
+                            if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
+                            {
+                                theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
+
+                                theBoss1.stance = Boss1a.Stance.Wait;
+                                theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                            }
+
+                        }
+                         */ // removing normal attack while healthLow == true
+                    }   // end of if(healthLow == true)
+
+                } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
+
+
+                // prepare to enable.. replace above code
+                //************************************************************
+                //****************************
+                /*
+                if (theBoss1.stance == Boss1a.Stance.Wait)
+                {
+                    theBoss1.holdPosFlag = true;
+                }
+                else if (theBoss1.stance == Boss1a.Stance.Attack)
+                {
+                    //theBoss1.holdPosFlag = true;
+
+                    // this will negate the above if from firing again.. 
+                    // .. maybe not.. 
+                    //theBoss1.holdyPosFlag = false;
+
+                    if (theBoss1.isRightFlag == true)
+                    {
+                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                        theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+                        //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                        if (theBoss1.attackLeftRect.Intersects(hitbase))
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+                    else
+                    {
+                        //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
+                        theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
+
+                        //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
+                        if (theBoss1.attackRightRect.Intersects(hitbase))
+                        {
+                            gMan.Health -= 10;
+                            gMan.playerStance = G_Shift.Player.Stance.hurt;
+                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
+                            //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
+                        }
+                    }
+
+
+                    if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
+                    {
+                        theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
+
+                        theBoss1.stance = Boss1a.Stance.Wait;
+                        theBoss1.lastDecisionTime = gameTime.TotalGameTime;
+                    }
+                }
+                else if (theBoss1.stance == Boss1a.Stance.Move)
                 {
                     // if close enough to hit.. hold xPos
                     if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
@@ -1078,50 +1472,15 @@ namespace G_Shift
                         theBoss1.lastDecisionTime = gameTime.TotalGameTime;
                         theBoss1.lastAttackTime = gameTime.TotalGameTime;
                     }
-
-                    //if (theBoss1.attackFlag == true)
-                    if(theBoss1.stance == Boss1a.Stance.Attack)
-                    {
-                        //theBoss1.holdPosFlag = true;
-
-                        if (theBoss1.isRightFlag == true)
-                        {
-                            //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-                            theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-                            //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                            if (theBoss1.attackLeftRect.Intersects(hitbase))                            
-                            {
-                                gMan.Health -= 10;
-                                gMan.playerStance = G_Shift.Player.Stance.hurt;
-                                //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                            }
-                        }
-                        else
-                        {
-                            //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
-                            theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-
-                            //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                            if (theBoss1.attackRightRect.Intersects(hitbase))  
-                            {
-                                gMan.Health -= 10;
-                                gMan.playerStance = G_Shift.Player.Stance.hurt;
-                                //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
-                                //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                            }
-                        }
+                }
+                */
+                //*******************************************
+                //***********************************************************************
 
 
-                        if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
-                        {
-                            theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
 
-                            theBoss1.stance = Boss1a.Stance.Wait;
-                            theBoss1.lastDecisionTime = gameTime.TotalGameTime;
-                        }
+                boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
-                    }
-                } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
 
                 theBoss1.Update();
                 //theBoss1.Update(gameTime);
@@ -1135,6 +1494,47 @@ namespace G_Shift
                 }
             }
         }
+        private void AddExplosion(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(explosionTexture, position, 134, 134, 12, 45, Color.White, 1f, false);
+            explosions.Add(explosion);
+        }
+        private void AddSmallExplosion(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(explosionTexture, position, 134, 134, 12, 45, Color.White, .5f, false);
+            explosions.Add(explosion);
+        }
+        private void UpdateExplosions(GameTime gameTime)
+        {
+            for (int i = explosions.Count - 1; i >= 0; i--)
+            {
+                explosions[i].Update(gameTime);
+                if (explosions[i].Active == false)
+                {
+                    explosions.RemoveAt(i);
+                }
+
+
+            }
+        }
+
+        private void PlayMusic(Song song)
+        {
+            // Due to the way the MediaPlayer plays music,
+            // we have to catch the exception. Music will play when the game is not tethered
+            try
+            {
+                // Play the music
+                MediaPlayer.Play(song);
+
+                // Loop the currently playing song
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
+
 
         private void UpdateCollision()
         {
@@ -1199,7 +1599,10 @@ namespace G_Shift
                     }
                 }            
         }
-
+        public void stopMusic()
+        {
+            MediaPlayer.Stop();
+        }
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
@@ -1388,6 +1791,10 @@ namespace G_Shift
                 //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
                 //badGuy4spawnTime = TimeSpan.FromSeconds(1f);
             //}
+
+                boss1MaxHealthBar = new Rectangle(500, 25, theBoss1.maxHealth, 20);
+                
+
         }
 
         void LoadGame()
@@ -1463,11 +1870,51 @@ namespace G_Shift
             if (gameState == GameState.Playing)
             {
                 spriteBatch.End();
-
                 Vector2 translation = gMan.Position - gMan.StartPosition;
+
+
+                //if (translate)
+                //{
+                //    translation = gMan.Position - gMan.StartPosition;
+                //}
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
-             spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
+                
+                spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
+
+                if (bossFlag == true)
+                {
+                    //translate = false;
+
+                    if (theBoss1.laserOn == true)
+                    {               
+                        /*
+                        theBoss1.laserStartScreenPos = new Vector2(theBoss1.laserStartPos.X - translation.X, theBoss1.laserStartPos.Y);
+                        //theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X - translation.X);    // may or may not need translation
+                        theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X); 
+                        //theBoss1.laserPosX = (int)theBoss1.laserStartPos.X;   // may have to update based on screenPos
+                        theBoss1.laserBeam = new Rectangle((int)(theBoss1.laserCurrentPosX - translation.X), (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
+                        spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Aquamarine);    
+                        */
+
+                        //theBoss1.laserStartScreenPos = new Vector2(theBoss1.laserStartPos.X - translation.X, theBoss1.laserStartPos.Y);
+                        //theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X - translation.X);    // may or may not need translation
+                        //theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X);
+                        //theBoss1.laserPosX = (int)theBoss1.laserStartPos.X;   // may have to update based on screenPos
+                        //theBoss1.laserBeam = new Rectangle((int)(theBoss1.laserCurrentPosX), (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
+                        
+                        //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Aquamarine); // Working!!
+
+                        if(theBoss1.laserBeam.Height < 75)
+                            spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Salmon);
+                        else
+                            spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
+
+                    }
+                }
+                else
+                    translate = true;
+                
                 spriteBatch.End();
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -1498,6 +1945,10 @@ namespace G_Shift
                 }
 
                 gMan.Draw(spriteBatch, .5f);
+                for (int i = 0; i < explosions.Count; i++)
+                {
+                    explosions[i].Draw(spriteBatch,.6f);
+                }
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
@@ -1523,9 +1974,23 @@ namespace G_Shift
                     theBoss1.Draw(spriteBatch);
                 }
 
-                spriteBatch.Draw(baseRectangle, healthRectange, Color.Black);
-            }
+                spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
+                spriteBatch.Draw(baseRectangle, healthRectange, Color.Green);
 
+                if (bossFlag == true)
+                {
+                    spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, Color.Red);
+                    spriteBatch.Draw(baseRectangle, boss1HealthBar, Color.Blue);
+
+                    if (theBoss1.laserOn == true)
+                    {
+                    }
+                }
+                
+
+            }
+            if (gameState == GameState.levelSelect)
+                levelselectclass.Draw(spriteBatch);
 
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);

@@ -113,7 +113,6 @@
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Boss1a.cs" />
-    <Compile Include="enemy.cs" />
     <Compile Include="Enemy1a.cs" />
     <Compile Include="Enemy2a.cs" />
     <Compile Include="Enemy2b.cs" />
@@ -122,6 +121,7 @@
     <Compile Include="EnemyProjectile.cs" />
     <Compile Include="Interactable.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="LevelSelect.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

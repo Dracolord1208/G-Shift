@@ -22,6 +22,11 @@ namespace G_Shift_Level_Editor
 
         Vector2 topLeft, botRight;
 
+        struct BattleEvent
+        {
+            public List<Item> locs;
+        }
+
         struct Item
         {
             public Vector2 loc;
@@ -34,8 +39,6 @@ namespace G_Shift_Level_Editor
             public Vector2 topRight;
             public Vector2 botLeft;
             public Vector2 botRight;
-            public bool direction1;
-            public bool direction2;
         }
 
         struct MenuBox
@@ -46,9 +49,11 @@ namespace G_Shift_Level_Editor
 
         List<Texture2D> mapTiles;
         List<Rectangle> mapRects;
+        List<Rectangle> eventRects;
         List<Item> items;
         List<Track> tracks;
         List<MenuBox> menuChoices;
+        List<BattleEvent> battleEvents;
 
         Texture2D outline;
         Texture2D pathUp;
@@ -60,6 +65,7 @@ namespace G_Shift_Level_Editor
         KeyboardState prevKeyboardState;
 
         bool itemDrag;
+        bool isEnemy;
         Item tempItem;
 
         public Game1()
@@ -87,6 +93,8 @@ namespace G_Shift_Level_Editor
             items = new List<Item>();
             tracks = new List<Track>();
             menuChoices = new List<MenuBox>();
+            battleEvents = new List<BattleEvent>();
+            eventRects = new List<Rectangle>();
 
             translation = new Vector2();
 
@@ -95,6 +103,7 @@ namespace G_Shift_Level_Editor
 
             tempItem = new Item();
             itemDrag = false;
+            isEnemy = false;
 
             IsMouseVisible = true;
 
@@ -126,6 +135,14 @@ namespace G_Shift_Level_Editor
 
             tempMenu.img = Content.Load<Texture2D>("barrel");
             tempMenu.rect = new Rectangle(40, 0, 40, 40);
+            menuChoices.Add(tempMenu);
+
+            tempMenu.img = Content.Load<Texture2D>("SmallBot");
+            tempMenu.rect = new Rectangle(80, 0, 40, 40);
+            menuChoices.Add(tempMenu);
+
+            tempMenu.img = Content.Load<Texture2D>("MediumBot");
+            tempMenu.rect = new Rectangle(120, 0, 40, 40);
             menuChoices.Add(tempMenu);
 
             // TODO: use this.Content to load your game content here
@@ -171,7 +188,8 @@ namespace G_Shift_Level_Editor
                 tempItem.loc.Y = mState.Y;
 
                 if (mState.LeftButton == ButtonState.Pressed &&
-                    prevMouseState.LeftButton == ButtonState.Released)
+                    prevMouseState.LeftButton == ButtonState.Released &&
+                    !isEnemy)
                 {
                     tempItem.loc.X += translation.X;
                     tempItem.loc.Y += translation.Y;
@@ -179,9 +197,34 @@ namespace G_Shift_Level_Editor
                     items.Add(tempItem);
                     tempItem.name = "";
                 }
+                else if (mState.LeftButton == ButtonState.Pressed &&
+                    prevMouseState.LeftButton == ButtonState.Released)
+                {
+                    tempItem.loc.X += translation.X;
+                    tempItem.loc.Y += translation.Y;
+                    itemDrag = false;
+                    isEnemy = false;
+                    battleEvents[battleEvents.Count-1].locs.Add(tempItem);
+                    tempItem.name = "";
+                }
             }
             else
             {
+                if (kState.IsKeyDown(Keys.E) &&
+                    prevKeyboardState.IsKeyDown(Keys.E))
+                {
+                    BattleEvent temp = new BattleEvent();
+                    temp.locs = new List<Item>();
+                    battleEvents.Add(temp);
+
+                    Rectangle rect = new Rectangle();
+                    rect.X = (int)translation.X;
+                    rect.Y = (int)translation.Y;
+                    rect.Width = graphics.GraphicsDevice.Viewport.Width;
+                    rect.Height = graphics.GraphicsDevice.Viewport.Height;
+                    eventRects.Add(rect);
+                }
+
                 if (mState.LeftButton == ButtonState.Pressed &&
                     prevMouseState.LeftButton == ButtonState.Released &&
                     topLeft.X == -1 && mState.Y > 40)
@@ -230,6 +273,22 @@ namespace G_Shift_Level_Editor
                             tempItem.loc = new Vector2(mState.X, mState.Y);
                             tempItem.name = "barrel";
                         }
+                        else
+                            if (mState.X <= 120 && mState.X > 80 && battleEvents.Count > 0)
+                            {
+                                itemDrag = true;
+                                isEnemy = true;
+                                tempItem.loc = new Vector2(mState.X, mState.Y);
+                                tempItem.name = "SmallBot";
+                            }
+                            else
+                                if (mState.X <= 160 && mState.X > 120 && battleEvents.Count > 0)
+                                {
+                                    itemDrag = true;
+                                    isEnemy = true;
+                                    tempItem.loc = new Vector2(mState.X, mState.Y);
+                                    tempItem.name = "MediumBot";
+                                }
                 }
 
                 if (prevKeyboardState.IsKeyUp(Keys.Enter)
@@ -288,7 +347,7 @@ namespace G_Shift_Level_Editor
 
             foreach(Rectangle rect in mapRects)
             {
-                spriteBatch.Draw(outline, rect, Color.White);
+                spriteBatch.Draw(outline, rect, Color.Pink);
             }
 
             for(int x = 0; x < mapRects.Count-1; x++)
@@ -302,7 +361,7 @@ namespace G_Shift_Level_Editor
                     rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                     rect.Height = (int)(tracks[x].topLeft.Y - tracks[x].topRight.Y);
 
-                    spriteBatch.Draw(pathUp, rect, Color.White);
+                    spriteBatch.Draw(pathUp, rect, Color.Blue);
 
                     if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
                     {
@@ -311,7 +370,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
 
-                        spriteBatch.Draw(pathUp, rect, Color.White);
+                        spriteBatch.Draw(pathUp, rect, Color.Blue);
                     }
                     else
                     {
@@ -320,7 +379,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
 
-                        spriteBatch.Draw(pathDown, rect, Color.White);
+                        spriteBatch.Draw(pathDown, rect, Color.Blue);
                     }
                 }
                 else
@@ -330,7 +389,7 @@ namespace G_Shift_Level_Editor
                     rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                     rect.Height = (int)(tracks[x].topRight.Y - tracks[x].topLeft.Y);
 
-                    spriteBatch.Draw(pathDown, rect, Color.White);
+                    spriteBatch.Draw(pathDown, rect, Color.Blue);
 
                     if (mapRects[x].Bottom > mapRects[x + 1].Bottom)
                     {
@@ -339,7 +398,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botLeft.Y - tracks[x].botRight.Y);
 
-                        spriteBatch.Draw(pathUp, rect, Color.White);
+                        spriteBatch.Draw(pathUp, rect, Color.Blue);
                     }
                     else
                     {
@@ -348,7 +407,7 @@ namespace G_Shift_Level_Editor
                         rect.Width = (int)(tracks[x].topRight.X - tracks[x].topLeft.X);
                         rect.Height = (int)(tracks[x].botRight.Y - tracks[x].botLeft.Y);
 
-                        spriteBatch.Draw(pathDown, rect, Color.White);
+                        spriteBatch.Draw(pathDown, rect, Color.Blue);
                     }
                 }
             }
@@ -365,8 +424,27 @@ namespace G_Shift_Level_Editor
                     spriteBatch.Draw(menuChoices[1].img, item.loc, Color.White);
                 }
             }
-            
 
+            foreach (Rectangle rect in eventRects)
+            {
+                spriteBatch.Draw(outline, rect, Color.Tomato);
+            }
+
+            foreach (BattleEvent bEvent in battleEvents)
+            {
+                foreach (Item item in bEvent.locs)
+                {
+                    if (item.name == "SmallBot")
+                    {
+                        spriteBatch.Draw(menuChoices[2].img, item.loc, Color.White);
+                    }
+                    else
+                    if (item.name == "MediumBot")
+                    {
+                        spriteBatch.Draw(menuChoices[3].img, item.loc, Color.White);
+                    }
+                }
+            }
 
             spriteBatch.End();
 
@@ -386,6 +464,14 @@ namespace G_Shift_Level_Editor
                 if (tempItem.name == "barrel")
                 {
                     spriteBatch.Draw(menuChoices[1].img, tempItem.loc, Color.White);
+                }
+                if (tempItem.name == "SmallBot")
+                {
+                    spriteBatch.Draw(menuChoices[2].img, tempItem.loc, Color.White);
+                }
+                if (tempItem.name == "MediumBot")
+                {
+                    spriteBatch.Draw(menuChoices[3].img, tempItem.loc, Color.White);
                 }
             }
 
