@@ -128,8 +128,7 @@ namespace G_Shift
         public List<Rectangle> BadGuys2aRect;
         public TimeSpan badGuy2spawnTime;      
         public TimeSpan badGuy2checkpoint;     
-        public Random badGuy2random;           
-
+        public Random badGuy2random;
         public List<Enemy3a> badGuys3;  // enemies
         public TimeSpan badGuy3spawnTime;      
         public TimeSpan badGuy3checkpoint;     
@@ -160,6 +159,13 @@ namespace G_Shift
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
         LevelSelect levelselectclass;
+        Song punch1;
+         Song punch2;
+         Song punch3;
+         Song timeBomb;
+         Song menuMusic;
+         Song gameMusic;
+         bool playSong;
 
         public float laserDepth;
 
@@ -347,7 +353,13 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-
+            punch1 = Content.Load<Song>("Music/weakpunch_1");
+            punch2 = Content.Load<Song>("Music/weakpunch_2");
+            punch3 = Content.Load<Song>("Music/weakpunch_3");
+            timeBomb = Content.Load<Song>("Music/TickingTimeBomb");
+            menuMusic = Content.Load<Song>("Music/MenuBackground");
+            gameMusic = Content.Load<Song>("Music/BattleBackground");
+            PlayMusic(menuMusic);
 
         }
 
@@ -425,7 +437,7 @@ namespace G_Shift
                 backgroundThread = new Thread(LoadGame);
                 isLoading = true;
 
-
+                stopMusic();
                 //start backgroundthread
                 backgroundThread.Start();
             }
@@ -456,11 +468,17 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
+             if (playSong == true)
+             {
+                 PlayMusic(gameMusic);
+             }
+
             if (gameState == GameState.Playing)
             {
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
+                  //  playSong = true;
                     if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
                         currentGamePadState.DPad.Left == ButtonState.Pressed)
                     {
@@ -471,7 +489,7 @@ namespace G_Shift
                     {
                       //  scrollPosition += moveFactorPerSecond;
                     }
-
+                   // PlayMusic(gameMusic);
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -1638,6 +1656,25 @@ namespace G_Shift
                 }
             }
         }
+
+        private void PlayMusic(Song song)
+         {
+             // Due to the way the MediaPlayer plays music,
+             // we have to catch the exception. Music will play when the game is not tethered
+             try
+             {
+                 // Play the music
+                 MediaPlayer.Play(song);
+ 
+                 // Loop the currently playing song
+                 MediaPlayer.IsRepeating = true;
+             }
+             catch { }
+         }
+        public void stopMusic()
+         {
+             MediaPlayer.Stop();
+         }
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
@@ -1907,7 +1944,7 @@ namespace G_Shift
             {
                 spriteBatch.End();
 
-                if(translate)
+                if (translate)
                     translation = gMan.Position - gMan.StartPosition;
                 
                 //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
