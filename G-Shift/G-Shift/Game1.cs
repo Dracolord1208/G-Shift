@@ -893,7 +893,7 @@ namespace G_Shift
                         if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
-                            AddSmallExplosion(badGuys4[i].position);
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
                         }
@@ -907,7 +907,8 @@ namespace G_Shift
                         {
                             gMan.Health -= 10;
                           //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
-                            AddSmallExplosion(badGuys4[i].position);
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
+//                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
@@ -1580,7 +1581,22 @@ namespace G_Shift
                         }
                         // If the player health is less than zero we died
                     }
-                }            
+                }
+                //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
+                if (bossFlag)
+                {
+                    if (rectangle1.Intersects(theBoss1.hitBox))
+                    {
+                        //the player can hit the enemy
+                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                        {
+                            //the player hit the robot
+                            theBoss1.health -= gMan.heavyHit;
+                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                        }
+                        // If the player health is less than zero we died
+                    }
+                }
         }
 
         public void spawnEnemies(GameTime gameTime)
