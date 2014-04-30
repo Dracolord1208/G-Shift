@@ -802,7 +802,8 @@ namespace G_Shift
                         {
                             //gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
                             gMan.Health -= 2;
-                            //gMan.playerStance = Player.Stance.hurt;
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 60));
+                            gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
@@ -820,7 +821,8 @@ namespace G_Shift
                         {
                             //gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
                             gMan.Health -= 2;
-                            //gMan.playerStance = Player.Stance.hurt;
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 60));
+                            gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
