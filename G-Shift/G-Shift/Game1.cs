@@ -1549,10 +1549,10 @@ namespace G_Shift
                 (int)badGuys4[i].position.Y + 40,
                 badGuys4[i].Width - 90,
                 badGuys4[i].Height - 40);
-                enemy1Rec = new Rectangle((int)badGuys4[i].position.X+60,
-                (int)badGuys4[i].position.Y+40 ,
-                badGuys4[i].Width-90,
-                badGuys4[i].Height-40);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X + 60,
+                (int)badGuys4[i].position.Y + 40,
+                badGuys4[i].Width - 90,
+                badGuys4[i].Height - 40);
                 // Determine if the two objects collided with each
                 // other
                 if (rectangle1.Intersects(rectangle2))
@@ -1575,51 +1575,49 @@ namespace G_Shift
                 }
 
             }
-                // Do the collision between the player and the gravies
-                for (int i = 0; i < badGuys2.Count; i++)
+            // Do the collision between the player and the gravies
+            for (int i = 0; i < badGuys2.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
                 {
-                    rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
-                    (int)badGuys2[i].position.Y + 150,
-                    badGuys2[i].Width - 80,
-                    badGuys2[i].Height - 160);
-                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X+50,
-                    (int)badGuys2[i].position.Y+150,
-                    badGuys2[i].Width-80,
-                    badGuys2[i].Height-160);
-                    // Determine if the two objects collided with each
-                    // other
-                    if (rectangle1.Intersects(rectangle2))
+                    //the player can hit the enemy
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
-                        //the player can hit the enemy
-                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack )//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
-                        {
-                            //the player hit the robot
-                            badGuys2[i].health -= gMan.heavyHit;
-                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
-                        }
-                        // If the player health is less than zero we died
+                        //the player hit the robot
+                        badGuys2[i].health -= gMan.heavyHit;
+                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
-<<<<<<< HEAD
-
-                    if (badGuys2[i].rect.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
-                    {
-                        badGuys2[i].health = 0;
-                    }
-
+                    // If the player health is less than zero we died
                 }
 
-                if (bossFlag)
+                if (badGuys2[i].rect.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
                 {
-                    for (int i = 0; i < allItems.Count; i++)
+                    badGuys2[i].health = 0;
+                }
+
+            }
+
+            if (bossFlag)
+            {
+                for (int i = 0; i < allItems.Count; i++)
+                {
+                    if (allItems[i].itemBeingThrown())
                     {
-                        if (allItems[i].itemBeingThrown())
+                        if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
                         {
-                            if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
-                            {
-                                theBoss1.health = 0;
-                            }
+                            theBoss1.health = 0;
                         }
-=======
+                    }
                 }
                 //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
                 if (bossFlag)
@@ -1634,11 +1632,10 @@ namespace G_Shift
                             //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                         }
                         // If the player health is less than zero we died
->>>>>>> FETCH_HEAD
                     }
                 }
+            }
         }
-
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
