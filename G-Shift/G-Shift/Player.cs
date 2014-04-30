@@ -48,7 +48,7 @@ namespace G_Shift
         public bool ismoveing = false;
         public int Height { get; set; }
         public int Width { get; set; }
-        bool facing = true;//true==left false == right
+       public  bool facing = true;//true==left false == right
         // Amount of hit points that player has
         public int Health;
         public bool gotlife;
@@ -602,15 +602,15 @@ namespace G_Shift
         {
             bool animator=true;
 
-            if (AttackRightList.Count != 0)
-            {
-                animator = false;
-            }
-            if (AttackLeftList.Count != 0)
-            {
-                animator = false;
-            }
-            animator = true;
+                if (AttackRightList.Count != 0)
+                {
+                    animator = false;
+                }
+                if (AttackLeftList.Count != 0)
+                {
+                    animator = false;
+                }
+                animator = true;
                 if (facing)
                 {
                     if (playerStance == Stance.Standing)
@@ -632,11 +632,11 @@ namespace G_Shift
                     if (playerStance == Stance.hurt)
                     {
                         //AHurtLeft.Draw(spriteBatch, depth);
-                        spriteBatch.Draw(HurtRight, new Vector2(StartPosition.X-100, Position.Y-225), Color.White);
+                        spriteBatch.Draw(HurtRight, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
                     }
                     if (playerStance == Stance.heavyAttack || fire == true)
                     {
-               //         AAttack1Right.Draw(spriteBatch, depth);
+                        //         AAttack1Right.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackLeftList.Count; i++)
                             AttackLeftList[i].Draw(spriteBatch, depth);
                         fire = false;
@@ -667,12 +667,12 @@ namespace G_Shift
                     }
                     if (playerStance == Stance.heavyAttack || fire == true)
                     {
-                  //      AAttack1Left.Draw(spriteBatch, depth);
+                        //      AAttack1Left.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackRightList.Count; i++)
                             AttackRightList[i].Draw(spriteBatch, depth);
                         fire = false;
                     }
                 }
+            }
         }
     }
-}
