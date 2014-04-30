@@ -87,6 +87,8 @@ namespace G_Shift
 
         List<Item> allItems;
         //Item aCrate;
+        TimeSpan previouslyRemovedObject;
+        TimeSpan removeDestroyedItem;
 
         World level;
 
@@ -185,6 +187,10 @@ namespace G_Shift
             level = new World(0, Content);
 
             allItems = new List<Item>();
+
+            removeDestroyedItem = TimeSpan.FromSeconds(1f);
+            previouslyRemovedObject = TimeSpan.Zero;
+
             explosions = new List<Animation>();
             for (int i = 0; i < level.getForUpdate().Count; i++)
             {
@@ -485,6 +491,12 @@ namespace G_Shift
                     for (int i = 0; i < allItems.Count; i++)
                     {
                         allItems[i].Update(gMan, Content, graphics);
+
+                        if (gameTime.TotalGameTime - previouslyRemovedObject > removeDestroyedItem && allItems[i].itemDestroyed())
+                        {
+                            previouslyRemovedObject = gameTime.TotalGameTime;
+                            allItems.RemoveAt(i);
+                        }
                     }
 
                     //aCrate.Update(gMan);
@@ -1555,6 +1567,12 @@ namespace G_Shift
                     if (gMan.Health <= 0)
                         gMan.Active = false;
                 }
+
+                if (badGuys4[i].rect.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+                {
+                    badGuys4[i].health = 0;
+                }
+
             }
                 // Do the collision between the player and the gravies
                 for (int i = 0; i < badGuys2.Count; i++)
@@ -1580,7 +1598,27 @@ namespace G_Shift
                         }
                         // If the player health is less than zero we died
                     }
-                }            
+
+                    if (badGuys2[i].rect.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+                    {
+                        badGuys2[i].health = 0;
+                    }
+
+                }
+
+                if (bossFlag)
+                {
+                    for (int i = 0; i < allItems.Count; i++)
+                    {
+                        if (allItems[i].itemBeingThrown())
+                        {
+                            if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
+                            {
+                                theBoss1.health = 0;
+                            }
+                        }
+                    }
+                }
         }
 
         public void spawnEnemies(GameTime gameTime)
