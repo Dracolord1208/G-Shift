@@ -120,7 +120,7 @@ namespace G_Shift
         private void AddExplosion(Vector2 position)
         {
             Animation explosion = new Animation();
-            explosion.Initialize(Attack1Right, position, 134, 134, 12, 45, Color.White, 1f, false);
+            explosion.Initialize(Attack1Right, galPosition, 225, 250, 8, 90, Color.White, 1f, false);
             explosions.Add(explosion);
         }
         public void LoadContent(ContentManager content)
@@ -310,7 +310,7 @@ namespace G_Shift
             }
 
             //else
-            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 0)
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) )
             {
                 //   whipping = true;
                 //attackTime = maxAttackTime;
@@ -321,23 +321,23 @@ namespace G_Shift
                 //ok
                 Combo++;
             }
-            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 1)
-            {
-                //   whipping = true;
-                //attackTime = maxAttackTime;
-                // animateWhip(gameTime);
-                playerStance = Stance.heavyAttack;
-                Combo++;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 2)
-            {
-                //   whipping = true;
-                //attackTime = maxAttackTime;
-                // animateWhip(gameTime);
-                fire = true;
-                playerStance = Stance.heavyAttack;
-                Combo = 0;
-            }
+            //if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 1)
+            //{
+            //    whipping = true;
+            //    attackTime = maxAttackTime;
+            //    animateWhip(gameTime);
+            //    playerStance = Stance.heavyAttack;
+            //    Combo++;
+            //}
+            //if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 2)
+            //{
+            //    whipping = true;
+            //    attackTime = maxAttackTime;
+            //    animateWhip(gameTime);
+            //    fire = true;
+            //    playerStance = Stance.heavyAttack;
+            //    Combo = 0;
+            //}
 
             CollisionDetection(level);
 
@@ -580,7 +580,7 @@ namespace G_Shift
 
         public void Draw(SpriteBatch spriteBatch, float depth)
         {
-            if (explosions.Count > 0)
+            if (explosions.Count == 0)
             {
                 if (facing)
                 {
