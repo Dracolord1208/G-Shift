@@ -111,6 +111,7 @@ namespace G_Shift
         public Vector2 backgroundPos;
         public Vector2 backgroundPos2;
         Texture2D baseRectangle;
+        Texture2D baseRectangle2;
         public Texture2D far_backgroundTexture;
         public float far_scrollPosition = 0;
 
@@ -157,6 +158,8 @@ namespace G_Shift
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
         LevelSelect levelselectclass;
+
+        public float laserDepth;
 
         public Game1()
         {
@@ -302,6 +305,7 @@ namespace G_Shift
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
             baseRectangle = Content.Load<Texture2D>("Rectangle");
+            baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -333,7 +337,7 @@ namespace G_Shift
 
             levelupTexture = Content.Load<Texture2D>("levelupscreen");
             EndMenuTexture = Content.Load<Texture2D>("endMenu");
-           startButton = Content.Load<Texture2D>(@"start");
+            startButton = Content.Load<Texture2D>(@"start");
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
@@ -659,6 +663,7 @@ namespace G_Shift
                 }
             }
 
+
             //*********************
             // Update badGuys2
             // (check if beaten?)
@@ -774,24 +779,36 @@ namespace G_Shift
 
                 if (badGuys2[i].stance == Enemy2b.Stance.Charging && badGuys2[i].isRightFlag == true)
                 {
-                    if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+
+                    badGuys2[i].attackLeftRect = new Rectangle((int)badGuys2[i].position.X, (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+                    //badGuys2[i].attackRightRect = new Rectangle((int)badGuys2[i].position.X + badGuys2[i].Width - (int)(badGuys2[i].Width * (.25)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+
+                    //if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+                    if(badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)
                     {
                         if (badGuys2[i].attackLeftRect.Intersects(hitbase))
                         {
-                            gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
-                            gMan.playerStance = Player.Stance.hurt;
+                            //gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
+                            gMan.Health -= 2;
+                            //gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
 
                 if (badGuys2[i].stance == Enemy2b.Stance.Charging && badGuys2[i].isRightFlag == false)
                 {
-                    if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+
+                    //badGuys2[i].attackLeftRect = new Rectangle((int)badGuys2[i].position.X, (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+                    badGuys2[i].attackRightRect = new Rectangle((int)badGuys2[i].position.X + badGuys2[i].Width - (int)(badGuys2[i].Width * (.25)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
+
+                    //if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
+                    if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)                    
                     {
                         if (badGuys2[i].attackRightRect.Intersects(hitbase))
                         {
-                            gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
-                            gMan.playerStance = Player.Stance.hurt;
+                            //gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
+                            gMan.Health -= 2;
+                            //gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
@@ -944,14 +961,17 @@ namespace G_Shift
                         theBoss1.laserStartPos = new Vector2(theBoss1.position.X, theBoss1.position.Y + 200);   // waist height laserBeam
                         //theBoss1.laserPos.X -= 10;
                         theBoss1.laserCurrentPosX -= 50;
+                        theBoss1.laserCurrentPos = new Vector2(theBoss1.laserCurrentPosX, theBoss1.position.Y + 150);
                         theBoss1.laserWidth += 50;
                         if (theBoss1.laserWidth > 2000)
                         {
                             //theBoss1.laserStartPos
+                            theBoss1.laserCurrentPos = new Vector2(theBoss1.laserCurrentPosX, theBoss1.position.Y + 125);
                             theBoss1.laserStartPos = new Vector2(theBoss1.position.X, theBoss1.position.Y + 125);
                             theBoss1.laserHeight = 150;
                         }
                         theBoss1.laserBeam = new Rectangle((int)theBoss1.laserCurrentPosX, (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
+                        laserDepth = theBoss1.laserBeam.Bottom * 0.01f;
                     }
 
                     //if (theBoss1.attackLeftRect.Intersects(hitbase))
@@ -1147,7 +1167,8 @@ namespace G_Shift
                     else if (theBoss1.healthLow == true)
                     {
                         //boss1HomePoint = new Vector2(gMan.Position.X + 200, gMan.Position.Y);
-                        boss1HomePoint = new Vector2(SCREEN_WIDTH-200, SCREEN_HEIGHT*.5f);
+                        //boss1HomePoint = new Vector2(SCREEN_WIDTH-200, SCREEN_HEIGHT*.5f);
+                        boss1HomePoint = new Vector2(SCREEN_WIDTH - 300, SCREEN_HEIGHT * .5f);
                         //boss1HomePoint = new Vector2(800, 350);
 
                         // Adjust X-directional movement
@@ -1808,6 +1829,7 @@ namespace G_Shift
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
 
             //spriteBatch.Draw(background, new Rectangle(0, 0, 1000, 600), Color.White);    // !!WORKING
 
@@ -1833,7 +1855,9 @@ namespace G_Shift
                 if(translate)
                     translation = gMan.Position - gMan.StartPosition;
                 
-                spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
                 
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
@@ -1861,11 +1885,25 @@ namespace G_Shift
                         
                         //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Aquamarine); // Working!!
 
+                        /*  WORKING!1
                         if(theBoss1.laserBeam.Height < 75)
                             spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Salmon);
                         else
                             spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
+                        */
 
+                        //spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, color, 0, origin, SpriteEffects.None, (0.1f) * (depth));
+                        
+                        Rectangle sourceRectangle = new Rectangle(theBoss1.laserBeam.X, theBoss1.laserBeam.Y, 508, 133);
+                        Vector2 tempVec = new Vector2(0,0);
+                        if (theBoss1.laserBeam.Height < 75)
+                            spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Salmon, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
+                        else
+                            spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
+                            //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
+                        
+                        //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
+                        //spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                     }
                 }
                 else
@@ -1873,7 +1911,8 @@ namespace G_Shift
                 
                 spriteBatch.End();
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
                //spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
              //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
                
@@ -1882,6 +1921,7 @@ namespace G_Shift
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
+                    /*
                     if (badGuys2[i].position.Y < gMan.Position.Y)
                     {
                         badGuys2[i].depth = .2f;
@@ -1890,6 +1930,7 @@ namespace G_Shift
                     {
                         badGuys2[i].depth = .8f;
                     }
+                    */
                     badGuys2[i].screenPosition = new Vector2(badGuys2[i].position.X - translation.X, badGuys2[i].position.Y);
                     badGuys2[i].Draw(spriteBatch);
               //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
@@ -1908,14 +1949,6 @@ namespace G_Shift
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
-                    if (badGuys4[i].position.Y < gMan.Position.Y)
-                    {
-                        badGuys4[i].depth = .2f;
-                    }
-                    else
-                    {
-                        badGuys4[i].depth = .8f;
-                    }
                     badGuys4[i].screenPosition = new Vector2(badGuys4[i].position.X - translation.X, badGuys4[i].position.Y);
                     badGuys4[i].Draw(spriteBatch);
                  //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
@@ -1930,17 +1963,40 @@ namespace G_Shift
                     theBoss1.Draw(spriteBatch);
                 }
 
-                spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
-                spriteBatch.Draw(baseRectangle, healthRectange, Color.Green);
+                Vector2 origin = new Vector2(0, 0);
+
+                Vector2 gpos = new Vector2(fullHealthRect.X, fullHealthRect.Y); // position of gMan health bar
+                //spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
+                //spriteBatch.Draw(baseRectangle, healthRectange, Color.Green);
+
+                spriteBatch.Draw(baseRectangle, gpos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                spriteBatch.Draw(baseRectangle, gpos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
+
 
                 if (bossFlag == true)
                 {
-                    spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, Color.Red);
-                    spriteBatch.Draw(baseRectangle, boss1HealthBar, Color.Blue);
+                    // WORKING!!
+                    //spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, Color.Red);
+                    //spriteBatch.Draw(baseRectangle, boss1HealthBar, Color.Blue);
 
-                    if (theBoss1.laserOn == true)
-                    {
-                    }
+                    //Vector2 pos = new Vector2(boss1HealthBar.Location.X, boss1HealthBar.Location.Y);
+                    Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
+                    //Vector2 origin = new Vector2(0,0);
+
+                    //Color blue = new Color(0, 0, 255, 0);
+                    //Color red = new Color(255, 0, 0, 0);
+                    spriteBatch.Draw(baseRectangle2, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                    spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
+
+                    //spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, boss1MaxHealthBar, Color.Red, 0, origin, SpriteEffects.None, 0.98f);
+                    //spriteBatch.Draw(baseRectangle2, boss1HealthBar, boss1HealthBar, Color.Blue, 0, origin, SpriteEffects.None, 0.99f);
+
+
+                    //spriteBatch.Draw(texture, position, sourceRectangle, color, angle, origin, 1, SpriteEffects.None, 0.1f * depth);
+
+                    //if (theBoss1.laserOn == true)
+                    //{
+                    //}
                 }
                 
 

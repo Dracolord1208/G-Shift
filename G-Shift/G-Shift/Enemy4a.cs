@@ -191,6 +191,9 @@ namespace G_Shift
             ttl--;
             position += velocity;
 
+            //depth = position.Y * .01f;
+            depth = (position.Y + Height) * 0.01f;
+
             // move left
             if (moveLeftFlag == true)
             {

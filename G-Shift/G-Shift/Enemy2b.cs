@@ -193,6 +193,9 @@ namespace G_Shift
             ttl--;
             position += velocity;
 
+            //depth = position.Y * 0.01f; // just added for depth
+            depth = (position.Y + Height) * 0.01f;
+
             // move left
             if (moveLeftFlag == true)
             {
@@ -273,6 +276,10 @@ namespace G_Shift
                     velocity = new Vector2(-12f, 0f);
                 else
                     velocity = new Vector2(12f, 0f);
+
+                attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
+                attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
+
             }
         }
 

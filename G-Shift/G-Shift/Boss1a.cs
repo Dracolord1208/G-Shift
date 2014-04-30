@@ -36,7 +36,7 @@ namespace G_Shift
         public int ttl { get; set; }
         public int health { get; set; }
         public int maxHealth { get; set; }
-        public int depth { get; set; }
+        public float depth { get; set; }
 
         public bool jumpFlag { get; set; }
         public float gravity;
@@ -126,8 +126,8 @@ namespace G_Shift
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            //health = 500;
-            health = 160;
+            health = 500;
+            //health = 160;
             maxHealth = 500;
             Height = height;
             Width = width;
@@ -226,6 +226,9 @@ namespace G_Shift
         {
             ttl--;
             position += velocity;
+
+            //depth = position.Y * 0.01f;
+            depth = (position.Y + Height) * 0.01f;
 
             if (health >= maxHealth * .66f)
             {
@@ -337,7 +340,7 @@ namespace G_Shift
                 //moveRightAnimation.Update();
             }
 
-            hitBox = new Rectangle((int)position.X+50, (int)position.Y, Width-100, Height);
+            hitBox = new Rectangle((int)position.X+75, (int)position.Y, Width-75, Height);
         }
 
         // not being used.. yet
