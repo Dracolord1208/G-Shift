@@ -1,5 +1,6 @@
 ﻿
-// tall robot, that charge-attacks
+// Standard, small crawly robot
+// newer sprite sheets/animations
 
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,9 @@ using Microsoft.Xna.Framework.Media;
 using System.Threading;
 using System.Timers;
 
-
 namespace G_Shift
 {
-    public class Enemy2b
+    public class Enemy4b
     {
         public int Height { get; set; }
         public int Width { get; set; }
@@ -45,6 +45,7 @@ namespace G_Shift
         public Rectangle baseRect { get; set; }
         public Rectangle attackLeftRect { get; set; }
         public Rectangle attackRightRect { get; set; }
+        public Rectangle hitBox { get; set; }
 
         public Rectangle rect
         {
@@ -81,6 +82,7 @@ namespace G_Shift
         public bool holdPosFlag { get; set; }
         // attack
         public bool attackFlag { get; set; }
+        public bool animateAttackFlag { get; set; }
 
         public bool holdxPosFlag { get; set; }
         public bool holdyPosFlag { get; set; }
@@ -103,20 +105,23 @@ namespace G_Shift
         public Texture2D spriteSheetmoveLeft;
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
-        //public float depth { get; set; }
+
+        public Texture2D spriteSheetattackRight;
+        public Texture2D spriteSheetattackLeft;
+        private AnimatedSprite attackLeftAnimation;
+        private AnimatedSprite attackRightAnimation;
+
         public enum Stance
-        {
+        {                        
             Wait,
             Move,
             Attack,
-            Stunned,
-            Preparing,
-            Charging
+            Stunned
         }
         public Stance stance { get; set; }
 
 
-        public Enemy2b(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
+        public Enemy4b(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
             health = 10;
             Height = height;
@@ -159,12 +164,15 @@ namespace G_Shift
             holdxPosFlag = false;
             holdyPosFlag = false;
             attackFlag = false;
+            animateAttackFlag = false;
 
             baseHeight = 20;
 
             baseRect = new Rectangle((int)position.X, (int)position.Y + Height - 15, Width, 30);
-            attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-            attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
+            attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width*(.25)), Height);
+            //attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
+            attackRightRect = new Rectangle((int)(position.X + Width*(.75)), (int)position.Y, (int)(Width * (.25)), Height);
+            hitBox = new Rectangle((int)position.X + (int)(Width*.33), (int)position.Y, (int)(Width*.33), Height);
 
             //spriteSheet = Content.Load<Texture2D>("robotSmallSheet1a");
             //moveAnimation = new AnimatedSprite();
@@ -181,10 +189,27 @@ namespace G_Shift
             //spriteSheet = content.Load<Texture2D>("robotSmallSheet1a");   // Working!!
             //moveAnimation = new AnimatedSprite(spriteSheet, 7, 5);
 
-            spriteSheetmoveRight = content.Load<Texture2D>("medSheet3a");
-            spriteSheetmoveLeft = content.Load<Texture2D>("medSheet3b");
-            moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
-            moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 7, 5);
+            
+            //spriteSheetmoveRight = content.Load<Texture2D>("robotSmallSheet3b");
+            //spriteSheetmoveLeft = content.Load<Texture2D>("robotSmallSheet3a");
+            //moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
+            //moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 7, 5);
+
+            //spriteSheetmoveRight = content.Load<Texture2D>("smallMoveSheet2a");
+            //spriteSheetmoveLeft = content.Load<Texture2D>("smallMoveSheet2b");
+            spriteSheetmoveRight = content.Load<Texture2D>("smallMoveSheet3a");
+            spriteSheetmoveLeft = content.Load<Texture2D>("smallMoveSheet3b");
+            moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 5);
+            moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 5);
+
+            // Attack animations
+            //spriteSheetattackRight = content.Load<Texture2D>("smallAttackSheet2b");
+            //spriteSheetattackLeft = content.Load<Texture2D>("smallAttackSheet2a");
+            spriteSheetattackRight = content.Load<Texture2D>("smallAttackSheet3b");
+            spriteSheetattackLeft = content.Load<Texture2D>("smallAttackSheet3a");
+            attackLeftAnimation = new AnimatedSprite(spriteSheetattackLeft, 7, 5);
+            attackRightAnimation = new AnimatedSprite(spriteSheetattackRight, 7, 5);
+            
         }
 
         //(Update v.2)
@@ -193,13 +218,13 @@ namespace G_Shift
             ttl--;
             position += velocity;
 
-            //depth = position.Y * 0.01f; // just added for depth
+            //depth = position.Y * .01f;
             depth = (position.Y + Height) * 0.01f;
 
             // move left
             if (moveLeftFlag == true)
             {
-                velocity = new Vector2(-4f, velocity.Y);
+                velocity = new Vector2(-3f, velocity.Y);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -207,7 +232,7 @@ namespace G_Shift
             // move right
             else if (moveRightFlag == true)
             {
-                velocity = new Vector2(4f, velocity.Y);
+                velocity = new Vector2(3f, velocity.Y);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -215,7 +240,7 @@ namespace G_Shift
             // move up
             if (moveUpFlag == true)
             {
-                velocity = new Vector2(velocity.X, -4f);
+                velocity = new Vector2(velocity.X, -3f);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -223,7 +248,7 @@ namespace G_Shift
             // move down
             else if (moveDownFlag == true)
             {
-                velocity = new Vector2(velocity.X, 4f);
+                velocity = new Vector2(velocity.X, 3f);
                 //moveAnimation.Update();
                 //moveLeftAnimation.Update();
                 //moveRightAnimation.Update();
@@ -260,27 +285,25 @@ namespace G_Shift
             }
 
             // attack
-            //if (attackFlag == true)
-            //{
-            //}
+            if (attackFlag == true)
+            {
+                attackLeftAnimation.Update();
+                attackRightAnimation.Update();
+
+                //if (animateAttackFlag == true)
+                //{
+                //    attackLeftAnimation.Update();
+                //    attackRightAnimation.Update();
+                //}
+            }
 
             if (holdPosFlag == false)
             {
                 moveLeftAnimation.Update();
-                moveRightAnimation.Update();
+                moveRightAnimation.Update();                
             }
 
-            if(stance == Stance.Charging)
-            {
-                if(isRightFlag == true)
-                    velocity = new Vector2(-12f, 0f);
-                else
-                    velocity = new Vector2(12f, 0f);
-
-                attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-                attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
-
-            }
+            hitBox = new Rectangle((int)position.X + (int)(Width * .33), (int)position.Y, (int)(Width * .33), Height);
         }
 
         public void ResetValues()
@@ -292,7 +315,8 @@ namespace G_Shift
             holdPosFlag = false;
             holdxPosFlag = false;
             holdyPosFlag = false;
-            //attackFlag = false;
+            attackFlag = false;
+            animateAttackFlag = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -320,11 +344,27 @@ namespace G_Shift
 
                 if (isRightFlag == true)
                 {
-                    moveRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    //if (stance == Stance.Attack)
+                    if (attackFlag == true)
+                    {
+                        attackLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
+                    else
+                    {
+                        moveRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
                 }
                 else
                 {
-                    moveLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    //if (stance == Stance.Attack)
+                    if (attackFlag == true)
+                    {
+                        attackRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
+                    else
+                    {
+                        moveLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
                 }
 
             }

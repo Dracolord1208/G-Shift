@@ -103,6 +103,8 @@ namespace G_Shift
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
 
+        
+
         public enum Stance
         {                        
             Wait,
@@ -179,10 +181,12 @@ namespace G_Shift
             //spriteSheet = content.Load<Texture2D>("robotSmallSheet1a");   // Working!!
             //moveAnimation = new AnimatedSprite(spriteSheet, 7, 5);
 
-            spriteSheetmoveRight = content.Load<Texture2D>("robotSmallSheet2b");
-            spriteSheetmoveLeft = content.Load<Texture2D>("robotSmallSheet2a");
+            
+            spriteSheetmoveRight = content.Load<Texture2D>("robotSmallSheet3b");
+            spriteSheetmoveLeft = content.Load<Texture2D>("robotSmallSheet3a");
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
             moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 7, 5);
+            
         }
 
         //(Update v.2)

@@ -213,8 +213,8 @@ namespace G_Shift
 
         public void LoadContent(ContentManager content)
         {
-            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet1cRight");
-            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet1c");
+            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet3b");
+            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet3a");
             //moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
             //moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
