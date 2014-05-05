@@ -1,6 +1,8 @@
 ﻿
 // 1st Boss
 
+// move to, translation.x + screenWidth
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace G_Shift
         public int ttl { get; set; }
         public int health { get; set; }
         public int maxHealth { get; set; }
-        public int depth { get; set; }
+        public float depth { get; set; }
 
         public bool jumpFlag { get; set; }
         public float gravity;
@@ -213,8 +215,8 @@ namespace G_Shift
 
         public void LoadContent(ContentManager content)
         {
-            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet1cRight");
-            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet1c");
+            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet3b");
+            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet3a");
             //moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
             //moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
@@ -226,6 +228,9 @@ namespace G_Shift
         {
             ttl--;
             position += velocity;
+
+            //depth = position.Y * 0.01f;
+            depth = (position.Y + Height) * 0.01f;
 
             if (health >= maxHealth * .66f)
             {
@@ -337,7 +342,7 @@ namespace G_Shift
                 //moveRightAnimation.Update();
             }
 
-            hitBox = new Rectangle((int)position.X+50, (int)position.Y, Width-100, Height);
+            hitBox = new Rectangle((int)position.X+75, (int)position.Y, Width-75, Height);
         }
 
         // not being used.. yet
