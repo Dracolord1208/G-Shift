@@ -416,7 +416,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <Compile Include="Music\BattleBackground.wma">
       <Name>BattleBackground</Name>
       <Importer>WmaImporter</Importer>
@@ -446,7 +445,6 @@
       <Name>weakpunch_3</Name>
       <Importer>WmaImporter</Importer>
       <Processor>SongProcessor</Processor>
-=======
     <Compile Include="RectangleRed.png">
       <Name>RectangleRed</Name>
       <Importer>TextureImporter</Importer>
@@ -554,7 +552,6 @@
       <Name>smallDeathSheet2b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
->>>>>>> origin/Near-Final
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
