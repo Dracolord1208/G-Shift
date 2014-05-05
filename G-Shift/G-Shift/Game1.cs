@@ -87,6 +87,8 @@ namespace G_Shift
 
         List<Item> allItems;
         //Item aCrate;
+        TimeSpan previouslyRemovedObject;
+        TimeSpan removeDestroyedItem;
 
         World level;
 
@@ -128,8 +130,7 @@ namespace G_Shift
         public List<Rectangle> BadGuys2aRect;
         public TimeSpan badGuy2spawnTime;      
         public TimeSpan badGuy2checkpoint;     
-        public Random badGuy2random;           
-
+        public Random badGuy2random;
         public List<Enemy3a> badGuys3;  // enemies
         public TimeSpan badGuy3spawnTime;      
         public TimeSpan badGuy3checkpoint;     
@@ -163,9 +164,26 @@ namespace G_Shift
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies=0;
         LevelSelect levelselectclass;
-
+        Song punch1;
+         Song punch2;
+         Song punch3;
+         Song timeBomb;
+         Song menuMusic;
+         Song gameMusic;
+         bool playSong;
+         List<Animation> DeathRightList;
+         List<Animation> DeathLeftList;
+         List<Animation> RiseReftList;
+         List<Animation> RiseRightList;
         public float laserDepth;
-
+        Texture2D DeathLeft;
+        Texture2D DeathRight;
+        Texture2D FallLeft;
+        Texture2D FallRight;
+        Texture2D LifeLeft; 
+        Texture2D LifeRight;
+        Texture2D RiseRight;
+        Texture2D RiseLeft; 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -190,6 +208,11 @@ namespace G_Shift
             level = new World(0, Content);
 
             allItems = new List<Item>();
+            DeathRightList = new List<Animation>();
+            DeathLeftList = new List<Animation>();
+            removeDestroyedItem = TimeSpan.FromSeconds(1f);
+            previouslyRemovedObject = TimeSpan.Zero;
+
             explosions = new List<Animation>();
             for (int i = 0; i < level.getForUpdate().Count; i++)
             {
@@ -350,7 +373,21 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-
+            punch1 = Content.Load<Song>("Music/weakpunch_1");
+            punch2 = Content.Load<Song>("Music/weakpunch_2");
+            punch3 = Content.Load<Song>("Music/weakpunch_3");
+            timeBomb = Content.Load<Song>("Music/TickingTimeBomb");
+            menuMusic = Content.Load<Song>("Music/MenuBackground");
+            gameMusic = Content.Load<Song>("Music/BattleBackground");
+            DeathLeft = Content.Load<Texture2D>("Galager/DEATHLEft");
+            DeathRight = Content.Load<Texture2D>("Galager/DEATHRight");
+            FallLeft = Content.Load<Texture2D>("Galager/FALLANIMATON");
+            FallRight = Content.Load<Texture2D>("Galager/FALLANIMATONright");
+            LifeLeft = Content.Load<Texture2D>("Galager/LIFELEFT");
+            LifeRight = Content.Load<Texture2D>("Galager/LIFEright");
+            RiseRight = Content.Load<Texture2D>("Galager/LIFTANIMATONright");
+            RiseLeft = Content.Load<Texture2D>("Galager/LIFTANIMATON");
+            PlayMusic(menuMusic);
 
         }
 
@@ -428,7 +465,7 @@ namespace G_Shift
                 backgroundThread = new Thread(LoadGame);
                 isLoading = true;
 
-
+                stopMusic();
                 //start backgroundthread
                 backgroundThread.Start();
             }
@@ -452,7 +489,10 @@ namespace G_Shift
             if(bossFlag==true)
                 boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
-
+            //UpdateRR(gameTime);
+            //UpdateRL(gameTime);
+            UpdateDL(gameTime);
+            UpdateDR(gameTime);
 
 
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
@@ -462,11 +502,17 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
+             if (playSong == true)
+             {
+                 PlayMusic(gameMusic);
+             }
+
             if (gameState == GameState.Playing)
             {
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
+                  //  playSong = true;
                     if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
                         currentGamePadState.DPad.Left == ButtonState.Pressed)
                     {
@@ -477,7 +523,7 @@ namespace G_Shift
                     {
                       //  scrollPosition += moveFactorPerSecond;
                     }
-
+                   // PlayMusic(gameMusic);
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -497,6 +543,12 @@ namespace G_Shift
                     for (int i = 0; i < allItems.Count; i++)
                     {
                         allItems[i].Update(gMan, Content, graphics);
+
+                        if (gameTime.TotalGameTime - previouslyRemovedObject > removeDestroyedItem && allItems[i].itemDestroyed())
+                        {
+                            previouslyRemovedObject = gameTime.TotalGameTime;
+                            allItems.RemoveAt(i);
+                        }
                     }
 
                     //aCrate.Update(gMan);
@@ -508,7 +560,23 @@ namespace G_Shift
                     //UpdateEnemyProjectiles();
                     UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
-
+                    //if (gMan.Health <= 0)
+                    //{
+                    //    if (!gMan.facing)
+                    //    {
+                    //        if (DeathLeftList.Count < 1)
+                    //        {
+                    //            AddDL(new Vector2(gMan.StartPosition.X, gMan.Position.Y));
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        if (DeathRightList.Count < 1)
+                    //        {
+                    //            AddDR(new Vector2(gMan.StartPosition.X, gMan.Position.Y));
+                    //        }
+                    //    }
+                    //}
                     //spawnEnemies(gameTime);
 
                     if (currentKeyboardState.IsKeyDown(Keys.D1))
@@ -599,6 +667,76 @@ namespace G_Shift
 
             base.Update(gameTime);
         }
+
+        //private void UpdateRL(GameTime gameTime)
+        //{
+        //    for (int i = RiseReftList.Count - 1; i >= 0; i--)
+        //    {
+        //        RiseReftList[i].Update(gameTime);
+        //        if (RiseReftList[i].Active == false)
+        //        {
+        //            RiseReftList.RemoveAt(i);
+        //        }
+        //    }
+        //}
+        //private void AddRL(Vector2 position)
+        //{
+        //    Animation explosion = new Animation();
+        //    explosion.Initialize(RiseLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
+        //    RiseReftList.Add(explosion);
+        //}
+        //private void UpdateRR(GameTime gameTime)
+        //{
+        //    for (int i = RiseRightList.Count - 1; i >= 0; i--)
+        //    {
+        //        RiseRightList[i].Update(gameTime);
+        //        if (RiseRightList[i].Active == false)
+        //        {
+        //            RiseRightList.RemoveAt(i);
+        //        }
+        //    }
+        //}
+        //private void AddRR(Vector2 position)
+        //{
+        //    Animation explosion = new Animation();
+        //    explosion.Initialize(RiseRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
+        //    RiseRightList.Add(explosion);
+        //}
+        private void UpdateDL(GameTime gameTime)
+        {
+            for (int i = DeathLeftList.Count - 1; i >= 0; i--)
+            {
+                DeathLeftList[i].Update(gameTime);
+                if (DeathLeftList[i].Active == false)
+                {
+                    DeathLeftList.RemoveAt(i);
+                }
+            }
+        }
+        private void AddDL(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(DeathLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
+            DeathLeftList.Add(explosion);
+        }
+        private void UpdateDR(GameTime gameTime)
+        {
+            for (int i = DeathRightList.Count - 1; i >= 0; i--)
+            {
+                DeathRightList[i].Update(gameTime);
+                if (DeathRightList[i].Active == false)
+                {
+                    DeathRightList.RemoveAt(i);
+                }
+            }
+        }
+        private void AddDR(Vector2 position)
+        {
+            Animation explosion = new Animation();
+            explosion.Initialize(DeathRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
+            DeathRightList.Add(explosion);
+        }
+
         void MouseClicked(int x, int y)
         {
             //creates a rectangle of 10x10 around the place where the mouse was clicked
@@ -802,7 +940,8 @@ namespace G_Shift
                         {
                             //gMan.Health -= (int)(gMan.maxHealth*(.25f));    // - a quarter health in damage
                             gMan.Health -= 2;
-                            //gMan.playerStance = Player.Stance.hurt;
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 60));
+                            gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
@@ -820,7 +959,8 @@ namespace G_Shift
                         {
                             //gMan.Health -= (int)(gMan.maxHealth * (.25f));    // - a quarter health in damage
                             gMan.Health -= 2;
-                            //gMan.playerStance = Player.Stance.hurt;
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 60));
+                            gMan.playerStance = Player.Stance.hurt;
                         }
                     }
                 }
@@ -921,7 +1061,7 @@ namespace G_Shift
                         {
                             //badGuys4[i].animateAttackFlag = true;
                             gMan.Health -= 10;
-                            AddSmallExplosion(badGuys4[i].position);
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
                         }
@@ -936,7 +1076,8 @@ namespace G_Shift
                             //badGuys4[i].animateAttackFlag = true;
                             gMan.Health -= 10;
                           //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
-                            AddSmallExplosion(badGuys4[i].position);
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
+//                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
@@ -1565,10 +1706,10 @@ namespace G_Shift
                 (int)badGuys4[i].position.Y + 40,
                 badGuys4[i].Width - 90,
                 badGuys4[i].Height - 40);
-                enemy1Rec = new Rectangle((int)badGuys4[i].position.X+60,
-                (int)badGuys4[i].position.Y+40 ,
-                badGuys4[i].Width-90,
-                badGuys4[i].Height-40);
+                enemy1Rec = new Rectangle((int)badGuys4[i].position.X + 60,
+                (int)badGuys4[i].position.Y + 40,
+                badGuys4[i].Width - 90,
+                badGuys4[i].Height - 40);
                 // Determine if the two objects collided with each
                 // other
                 if (rectangle1.Intersects(rectangle2))
@@ -1584,34 +1725,93 @@ namespace G_Shift
                     if (gMan.Health <= 0)
                         gMan.Active = false;
                 }
-            }
-                // Do the collision between the player and the gravies
-                for (int i = 0; i < badGuys2.Count; i++)
+
+                if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
                 {
-                    rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
-                    (int)badGuys2[i].position.Y + 150,
-                    badGuys2[i].Width - 80,
-                    badGuys2[i].Height - 160);
-                    enemy2Rec = new Rectangle((int)badGuys2[i].position.X+50,
-                    (int)badGuys2[i].position.Y+150,
-                    badGuys2[i].Width-80,
-                    badGuys2[i].Height-160);
-                    // Determine if the two objects collided with each
-                    // other
-                    if (rectangle1.Intersects(rectangle2))
+                    badGuys4[i].health = 0;
+                }
+
+            }
+            // Do the collision between the player and the gravies
+            for (int i = 0; i < badGuys2.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
+                {
+                    //the player can hit the enemy
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                    {
+                        //the player hit the robot
+                        badGuys2[i].health -= gMan.heavyHit;
+                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+                    }
+                    // If the player health is less than zero we died
+                }
+
+                if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+                {
+                    badGuys2[i].health = 0;
+                }
+
+            }
+
+            if (bossFlag)
+            {
+                for (int i = 0; i < allItems.Count; i++)
+                {
+                    if (allItems[i].itemBeingThrown())
+                    {
+                        if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
+                        {
+                            theBoss1.health = 0;
+                        }
+                    }
+                }
+                        }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
+                if (bossFlag)
+                {
+                    if (rectangle1.Intersects(theBoss1.hitBox))
                     {
                         //the player can hit the enemy
-                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack )//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                         {
                             //the player hit the robot
-                            badGuys2[i].health -= gMan.heavyHit;
+                            theBoss1.health -= gMan.heavyHit;
                             //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                         }
                         // If the player health is less than zero we died
                     }
-                }            
+                }
+
         }
 
+        private void PlayMusic(Song song)
+         {
+             // Due to the way the MediaPlayer plays music,
+             // we have to catch the exception. Music will play when the game is not tethered
+             try
+             {
+                 // Play the music
+                 MediaPlayer.Play(song);
+ 
+                 // Loop the currently playing song
+                 MediaPlayer.IsRepeating = true;
+             }
+             catch { }
+         }
+        public void stopMusic()
+         {
+             MediaPlayer.Stop();
+         }
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
@@ -1887,7 +2087,7 @@ namespace G_Shift
             {
                 spriteBatch.End();
 
-                if(translate)
+                if (translate)
                     translation = gMan.Position - gMan.StartPosition;
                 
                 //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));

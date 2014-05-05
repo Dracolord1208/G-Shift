@@ -423,6 +423,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="RectWhite.png">
       <Name>RectWhite</Name>
       <Importer>TextureImporter</Importer>
@@ -437,11 +438,21 @@
     </Compile>
     <Compile Include="robotSmallSheet3b.png">
       <Name>robotSmallSheet3b</Name>
+=======
+    <Compile Include="Galager\hurtleft.png">
+      <Name>hurtleft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Galager\hurtright.png">
+      <Name>hurtright</Name>
+>>>>>>> d9cc866cac069c67b1cd042f85963b4e9f8a9cc8
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="medSheet3a.png">
       <Name>medSheet3a</Name>
       <Importer>TextureImporter</Importer>
@@ -511,6 +522,37 @@
       <Name>smallAttackSheet3b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+=======
+    <Compile Include="Music\BattleBackground.wma">
+      <Name>BattleBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\MenuBackground.wma">
+      <Name>MenuBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\TickingTimeBomb.wma">
+      <Name>TickingTimeBomb</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_1.wma">
+      <Name>weakpunch_1</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_2.wma">
+      <Name>weakpunch_2</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_3.wma">
+      <Name>weakpunch_3</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+>>>>>>> d9cc866cac069c67b1cd042f85963b4e9f8a9cc8
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
