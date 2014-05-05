@@ -459,10 +459,10 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
-            if (playSong == true)
-            {
-                PlayMusic(gameMusic);
-            }
+            //if (playSong == true)
+            //{
+            //    PlayMusic(gameMusic);
+            //}
 
             if (gameState == GameState.Playing)
             {
