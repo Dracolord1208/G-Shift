@@ -1,6 +1,8 @@
 ﻿
 // 1st Boss
 
+// move to, translation.x + screenWidth
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,8 +128,8 @@ namespace G_Shift
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            health = 500;
-            //health = 160;
+            //health = 500;
+            health = 160;
             maxHealth = 500;
             Height = height;
             Width = width;
@@ -213,8 +215,8 @@ namespace G_Shift
 
         public void LoadContent(ContentManager content)
         {
-            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet1cRight");
-            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet1c");
+            spriteSheetmoveRight = content.Load<Texture2D>("BossSheet3b");
+            spriteSheetmoveLeft = content.Load<Texture2D>("BossSheet3a");
             //moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 3, 3);
             //moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveRight, 3, 3);
