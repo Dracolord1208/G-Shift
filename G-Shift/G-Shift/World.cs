@@ -26,6 +26,13 @@ namespace G_Shift
             /*public bool direction1;
             public bool direction2;*/
         }
+
+        public struct BattleEvent
+        {
+            public List<Enemy2b> MedEnemies;
+            public float loc;
+        }
+
         public List<Track> tracks;
         public List<Rectangle> level;
         public List<Item> items;
@@ -35,6 +42,7 @@ namespace G_Shift
             level = new List<Rectangle>();
             items = new List<Item>();
             tracks = new List<Track>();
+            string s1 = "level" + lvlNum + ".txt";
             StreamReader file = new StreamReader("level.txt");
 
             string s = file.ReadToEnd();
@@ -85,6 +93,10 @@ namespace G_Shift
                         track.direction2 = false;*/
 
                     tracks.Add(track);
+                }
+                if (data[x] == "Event")
+                {
+
                 }
                 if (data[x] == "/*")
                 {
