@@ -126,8 +126,8 @@ namespace G_Shift
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            health = 500;
-            //health = 160;
+            //health = 500;
+            health = 160;
             maxHealth = 500;
             Height = height;
             Width = width;

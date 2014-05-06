@@ -378,7 +378,7 @@ namespace G_Shift
             LifeRight = Content.Load<Texture2D>("Galager/LIFEright");
             RiseRight = Content.Load<Texture2D>("Galager/LIFTANIMATONright");
             RiseLeft = Content.Load<Texture2D>("Galager/LIFTANIMATON");
-            PlayMusic(menuMusic);
+            PlayMusic(gameMusic);
 
         }
 
@@ -456,7 +456,7 @@ namespace G_Shift
                 backgroundThread = new Thread(LoadGame);
                 isLoading = true;
 
-                stopMusic();
+                //stopMusic();
                 //start backgroundthread
                 backgroundThread.Start();
             }
@@ -2185,8 +2185,8 @@ namespace G_Shift
 
                     //Color blue = new Color(0, 0, 255, 0);
                     //Color red = new Color(255, 0, 0, 0);
-                    spriteBatch.Draw(baseRectangle2, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
-                    spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
+                  //  spriteBatch.Draw(baseRectangle2, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                  //  spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
 
                     //spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, boss1MaxHealthBar, Color.Red, 0, origin, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle2, boss1HealthBar, boss1HealthBar, Color.Blue, 0, origin, SpriteEffects.None, 0.99f);
