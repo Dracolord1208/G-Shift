@@ -1948,16 +1948,16 @@ namespace G_Shift
                 Vector2 translation = gMan.Position - gMan.StartPosition;
 
 
-                //if (translate)
-                //{
-                //    translation = gMan.Position - gMan.StartPosition;
-                //}
-                spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
-                if(translate)
+                if (translate)
+                {
                     translation = gMan.Position - gMan.StartPosition;
+                }
+                spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                //if(translate)
+                    //translation = gMan.Position - gMan.StartPosition;
                 
                 //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
-                spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
+                //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
                 //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
                 
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
