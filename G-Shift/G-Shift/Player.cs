@@ -48,7 +48,7 @@ namespace G_Shift
         public bool ismoveing = false;
         public int Height { get; set; }
         public int Width { get; set; }
-       public  bool facing = true;//true==left false == right
+        bool facing = true;//true==left false == right
         // Amount of hit points that player has
         public int Health;
         public bool gotlife;
@@ -86,8 +86,7 @@ namespace G_Shift
         Texture2D WalkGunLeft;       public Animation AWalkGunLeft;
         Texture2D WalkGunRight;     public Animation AWalkGunRight;
         bool fire=false;
-        Texture2D HurtLeft; Texture2D HurtRight;
-        public Animation AHurtLeft; public Animation AHurtRight;
+
         public int heavyHit = 5;
         int Combo = 0;
         float attackTime;
@@ -103,118 +102,8 @@ namespace G_Shift
         bool isPunching;
         //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
-        List<Animation> AttackRightList;
-        List<Animation> AttackLeftList;
-        List<Animation> RiseReftList;
-        List<Animation> RiseRightList;
-        List<Animation> DeathRightList;
-        List<Animation> DeathLeftList;
-
-        private void UpdateAR(GameTime gameTime)
-        {
-            for (int i = AttackRightList.Count - 1; i >= 0; i--)
-            {
-                AttackRightList[i].Update(gameTime);
-                if (AttackRightList[i].Active == false)
-                {
-                    AttackRightList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddAR(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Right, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-            AttackRightList.Add(explosion);
-        }
-        private void UpdateAL(GameTime gameTime)
-        {
-            for (int i = AttackLeftList.Count - 1; i >= 0; i--)
-            {
-                AttackLeftList[i].Update(gameTime);
-                if (AttackLeftList[i].Active == false)
-                {
-                    AttackLeftList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddAL(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Left, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 200, Color.White, 1f, false);
-            AttackLeftList.Add(explosion);
-        }
-        private void UpdateRL(GameTime gameTime)
-        {
-            for (int i = RiseReftList.Count - 1; i >= 0; i--)
-            {
-                RiseReftList[i].Update(gameTime);
-                if (RiseReftList[i].Active == false)
-                {
-                    RiseReftList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddRL(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Left, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-            RiseReftList.Add(explosion);
-        }
-        private void UpdateRR(GameTime gameTime)
-        {
-            for (int i = RiseRightList.Count - 1; i >= 0; i--)
-            {
-                RiseRightList[i].Update(gameTime);
-                if (RiseRightList[i].Active == false)
-                {
-                    RiseRightList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddRR(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Left, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-            RiseRightList.Add(explosion);
-        }
-        private void UpdateDL(GameTime gameTime)
-        {
-            for (int i = AttackLeftList.Count - 1; i >= 0; i--)
-            {
-                AttackLeftList[i].Update(gameTime);
-                if (AttackLeftList[i].Active == false)
-                {
-                    AttackLeftList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddDL(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Left, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-            AttackLeftList.Add(explosion);
-        }
-        private void UpdateDR(GameTime gameTime)
-        {
-            for (int i = AttackLeftList.Count - 1; i >= 0; i--)
-            {
-                AttackLeftList[i].Update(gameTime);
-                if (AttackLeftList[i].Active == false)
-                {
-                    AttackLeftList.RemoveAt(i);
-                }
-            }
-        }
-        private void AddDR(Vector2 position)
-        {
-            Animation explosion = new Animation();
-            explosion.Initialize(Attack1Left, new Vector2(StartPosition.X, Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-            AttackLeftList.Add(explosion);
-        }
         public void LoadContent(ContentManager content)
         {
-
             galPosition = new Vector2((int)Position.X - 85, (int)Position.Y - 200);
             Attack1Right = content.Load<Texture2D>("Galager/Attack1");
             Attack1Left = content.Load<Texture2D>("Galager/Attack2");
@@ -230,10 +119,6 @@ namespace G_Shift
             WalkNoGunRight = content.Load<Texture2D>("Galager/WALKINGNOGUNRight1");
             WalkGunLeft = content.Load<Texture2D>("Galager/WALKINGWITHGUN");
             WalkGunRight = content.Load<Texture2D>("Galager/WALKINGWITHGUNRight1");
-            HurtLeft = content.Load<Texture2D>("Galager/hurtleft");
-            HurtRight = content.Load<Texture2D>("Galager/hurtright");
-            AHurtLeft.Initialize(HurtRight, galPosition, 225, 225, 1, 60, Color.White, 1f, true);
-            AHurtRight.Initialize(HurtLeft, galPosition, 225, 225, 1, 60, Color.White, 1f, true);
             AAttack1Right.Initialize(Attack1Left, galPosition, 225, 250, 8, 90, Color.White, 1f, true);
             AAttack1Left.Initialize(Attack1Right, galPosition, 225, 250, 8, 90, Color.White, 1f, true);
             ADeathLeft.Initialize(DeathRight, galPosition, 225, 250, 8, 60, Color.White, 1f, true);
@@ -253,13 +138,6 @@ namespace G_Shift
         }
         public void Initialize(Texture2D playerTexture, Vector2 position)
         {
-
-            AttackRightList = new List<Animation>();
-            AttackLeftList = new List<Animation>();
-            RiseReftList = new List<Animation>();
-            RiseRightList = new List<Animation>();
-            DeathRightList = new List<Animation>();
-            DeathLeftList = new List<Animation>();
 
             //set animation
             fireTime = TimeSpan.FromSeconds(.30f);
@@ -285,8 +163,8 @@ namespace G_Shift
             Active = true;
             playerStance = Stance.Standing;
           //  playerAnimation.Initialize(gManTest1, Vector2.Zero, 225, 225, 6, 30, Color.White, 1f, true);
-            AHurtRight = new Animation();
-            AHurtLeft = new Animation();
+
+
           //  PlayerAnimation = playerAnimation;
             // Set the player health
             maxHealth = 500;
@@ -317,8 +195,7 @@ namespace G_Shift
             AWalkGunRight.Position = new Vector2(StartPosition.X, Position.Y);
             AStillleft.Position = new Vector2(StartPosition.X, Position.Y);
             AStillRight.Position = new Vector2(StartPosition.X, Position.Y);
-            AHurtLeft.Position = new Vector2(StartPosition.X, Position.Y);
-                AHurtRight.Position = new Vector2(StartPosition.X, Position.Y);
+           
             ADeathLeft.Update(gameTime);
             ADeathRight.Update(gameTime);
             AFallLeft.Update(gameTime);
@@ -335,52 +212,27 @@ namespace G_Shift
             AStillRight.Update(gameTime);
             AAttack1Right.Update(gameTime);
             AAttack1Left.Update(gameTime);
-            //      public Animation AHurtLeft; public Animation AHurtRight;
-             AHurtLeft.Update(gameTime);
-             AHurtRight.Update(gameTime);
             //  currentKeyboardState=   Keyboard.GetState();
             // Move background texture 400 pixels each second 
             StanceMoves(gameTime);
-            UpdateAR(gameTime);
-            UpdateAL(gameTime);
-            UpdateRR(gameTime);
-            UpdateRL(gameTime);
-            UpdateDL(gameTime);
-            UpdateDR(gameTime);
+           
             motion = new Vector2(0, 0);
             Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
             Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
             //////handGunA.position = new Vector2(position.X + 50, position.Y + 100);
             galPosition = new Vector2((int)Position.X - 85, (int)Position.Y - 200);
             // Use the Keyboard / Dpad
-            bool animators = false;
-
-            if(AttackRightList.Count==0)
-                animators=true;
-            if(AttackLeftList.Count==0)
-                animators=true;
-            if(RiseReftList.Count==0)
-                animators = true;
-            if(RiseRightList.Count==0)
-                animators = true;
-            if( DeathRightList.Count==0)
-                animators = true;
-            if (DeathLeftList.Count == 0)
-                animators = true;
-
             if ((currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
             currentGamePadState.DPad.Left == ButtonState.Pressed )&& !previousKeyboardState.IsKeyDown(Keys.C))
             {
-                if (animators)
-                    Position.X -= playerMoveSpeed;
+                Position.X -= playerMoveSpeed;
                 facing = false;
                 playerStance = Stance.Left;
             }
             if ((currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
             currentGamePadState.DPad.Right == ButtonState.Pressed )&& !previousKeyboardState.IsKeyDown(Keys.C))
             {
-                if (animators)
-                    Position.X += playerMoveSpeed;
+                Position.X += playerMoveSpeed;
                 facing = true;
                 playerStance = Stance.Right;
             }
@@ -400,9 +252,8 @@ namespace G_Shift
                     }
                 }
 
-                if (canMoveUp && animators)
+                if (canMoveUp)
                     Position.Y -= playerMoveSpeed;
-
             }
 
             canMoveDown = true;
@@ -420,38 +271,49 @@ namespace G_Shift
                     }
                 }
 
-                if (canMoveDown && animators)
+                if (canMoveDown)
                     Position.Y += playerMoveSpeed;
-
             }
 
             if (currentKeyboardState.IsKeyDown(Keys.Z) || currentGamePadState.Buttons.X == ButtonState.Pressed)
             {
-   //             playerStance = Stance.lightAttack;
+                playerStance = Stance.lightAttack;
             }
             if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
             {
-                
-//                playerStance = Stance.heavyAttack;
+
+                playerStance = Stance.heavyAttack;
 
             }
 
             //else
-            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) )
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 0)
             {
-                if (!facing)
-                {
-                    if (AttackRightList.Count < 1)
-                        AddAR(new Vector2(StartPosition.X, Position.Y));
-                }
-                else
-                {
-                    if (AttackLeftList.Count < 1)
-                        AddAL(new Vector2(StartPosition.X, Position.Y));
-                }
-                playerStance = Stance.heavyAttack;
-            }
+                //   whipping = true;
+                //attackTime = maxAttackTime;
+                // animateWhip(gameTime);
 
+                playerStance = Stance.heavyAttack;
+                //ok
+                Combo++;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 1)
+            {
+                //   whipping = true;
+                //attackTime = maxAttackTime;
+                // animateWhip(gameTime);
+                playerStance = Stance.heavyAttack;
+                Combo++;
+            }
+            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space) && Combo == 2)
+            {
+                //   whipping = true;
+                //attackTime = maxAttackTime;
+                // animateWhip(gameTime);
+                fire = true;
+                playerStance = Stance.heavyAttack;
+                Combo = 0;
+            }
 
             CollisionDetection(level);
 
@@ -562,9 +424,25 @@ namespace G_Shift
                                    
                                 }
                             }
-
-                            if (AttackLeftList.Count == 0)
+                            if (playerStance == Stance.lightAttack)
+                            {
+                            } 
+                            if (playerStance == Stance.hurt)
+                            {
+                            }
+                            if (playerStance == Stance.heavyAttack)
+                            {
+                                 AAttack1Right.Update(gameTime);
+                              
+                            }
+                            if (fire == false)
                                 playerStance = Stance.Standing;
+                //ADeathRight.Draw(spriteBatch, depth);
+                //AFallRight.Draw(spriteBatch, depth);
+                //ALifeRight.Draw(spriteBatch, depth);
+                //ARiseRight.Draw(spriteBatch, depth);
+                            //playerStance = Stance.Standing;
+                
             }
             else
             {
@@ -577,19 +455,97 @@ namespace G_Shift
                     if (gun)
                     {
                         AWalkGunLeft.Update(gameTime);
+           
+                      
                     }
                     else
                     {
                         AWalkNoGunLeft.Update(gameTime);
                     }
                 }
+                
+                if (playerStance == Stance.lightAttack)
+                {
+                }
+                if (playerStance == Stance.hurt)
+                {
+                }
+                if (playerStance == Stance.heavyAttack||fire==true)
+                {
+                        AAttack1Left.Update(gameTime);
+                }
+               if(fire==false)
+                   playerStance = Stance.Standing;
+                //AStillleft.Draw(spriteBatch, depth);
+                //ALifeLeft.Draw(spriteBatch, depth);
+                //AFallLeft.Draw(spriteBatch, depth);
+                //ADeathLeft.Draw(spriteBatch, depth);
+                //ARiseLeft.Draw(spriteBatch, depth);
 
-                if (AttackRightList.Count == 0)
-                    playerStance = Stance.Standing;
+
+               // playerStance = Stance.Standing;
+                
             }
             
         }
-      
+        //public void StanceMoves(GameTime gameTime)
+        //{
+        //        if (playerStance == Stance.Standing)
+        //        {
+        //            stillAni.Update(gameTime);
+        //        }
+        //        if (playerStance == Stance.Left)
+        //        {
+        //            if (gun)
+        //            {
+        //                walknogun.Update(gameTime);
+        //            }
+        //            else
+        //            {
+        //                walkgun.Update(gameTime);
+        //            }
+        //        }
+        //        if (playerStance == Stance.Right)
+        //        {
+        //            if (gun)
+        //            {
+        //                walknogun.Update(gameTime);
+        //            }
+        //            else
+        //            {
+        //                walkgun.Update(gameTime);
+        //            }
+        //        }
+        //        if (playerStance == Stance.lightAttack)
+        //        {
+        //        } 
+        //        if (playerStance == Stance.hurt)
+        //        {
+        //            fall.Update(gameTime);
+        //        }
+        //        if (playerStance == Stance.heavyAttack)
+        //        {
+        //            attack1.Update(gameTime);
+        //        }
+        //    }
+        //       //private void doAttack(GameTime gameTime)
+        //    //{
+        //    //    if (isAttacking)
+        //    //    {
+        //    //        if (attackTime > 0.0f)
+        //    //        {
+        //    //            attackTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            isAttacking = false;
+        //    //        }
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        attackTime = 0.0f;
+        //    //    }
+
 
 
 
@@ -600,79 +556,80 @@ namespace G_Shift
 
         public void Draw(SpriteBatch spriteBatch, float depth)
         {
-            bool animator=true;
-
-                if (AttackRightList.Count != 0)
+            if (facing)
+            {
+                if (playerStance == Stance.Standing)
+                            {
+                                AStillleft.Draw(spriteBatch, depth);
+                            }
+                            if (playerStance == Stance.Right||playerStance==Stance.moving)
+                            {
+                                if (gun)
+                                {
+                                    AWalkGunRight.Draw(spriteBatch, depth);
+                                }
+                                else
+                                {
+                                    AWalkNoGunRight.Draw(spriteBatch, depth);
+                                }
+                            }
+                            if (playerStance == Stance.lightAttack)
+                            {
+                            } 
+                            if (playerStance == Stance.hurt)
+                            {
+                            }
+                            if (playerStance == Stance.heavyAttack)
+                            {
+                                AAttack1Right.Draw(spriteBatch, depth);
+                            }
+               
+                //ADeathRight.Draw(spriteBatch, depth);
+                //AFallRight.Draw(spriteBatch, depth);
+                //ALifeRight.Draw(spriteBatch, depth);
+                //ARiseRight.Draw(spriteBatch, depth);
+                
+                
+            }
+            else
+            {
+                if (playerStance == Stance.Standing)
                 {
-                    animator = false;
+                    AStillRight.Draw(spriteBatch, depth);
                 }
-                if (AttackLeftList.Count != 0)
+                if (playerStance == Stance.Left||playerStance==Stance.moving)
                 {
-                    animator = false;
-                }
-                animator = true;
-                if (facing)
-                {
-                    if (playerStance == Stance.Standing)
+                    if (gun)
                     {
-                        AStillleft.Draw(spriteBatch, depth);
+                        AWalkGunLeft.Draw(spriteBatch, depth);
                     }
-                    if (playerStance == Stance.Right || playerStance == Stance.moving)
+                    else
                     {
-                        if (!gun)
-                        {
-                            AWalkGunRight.Draw(spriteBatch, depth);
-                        }
-                        else
-                        {
-                            AWalkNoGunRight.Draw(spriteBatch, depth);
-                        }
-                    }
-
-                    if (playerStance == Stance.hurt)
-                    {
-                        //AHurtLeft.Draw(spriteBatch, depth);
-                        spriteBatch.Draw(HurtRight, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
-                    }
-                    if (playerStance == Stance.heavyAttack || fire == true)
-                    {
-                        //         AAttack1Right.Draw(spriteBatch, depth);
-                        for (int i = 0; i < AttackLeftList.Count; i++)
-                            AttackLeftList[i].Draw(spriteBatch, depth);
-                        fire = false;
-                    }
-                }
-                else
-                {
-                    if (playerStance == Stance.Standing)
-                    {
-                        AStillRight.Draw(spriteBatch, depth);
-                    }
-                    if (playerStance == Stance.Left || playerStance == Stance.moving)
-                    {
-                        if (!gun)
-                        {
-                            AWalkGunLeft.Draw(spriteBatch, depth);
-                        }
-                        else
-                        {
-                            AWalkNoGunLeft.Draw(spriteBatch, depth);
-                        }
-                    }
-
-                    if (playerStance == Stance.hurt)
-                    {
-                        //AHurtRight.Draw(spriteBatch, depth); ;
-                        spriteBatch.Draw(HurtLeft, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
-                    }
-                    if (playerStance == Stance.heavyAttack || fire == true)
-                    {
-                        //      AAttack1Left.Draw(spriteBatch, depth);
-                        for (int i = 0; i < AttackRightList.Count; i++)
-                            AttackRightList[i].Draw(spriteBatch, depth);
-                        fire = false;
+                        AWalkNoGunLeft.Draw(spriteBatch, depth);
                     }
                 }
+                
+                if (playerStance == Stance.lightAttack)
+                {
+                }
+                if (playerStance == Stance.hurt)
+                {
+                }
+                if (playerStance == Stance.heavyAttack||fire==true)
+                {
+                    AAttack1Left.Draw(spriteBatch, depth);
+                    fire = false;
+                }
+               
+                //AStillleft.Draw(spriteBatch, depth);
+                //ALifeLeft.Draw(spriteBatch, depth);
+                //AFallLeft.Draw(spriteBatch, depth);
+                //ADeathLeft.Draw(spriteBatch, depth);
+                //ARiseLeft.Draw(spriteBatch, depth);
+                
+              
+                
             }
         }
     }
+}
