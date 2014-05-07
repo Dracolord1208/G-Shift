@@ -70,7 +70,7 @@ namespace G_Shift
         private bool pausedForGuide = false;
         Player gMan;
         bool isLoading;
-        bool finishend ;
+        bool finishend;
         bool endbool;
         public bool translate = true;
         public Vector2 translation;
@@ -92,7 +92,7 @@ namespace G_Shift
 
         World level;
 
-     //  float playerMoveSpeed = 5f;
+        //  float playerMoveSpeed = 5f;
         const int SCREEN_WIDTH = 1000;
         const int SCREEN_HEIGHT = 600;
         const float LowerBounderyHeight = 150;
@@ -100,15 +100,14 @@ namespace G_Shift
         Rectangle fullHealthRect;
         Rectangle boss1HealthBar;
         Rectangle boss1MaxHealthBar;
-
         Rectangle dgs;
         //private Texture2D backgroundTexture;
 
         //************************
 
-     //   private SpriteFont font;
+        //   private SpriteFont font;
         //private int score = 0;
-       //private int lives = 3;
+        //private int lives = 3;
         Texture2D badge;
         public Texture2D backgroundTexture;
         public Texture2D backgroundTexture2;
@@ -122,26 +121,28 @@ namespace G_Shift
 
         public List<Enemy1a> badGuys;  // enemies
         public List<Rectangle> BadGuys1aRect;
-        public TimeSpan badGuyspawnTime;      
-        public TimeSpan badGuycheckpoint;     
-        public Random badGuyrandom;           
+        public TimeSpan badGuyspawnTime;
+        public TimeSpan badGuycheckpoint;
+        public Random badGuyrandom;
 
         //public List<Enemy2a> badGuys2;  // enemies
         public List<Enemy2b> badGuys2;
         public List<Rectangle> BadGuys2aRect;
-        public TimeSpan badGuy2spawnTime;      
-        public TimeSpan badGuy2checkpoint;     
+        public TimeSpan badGuy2spawnTime;
+        public TimeSpan badGuy2checkpoint;
         public Random badGuy2random;
         public List<Enemy3a> badGuys3;  // enemies
-        public TimeSpan badGuy3spawnTime;      
-        public TimeSpan badGuy3checkpoint;     
-        public Random badGuy3random;           
+        public TimeSpan badGuy3spawnTime;
+        public TimeSpan badGuy3checkpoint;
+        public Random badGuy3random;
         public TimeSpan badGuy3jumpTime;
         public TimeSpan badGuy3jumpcheckpoint;
         //public TimeSpan badGuy3decisionTime;
         //public TimeSpan badGuy3lastDecisionTime;
 
-        public List<Enemy4a> badGuys4;  // enemies
+        //public List<Enemy4a> badGuys4;  // enemies    // WORKING
+        public List<Enemy4b> badGuys4;
+        //public List<Enemy4b> badGuys4;  // enemies
         public TimeSpan badGuy4spawnTime;
         public TimeSpan badGuy4checkpoint;
         public Random badGuy4random;
@@ -150,6 +151,7 @@ namespace G_Shift
         public Vector2 boss1HomePoint;
         //public Rectangle boss1HealthBar;
         //public Rectangle boss1MaxHealthBar;
+
         //public TimeSpan theBoss1spawnTime;
         //public TimeSpan theBoss1checkpoint;
         public Random theBoss1random;
@@ -160,32 +162,28 @@ namespace G_Shift
         public Rectangle hitbase;
         public Rectangle enemy1Rec;
         public Rectangle enemy2Rec;
-        int amountOfFightingEnemies=0;
+        int amountOfFightingEnemies = 0;
         LevelSelect levelselectclass;
         Song punch1;
-         Song punch2;
-         Song punch3;
-         Song timeBomb;
-         Song menuMusic;
-         Song gameMusic;
-         bool playSong;
-         List<Animation> DeathRightList;
-         List<Animation> DeathLeftList;
-         List<Animation> RiseReftList;
-         List<Animation> RiseRightList;
+        Song punch2;
+        Song punch3;
+        Song timeBomb;
+        Song menuMusic;
+        Song gameMusic;
+        bool playSong;
+        List<Animation> DeathRightList;
+        List<Animation> DeathLeftList;
+        List<Animation> RiseReftList;
+        List<Animation> RiseRightList;
         public float laserDepth;
         Texture2D DeathLeft;
         Texture2D DeathRight;
         Texture2D FallLeft;
         Texture2D FallRight;
-        Texture2D LifeLeft; 
+        Texture2D LifeLeft;
         Texture2D LifeRight;
         Texture2D RiseRight;
         Texture2D RiseLeft;
-
-        public float laserDepth;
-
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -220,16 +218,16 @@ namespace G_Shift
             {
                 allItems.Add(level.getForUpdate()[i]);
             }
-                // Setup window dimensions.
-                graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            // Setup window dimensions.
+            graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             graphics.PreferMultiSampling = false;
             graphics.ApplyChanges();
 
             // Initialize Gallagher
-            gMan = new Player ();
+            gMan = new Player();
             gMan.Initialize(gManTest, new Vector2(500, 500));
-    
+
 
             //aCrate = new Item();
             //aCrate.initialize(Content, "crate");
@@ -252,15 +250,15 @@ namespace G_Shift
 
             IsMouseVisible = true;
             //set the gamestate to start menu
-         //   gameState = GameState.Playing;
+            //   gameState = GameState.Playing;
             //get the mouse state
             mouseState = Mouse.GetState();
             previousMouseState = mouseState;
-           
 
 
-            badGuys = new List<Enemy1a>();  
-            badGuyspawnTime = new TimeSpan();   
+
+            badGuys = new List<Enemy1a>();
+            badGuyspawnTime = new TimeSpan();
             badGuyspawnTime = TimeSpan.FromSeconds(2.0f);  // spawn within 5 seconds
             badGuycheckpoint = new TimeSpan();
             badGuycheckpoint = TimeSpan.FromSeconds(0.0);
@@ -275,7 +273,7 @@ namespace G_Shift
             badGuy2random = new Random();
             amountOfFightingEnemies++;
 
-            
+
             badGuys3 = new List<Enemy3a>();  // maybe new****!!!!
             badGuy3spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
             badGuy3spawnTime = TimeSpan.FromSeconds(3.0f);  // spawn within 5 seconds
@@ -291,16 +289,19 @@ namespace G_Shift
             //badGuy3decisionTime = TimeSpan.FromSeconds(0.0f);
             //badGuy3lastDecisionTime = new TimeSpan();
 
-            badGuys4 = new List<Enemy4a>();  // maybe new****!!!!
-            badGuy4spawnTime = new TimeSpan();   // **** NEWLY ADDED ****!!!!
+            //badGuys4 = new List<Enemy4a>();  // WORKING
+            badGuys4 = new List<Enemy4b>(); // new
+            //badGuys4 = new List<Enemy4b>();  // new
+            badGuy4spawnTime = new TimeSpan();
             badGuy4spawnTime = TimeSpan.FromSeconds(3.0f);  // spawn within 5 seconds
             badGuy4checkpoint = new TimeSpan();
             badGuy4checkpoint = TimeSpan.FromSeconds(0.0);
             badGuy4random = new Random();
 
+
             //theBoss1 = new Boss1a();
             theBoss1random = new Random();
-            boss1HomePoint = new Vector2(SCREEN_WIDTH*0.95f, SCREEN_HEIGHT*.5f);
+            boss1HomePoint = new Vector2(SCREEN_WIDTH * 0.95f, SCREEN_HEIGHT * .5f);
             bossFlag = false;
             int resolutionWidth = graphics.GraphicsDevice.Viewport.Width;
             int resolutionHeight = graphics.GraphicsDevice.Viewport.Height;
@@ -318,6 +319,7 @@ namespace G_Shift
 
             //boss1MaxHealthBar = new Rectangle(500,10,theBoss1.maxHealth,20);
             boss1MaxHealthBar = new Rectangle(500, 25, 500, 20);
+
             base.Initialize();
         }
 
@@ -333,11 +335,9 @@ namespace G_Shift
             // TODO: use this.Content to load your game content here
             backgroundTexture = Content.Load<Texture2D>("Map");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
-            gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            //baseRectangle = Content.Load<Texture2D>("Rectangle");
-            baseRectangle = Content.Load<Texture2D>("RectWhite");
-            //baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
-
+            gManTest = Content.Load<Texture2D>("gspritesheattest");
+            baseRectangle = Content.Load<Texture2D>("Rectangle");
+            baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -350,7 +350,7 @@ namespace G_Shift
             font = Content.Load<SpriteFont>("gameFont");
             // Load the laser and explosion sound effect
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
-            levelselectclass.LoadCont(exitButton,font1,badge);
+            levelselectclass.LoadCont(exitButton, font1, badge);
             /*
             enemyATexture = Content.Load<Texture2D>("gunEnemy 1a");
             enemyBTexture = Content.Load<Texture2D>("gunEnemy 2a");
@@ -359,7 +359,7 @@ namespace G_Shift
             */
             explosionTexture = Content.Load<Texture2D>("explosion");
 
-            
+
             enemyATexture = Content.Load<Texture2D>("smallRobot1a");
             enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
             enemyBTexture = Content.Load<Texture2D>("mediumRobot1a");
@@ -465,7 +465,7 @@ namespace G_Shift
                 backgroundThread = new Thread(LoadGame);
                 isLoading = true;
 
-              //  stopMusic();
+                stopMusic();
                 //start backgroundthread
                 backgroundThread.Start();
             }
@@ -474,19 +474,16 @@ namespace G_Shift
                 gManbase = new Rectangle((int)gMan.Position.X - 65, (int)gMan.Position.Y - 30, 150, 50);
                 hitbase = new Rectangle((int)gMan.Position.X - 85, (int)gMan.Position.Y - 200, 150, 200);
             }
-            else 
+            else
             {
                 gManbase = new Rectangle((int)gMan.Position.X - 100, (int)gMan.Position.Y - 30, 150, 50);
                 hitbase = new Rectangle((int)gMan.Position.X - 65, (int)gMan.Position.Y - 200, 150, 200);
-                
+
             }
             //dgs = new Rectangle((int)gMan.Position.X, (int)gMan.Position.Y, 200, 200);
 
             healthRectange = new Rectangle(10,
                             10, gMan.Health, 20);
-            //boss1HealthBar = new Rectangle();
-            if (bossFlag == true)
-                boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
             //UpdateRR(gameTime);
@@ -502,28 +499,23 @@ namespace G_Shift
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
             checkPauseKey(currentKeyboardState, currentGamePadState);
-             if (playSong == true)
-             {
-                 PlayMusic(gameMusic);
-             }
-
             if (gameState == GameState.Playing)
             {
                 // If the user hasn't paused, Update normally
                 if (!paused)
                 {
-                  //  playSong = true;
+                    //  playSong = true;
                     if (currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
                         currentGamePadState.DPad.Left == ButtonState.Pressed)
                     {
-                      //  scrollPosition -= moveFactorPerSecond;
+                        //  scrollPosition -= moveFactorPerSecond;
                     }
                     if (currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
                     currentGamePadState.DPad.Right == ButtonState.Pressed)
                     {
-                      //  scrollPosition += moveFactorPerSecond;
+                        //  scrollPosition += moveFactorPerSecond;
                     }
-                   // PlayMusic(gameMusic);
+                    // PlayMusic(gameMusic);
                     //      MediaPlayer.Resume();
                     //Update the player
                     //UpdatePlayer(gameTime);
@@ -591,7 +583,7 @@ namespace G_Shift
 
                     if (currentKeyboardState.IsKeyDown(Keys.D0))
                     {
-                        if(bossFlag == false)
+                        if (bossFlag == false)
                             spawntheBoss1();
                     }
 
@@ -605,11 +597,11 @@ namespace G_Shift
                             theBoss1.holdPosFlag = true;
                             //theBoss1.laserStartPos = new Vector2(theBoss1.position.X + 150, theBoss1.position.Y + 150);
                             theBoss1.laserCurrentPosX = (int)theBoss1.laserStartPos.X;
-                            
+
                         }
                     }
                 }
-            
+
             }
             mouseState = Mouse.GetState();
             if ((previousMouseState.LeftButton == ButtonState.Pressed &&
@@ -621,11 +613,11 @@ namespace G_Shift
             if (gameState == GameState.StartMenu)
             {
                 //check the startmenu
-                if ((currentKeyboardState.IsKeyDown(Keys.Space) || 
+                if ((currentKeyboardState.IsKeyDown(Keys.Space) ||
                 currentGamePadState.Buttons.A == ButtonState.Pressed)) //player clicked start button
                 {
                     gameState = GameState.levelSelect;
-                    
+
                 }
                 else if (currentKeyboardState.IsKeyDown(Keys.Escape) ||
                 currentGamePadState.Buttons.B == ButtonState.Pressed) //player clicked exit button
@@ -653,7 +645,7 @@ namespace G_Shift
 
             if (gameState == GameState.levelSelect)
             {
-                levelselectclass.Update(gameTime,currentKeyboardState, previousKeyboardState);
+                levelselectclass.Update(gameTime, currentKeyboardState, previousKeyboardState);
                 if (levelselectclass.selected == false)
                 {
                     gameState = GameState.Loading;
@@ -827,7 +819,7 @@ namespace G_Shift
                 }
                 //badGuys4[i].Update();
                 badGuys2[i].ResetValues();
-                
+
 
                 //************************
                 // Complex behavior rules..
@@ -934,7 +926,7 @@ namespace G_Shift
                     //badGuys2[i].attackRightRect = new Rectangle((int)badGuys2[i].position.X + badGuys2[i].Width - (int)(badGuys2[i].Width * (.25)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
 
                     //if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
-                    if(badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)
+                    if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)
                     {
                         if (badGuys2[i].attackLeftRect.Intersects(hitbase))
                         {
@@ -953,7 +945,7 @@ namespace G_Shift
                     badGuys2[i].attackRightRect = new Rectangle((int)badGuys2[i].position.X + badGuys2[i].Width - (int)(badGuys2[i].Width * (.25)), (int)badGuys2[i].position.Y, (int)(badGuys2[i].Width * (.25)), badGuys2[i].Height);
 
                     //if (badGuys2[i].position.Y < gMan.Position.Y + 10 && badGuys2[i].position.Y > gMan.Position.Y - 10)
-                    if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)                    
+                    if (badGuys2[i].position.Y + badGuys2[i].Height < gMan.Position.Y + gMan.Height + 20 && badGuys2[i].position.Y + badGuys2[i].Height > gMan.Position.Y + gMan.Height - 20)
                     {
                         if (badGuys2[i].attackRightRect.Intersects(hitbase))
                         {
@@ -1016,19 +1008,6 @@ namespace G_Shift
                 {
                     badGuys4[i].moveRightFlag = true;
                 }
-                //if (badGuys4[i].position.X < gMan.Position.X + gMan.Width - 50 && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width) - 50)
-                //{
-                //    badGuys4[i].holdxPosFlag = true;
-                //}
-                //else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width)
-                //{
-                //    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                //    badGuys4[i].moveLeftFlag = true;
-                //}
-                //else if (badGuys4[i].position.X < gMan.Position.X - badGuys4[i].Width)
-                //{
-                //    badGuys4[i].moveRightFlag = true;
-                //}
 
                 // Adjust Y-directional movement
                 if (badGuys4[i].position.Y + badGuys4[i].Height < gMan.Position.Y + gMan.Height + badGuys4[i].baseHeight && badGuys4[i].position.Y + badGuys4[i].Height > gMan.Position.Y + gMan.Height - badGuys4[i].baseHeight)
@@ -1057,7 +1036,6 @@ namespace G_Shift
                         badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
                         if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
-                            //badGuys4[i].animateAttackFlag = true;
                             gMan.Health -= 10;
                             AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 40));
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
@@ -1072,9 +1050,9 @@ namespace G_Shift
                         if (badGuys4[i].attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
                             gMan.Health -= 10;
-                          //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
-                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
-//                            AddSmallExplosion(badGuys4[i].position);
+                            //  AddSmallExplosion(new Vector2( gMan.Position.X-200,gMan.Position.Y-30));
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 40));
+                            //                            AddSmallExplosion(badGuys4[i].position);
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
@@ -1085,30 +1063,10 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
-//                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
-                // WORKING
-                //if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
-                //{
-                //    badGuys4.RemoveAt(i);
-                //    i--;                    
-                //}
-
-                if (badGuys4[i].health <= 0)
+                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
                 {
-                    if (badGuys4[i].deathFlag == false)
-                        badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
-
-                    badGuys4[i].holdPosFlag = true;
-                    badGuys4[i].attackFlag = false;
-                    //badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
-                    badGuys4[i].deathFlag = true;
-
-                    if (gameTime.TotalGameTime - badGuys4[i].deathCheckpoint > badGuys4[i].deathTimeSpan)
-                    {
-                        badGuys4.RemoveAt(i);
-                        i--;
-                    }
-
+                    badGuys4.RemoveAt(i);
+                    i--;
                 }
             }
 
@@ -1217,7 +1175,7 @@ namespace G_Shift
                 }
 
 
-                
+
                 //*************************
                 // Boss1 movement rules
                 //
@@ -1228,8 +1186,8 @@ namespace G_Shift
                 if (theBoss1.stance == Boss1a.Stance.Wait && gameTime.TotalGameTime - theBoss1.lastDecisionTime > TimeSpan.FromSeconds(1.5f))
                 {
                     theBoss1.stance = Boss1a.Stance.Move;
-                }                
-                
+                }
+
 
                 // if not in Wait mode, do something!
                 if (theBoss1.stance != Boss1a.Stance.Wait)
@@ -1386,7 +1344,7 @@ namespace G_Shift
 
                             theBoss1.velocityChanged = false;
                         }
-                        
+
                         if (theBoss1.position.Y + theBoss1.Height < SCREEN_HEIGHT - 10 && theBoss1.velocityChanged == true)
                         {
                             theBoss1.moveDownFlag = false;
@@ -1417,7 +1375,7 @@ namespace G_Shift
                             theBoss1.velocityChanged = false;
 
                         }
-                        
+
                         /*
                         else if(theBoss1.velocityChanged == true)
                         {
@@ -1561,7 +1519,8 @@ namespace G_Shift
                             }
 
                         }
-                         */ // removing normal attack while healthLow == true
+                         */
+                        // removing normal attack while healthLow == true
                     }   // end of if(healthLow == true)
 
                 } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
@@ -1666,7 +1625,7 @@ namespace G_Shift
 
 
 
-              //  boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
+                //boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
                 theBoss1.Update();
@@ -1729,7 +1688,7 @@ namespace G_Shift
                 badGuys4[i].Height - 40);
                 // Determine if the two objects collided with each
                 // other
-                if (rectangle1.Intersects(rectangle2))
+                if (rectangle1.Intersects(enemy1Rec))
                 {
                     //the player can hit the enemy
                     if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
@@ -1743,7 +1702,7 @@ namespace G_Shift
                         gMan.Active = false;
                 }
 
-                if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+                if (enemy1Rec.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
                 {
                     badGuys4[i].health = 0;
                 }
@@ -1793,58 +1752,42 @@ namespace G_Shift
                         }
                     }
                 }
-             }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
-            for (int i = 0; i < badGuys2.Count; i++)
-            {
-                rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
-                (int)badGuys2[i].position.Y + 150,
-                badGuys2[i].Width - 80,
-                badGuys2[i].Height - 160);
-                enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
-                (int)badGuys2[i].position.Y + 150,
-                badGuys2[i].Width - 80,
-                badGuys2[i].Height - 160);
-                // Determine if the two objects collided with each
-                // other
-                if (rectangle1.Intersects(rectangle2))
-                    badGuys2[i].health = 0;
-            }
-
+            }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
             if (bossFlag)
+            {
+                if (rectangle1.Intersects(theBoss1.hitBox))
                 {
-                    if (rectangle1.Intersects(theBoss1.hitBox))
+                    //the player can hit the enemy
+                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
-                        //the player can hit the enemy
-                        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
-                        {
-                            //the player hit the robot
-                            theBoss1.health -= gMan.heavyHit;
-                            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
-                        }
-                        // If the player health is less than zero we died
+                        //the player hit the robot
+                        theBoss1.health -= gMan.heavyHit;
+                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
+                    // If the player health is less than zero we died
                 }
+            }
 
         }
 
         private void PlayMusic(Song song)
-         {
-             // Due to the way the MediaPlayer plays music,
-             // we have to catch the exception. Music will play when the game is not tethered
-             try
-             {
-                 // Play the music
-                 MediaPlayer.Play(song);
- 
-                 // Loop the currently playing song
-                 MediaPlayer.IsRepeating = true;
-             }
-             catch { }
-         }
+        {
+            // Due to the way the MediaPlayer plays music,
+            // we have to catch the exception. Music will play when the game is not tethered
+            try
+            {
+                // Play the music
+                MediaPlayer.Play(song);
+
+                // Loop the currently playing song
+                MediaPlayer.IsRepeating = true;
+            }
+            catch { }
+        }
         public void stopMusic()
-         {
-             MediaPlayer.Stop();
-         }
+        {
+            MediaPlayer.Stop();
+        }
         public void spawnEnemies(GameTime gameTime)
         {
             // badGuys spawn on random time interval
@@ -1914,21 +1857,17 @@ namespace G_Shift
                     startPos = new Vector2(tempXleft, tempY);
                     eMotion = new Vector2(6f, 0f);
                     //badGuys4[i].texture = enemy1bTexture;
-               //     badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
-                    //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f)); // WORKING
-                    badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));  // new
-                    //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
-
+                    //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));    // Working!!
+                    badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));  // new
+                    //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
                 }
                 else
                 {
                     startPos = new Vector2(tempXright, tempY);
                     eMotion = new Vector2(-6f, 0f);
-               //     badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
                     //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f)); // WORKING
                     badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));  // new
                     //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
-
                 }
 
 
@@ -1955,25 +1894,27 @@ namespace G_Shift
                 float tempX = gMan.Position.X + 500;
 
                 Vector2 startPos = new Vector2(0, 0);
-            /*
-                if (random.Next(1, 3) == 1)
-                {
-                    startPos = new Vector2(tempXleft, tempY);
-                    eMotion = new Vector2(6f, 0f);
-                    //badGuys4[i].texture = enemy1bTexture;
-                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
-                }
-                else
-                {
-                    startPos = new Vector2(tempXright, tempY);
-                    eMotion = new Vector2(-6f, 0f);
-                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
-                }
-             */
+                /*
+                    if (random.Next(1, 3) == 1)
+                    {
+                        startPos = new Vector2(tempXleft, tempY);
+                        eMotion = new Vector2(6f, 0f);
+                        //badGuys4[i].texture = enemy1bTexture;
+                        badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
+                    }
+                    else
+                    {
+                        startPos = new Vector2(tempXright, tempY);
+                        eMotion = new Vector2(-6f, 0f);
+                        badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                    }
+                 */
 
                 startPos = new Vector2(tempX, tempY);
                 eMotion = new Vector2(0f, 0f);
-                badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f)); // WORKING
+                //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));  // new
+                badGuys4.Add(new Enemy4b(240, 144, startPos, eMotion, enemyATexture, 0f, 0f));  // new new size
 
 
                 //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
@@ -1983,7 +1924,6 @@ namespace G_Shift
                 badGuy4spawnTime = TimeSpan.FromSeconds(1f);
             }
         }
-
         public void spawnMedRobot1(GameTime gameTime)
         {
             // badGuys2 spawn on random time interval
@@ -2012,49 +1952,50 @@ namespace G_Shift
             //if (gameTime.TotalGameTime - badGuy4checkpoint > badGuy4spawnTime && badGuys4.Count <= 3)
             //if(theBoss1..)
             //{
-                Vector2 eMotion = new Vector2(0f, 0f);
+            Vector2 eMotion = new Vector2(0f, 0f);
 
-                //float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
-                //float tempXright = (float)badGuy4random.Next((int)gMan.scrollPosition + 300, (int)gMan.scrollPosition + 350);
-                float tempXleft = (float)badGuy4random.Next(-258, -158);
-                //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
-                //float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
-                float tempY = (float) theBoss1random.Next(0, SCREEN_HEIGHT - 446); // whole screen
+            //float tempXright = (float)badGuy4random.Next(SCREEN_WIDTH, SCREEN_WIDTH + 100);
+            //float tempXright = (float)badGuy4random.Next((int)gMan.scrollPosition + 300, (int)gMan.scrollPosition + 350);
+            float tempXleft = (float)badGuy4random.Next(-258, -158);
+            //float tempY = (float)badGuy2random.Next(SCREEN_HEIGHT - SCREEN_HEIGHT / 3, SCREEN_HEIGHT - 50);
+            //float tempY = (float)badGuy2random.Next(0, SCREEN_HEIGHT - 87); // whole screen
+            float tempY = (float)theBoss1random.Next(0, SCREEN_HEIGHT - 446); // whole screen
 
-                //float tempX = (400f);
-                //float tempX = gMan.scrollPosition + 100;
-                float tempX = gMan.Position.X + 500;
+            //float tempX = (400f);
+            //float tempX = gMan.scrollPosition + 100;
+            float tempX = gMan.Position.X + 500;
 
-                Vector2 startPos = new Vector2(0, 0);
+            Vector2 startPos = new Vector2(0, 0);
 
-                startPos = new Vector2(tempX, tempY);
-                eMotion = new Vector2(0f, 0f);
+            startPos = new Vector2(tempX, tempY);
+            eMotion = new Vector2(0f, 0f);
 
-                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
-                theBoss1 = new Boss1a(381,446, startPos, eMotion, bossATexture, 0f, 0f);
+            //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+            theBoss1 = new Boss1a(381, 446, startPos, eMotion, bossATexture, 0f, 0f);
 
-                bossFlag = true;
+            bossFlag = true;
 
-                //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
-                //theBoss1acheckpoint = gameTime.TotalGameTime;
+            //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+            //theBoss1acheckpoint = gameTime.TotalGameTime;
 
-                //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
-                //badGuy4spawnTime = TimeSpan.FromSeconds(1f);
+            //badGuy4spawnTime = TimeSpan.FromSeconds((float)badGuy4random.Next(1, 5));  // not necessary
+            //badGuy4spawnTime = TimeSpan.FromSeconds(1f);
             //}
 
-              //  boss1MaxHealthBar = new Rectangle(500, 25, theBoss1.maxHealth, 20);
-                
+            //boss1MaxHealthBar = new Rectangle(500, 25, theBoss1.maxHealth, 20);
+
 
         }
+
 
         void LoadGame()
         {
             //load the game images into the content pipeline
             // orb = Content.Load<Texture2D>(@"orb");
             //pauseButton = Content.Load<Texture2D>(@"pause");
-           // resumeButton = Content.Load<Texture2D>(@"resume");
+            // resumeButton = Content.Load<Texture2D>(@"resume");
             //resumeButtonPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - (resumeButton.Width / 2),
-               //                                (GraphicsDevice.Viewport.Height / 2) - (resumeButton.Height / 2));
+            //                                (GraphicsDevice.Viewport.Height / 2) - (resumeButton.Height / 2));
 
             //set the position of the orb in the middle of the gamewindow
             // orbPosition = new Vector2((GraphicsDevice.Viewport.Width / 2) - (OrbWidth / 2), (GraphicsDevice.Viewport.Height / 2) - (OrbHeight / 2));
@@ -2124,11 +2065,11 @@ namespace G_Shift
 
                 if (translate)
                     translation = gMan.Position - gMan.StartPosition;
-                
+
                 //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
                 spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
                 //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-                
+
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
 
@@ -2137,7 +2078,7 @@ namespace G_Shift
                     //translate = false;
 
                     if (theBoss1.laserOn == true)
-                    {               
+                    {
                         /*
                         theBoss1.laserStartScreenPos = new Vector2(theBoss1.laserStartPos.X - translation.X, theBoss1.laserStartPos.Y);
                         //theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X - translation.X);    // may or may not need translation
@@ -2152,7 +2093,7 @@ namespace G_Shift
                         //theBoss1.laserCurrentPosX = (int)(theBoss1.laserStartPos.X);
                         //theBoss1.laserPosX = (int)theBoss1.laserStartPos.X;   // may have to update based on screenPos
                         //theBoss1.laserBeam = new Rectangle((int)(theBoss1.laserCurrentPosX), (int)theBoss1.laserStartPos.Y, (int)theBoss1.laserWidth, (int)theBoss1.laserHeight);
-                        
+
                         //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Aquamarine); // Working!!
 
                         /*  WORKING!1
@@ -2163,30 +2104,30 @@ namespace G_Shift
                         */
 
                         //spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, color, 0, origin, SpriteEffects.None, (0.1f) * (depth));
-                        
+
                         Rectangle sourceRectangle = new Rectangle(theBoss1.laserBeam.X, theBoss1.laserBeam.Y, 508, 133);
-                        Vector2 tempVec = new Vector2(0,0);
+                        Vector2 tempVec = new Vector2(0, 0);
                         if (theBoss1.laserBeam.Height < 75)
                             spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Salmon, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                         else
                             spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
-                            //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
-                        
+                        //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
+
                         //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
                         //spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                     }
                 }
                 else
                     translate = true;
-                
+
                 spriteBatch.End();
 
                 //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
                 spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-               //spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
-             //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
-               
-               
+                //spriteBatch.Draw(backgroundTexture, hitbase, Color.White);
+                //  spriteBatch.Draw(backgroundTexture, gMan.hitBox, Color.White);
+
+
 
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
@@ -2203,7 +2144,7 @@ namespace G_Shift
                     */
                     badGuys2[i].screenPosition = new Vector2(badGuys2[i].position.X - translation.X, badGuys2[i].position.Y);
                     badGuys2[i].Draw(spriteBatch);
-              //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
+                    //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
                 }
                 // draw badGuys3
                 for (int i = 0; i < badGuys3.Count; i++)
@@ -2214,18 +2155,19 @@ namespace G_Shift
                 gMan.Draw(spriteBatch, .5f);
                 for (int i = 0; i < explosions.Count; i++)
                 {
-                    explosions[i].Draw(spriteBatch,.6f);
+                    explosions[i].Draw(spriteBatch, .6f);
                 }
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)
                 {
                     badGuys4[i].screenPosition = new Vector2(badGuys4[i].position.X - translation.X, badGuys4[i].position.Y);
                     badGuys4[i].Draw(spriteBatch);
-                 //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
+                    //   spriteBatch.Draw(backgroundTexture, enemy1Rec, Color.White);
 
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackLeftRect, Color.Green);   // debug purposes
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
+
 
                 Vector2 origin = new Vector2(0, 0);
 
@@ -2233,6 +2175,7 @@ namespace G_Shift
                 {
                     theBoss1.screenPosition = new Vector2(theBoss1.position.X - translation.X, theBoss1.position.Y);
                     theBoss1.Draw(spriteBatch);
+
                     Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
                     spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
@@ -2242,8 +2185,6 @@ namespace G_Shift
 
                 }
 
-                //Vector2 origin = new Vector2(0, 0);
-
                 Vector2 gpos = new Vector2(fullHealthRect.X, fullHealthRect.Y); // position of gMan health bar
                 //spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
                 //spriteBatch.Draw(baseRectangle, healthRectange, Color.Green);
@@ -2252,32 +2193,7 @@ namespace G_Shift
                 spriteBatch.Draw(baseRectangle, gpos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
 
 
-                if (bossFlag == true)
-                {
-                    // WORKING!!
-                    //spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, Color.Red);
-                    //spriteBatch.Draw(baseRectangle, boss1HealthBar, Color.Blue);
 
-                    //Vector2 pos = new Vector2(boss1HealthBar.Location.X, boss1HealthBar.Location.Y);
-                    Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
-                    //Vector2 origin = new Vector2(0,0);
-
-                    //Color blue = new Color(0, 0, 255, 0);
-                    //Color red = new Color(255, 0, 0, 0);
-                    spriteBatch.Draw(baseRectangle2, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
-                    spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
-
-                    //spriteBatch.Draw(baseRectangle, boss1MaxHealthBar, boss1MaxHealthBar, Color.Red, 0, origin, SpriteEffects.None, 0.98f);
-                    //spriteBatch.Draw(baseRectangle2, boss1HealthBar, boss1HealthBar, Color.Blue, 0, origin, SpriteEffects.None, 0.99f);
-
-
-                    //spriteBatch.Draw(texture, position, sourceRectangle, color, angle, origin, 1, SpriteEffects.None, 0.1f * depth);
-
-                    //if (theBoss1.laserOn == true)
-                    //{
-                    //}
-                }
-                
 
             }
             if (gameState == GameState.levelSelect)
