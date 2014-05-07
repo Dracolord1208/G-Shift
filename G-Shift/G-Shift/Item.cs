@@ -30,7 +30,7 @@ namespace G_Shift
         bool goUp;
         bool inIfStatement;
         bool stillIntersects;
-        bool spacePressed;
+        bool xPressed;
         bool goneUp;
         bool top;
         bool bottom;
@@ -44,6 +44,7 @@ namespace G_Shift
         bool inAir;
         int throwCount;
         Vector2 speed;
+        bool canThrow;
 
         public void initialize(ContentManager Content, string name)
         {
@@ -72,7 +73,7 @@ namespace G_Shift
             goUp = false;
             inIfStatement = false;
             stillIntersects = false;
-            spacePressed = false;
+            xPressed = false;
             goneUp = false;
             top = false;
             bottom = false;
@@ -84,15 +85,26 @@ namespace G_Shift
             offScreen = false;
             charDirection = false;
             inAir = false;
+            canThrow = false;
             throwCount = 0;
 
-            speed = new Vector2(10, 20);
+            speed = new Vector2(25, 0);
         }
 
         public void setItemPosition(Vector2 position)
         {
             throwableHitbox.X = (int)position.X;
             throwableHitbox.Y = (int)position.Y;
+        }
+
+        public Rectangle itemHitbox()
+        {
+            return throwableHitbox;
+        }
+
+        public bool itemBeingThrown()
+        {
+            return inAir;
         }
 
         public bool getUpMove()
@@ -175,37 +187,70 @@ namespace G_Shift
                     throwableHitbox.X = (int)gMan.Position.X + 10;
                     throwableHitbox.Y = (int)gMan.Position.Y - 300;
                     pickedUp = true;
-                    spacePressed = false;
+                    xPressed = false;
                     stillIntersects = true;
                     inAir = false;
+                    canThrow = false;
                 }
                 //}
 
 
             }
 
-            if (pickedUp && !spacePressed)
+            if (pickedUp && !xPressed)
             {
-                throwableHitbox.X = (int)gMan.Position.X + 10;
-                throwableHitbox.Y = (int)gMan.Position.Y - 300;
+                charDirection = gMan.getDirection();
+
+                if (charDirection)
+                {
+                    if (throwable.Name.CompareTo("barrel2") == 0)
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 200;
+                    }
+                    else
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 250;
+                    }
+                }
+                else
+                {
+                    if (throwable.Name.CompareTo("barrel2") == 0)
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X - 100;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 200;
+                    }
+                    else
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X - 100;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 250;
+                    }
+                }
                 goneUp = true;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.X))
             {
-                if (throwable.Name.CompareTo("BOXLARGE1") != 0)
+                if (canThrow)
                 {
-                    goUp = true;
-                    stillIntersects = false;
-                    spacePressed = true;
-                    charDirection = gMan.getDirection();
+                    if (throwable.Name.CompareTo("BOXLARGE1") != 0)
+                    {
+                        goUp = true;
+                        stillIntersects = false;
+                        xPressed = true;
+                        charDirection = gMan.getDirection();
+                    }
                 }
             }
+            else
+                canThrow = true;
 
-            if (goUp && pickedUp && spacePressed)
+            if (goUp && pickedUp && xPressed)
             {
                 //if (throwableHitbox.Y > 100 && goneUp)
-                if (speed.Y > 1 && goneUp)
+                //if (speed.Y > 1 && goneUp)
+                /*if (goneUp)
                 {
 
                     // if (!gMan.getDirection())
@@ -229,69 +274,90 @@ namespace G_Shift
                 }
                 else
                 {
-                    goneUp = false;
-                    //if (throwableHitbox.Y < 350)
-                    if (speed.Y < 30)
+                    goneUp = false;*/
+                //if (throwableHitbox.Y < 350)
+                if (speed.Y < 15)
+                {
+
+
+                    //if (!gMan.getDirection())
+
+                    if (charDirection)
                     {
-
-
-                        //if (!gMan.getDirection())
-
-                        if (charDirection)
-                        {
-                            throwableHitbox.X += (int)speed.X;
-                            throwableHitbox.Y += (int)speed.Y;
-                            inIfStatement = true;
-                            speed.Y++;
-                        }
-                        else
-                        {
-                            throwableHitbox.X -= (int)speed.X;
-                            throwableHitbox.Y += (int)speed.Y;
-                            //inIfStatement = true;
-                            speed.Y++;
-                        }
-
-                        //throwableHitbox.X += (int)speed.X;
-                        //throwableHitbox.Y += (int)speed.Y;
-                        //speed.Y++;
-                        inAir = true;
+                        throwableHitbox.X += (int)speed.X;
+                        throwableHitbox.Y += (int)speed.Y;
+                        inIfStatement = true;
+                        speed.Y++;
                     }
                     else
                     {
-                        goUp = false;
-                        pickedUp = false;
-                        spacePressed = false;
-                        inAir = false;
-                        throwCount++;
-                        speed.Y = 20;
+                        throwableHitbox.X -= (int)speed.X;
+                        throwableHitbox.Y += (int)speed.Y;
+                        //inIfStatement = true;
+                        speed.Y++;
                     }
 
-                    //if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)
-                    //{
-                        //throwable = content.Load<Texture2D>("laser");
-                    //}
+                    //throwableHitbox.X += (int)speed.X;
+                    //throwableHitbox.Y += (int)speed.Y;
+                    //speed.Y++;
+                    inAir = true;
+                }
+                else
+                {
+                    goUp = false;
+                    pickedUp = false;
+                    xPressed = false;
+                    inAir = false;
+
+                    if (throwable.Name.CompareTo("barrel2") != 0)
+                        throwCount++;
+
+                    speed.Y = 0;
+                }
+
+                if (throwable.Name.CompareTo("BOXSMALL1") == 0 || throwable.Name.CompareTo("BOXSMALL2") == 0)
+                {
+                    if (throwCount == 1)
+                    {
+                        throwable = content.Load<Texture2D>("BOXSMALL2");
+                        throwable.Name = "BOXSMALL2";
+                    }
+                    else if (throwCount == 2)
+                    {
+                        throwable = content.Load<Texture2D>("BOXSMALL3");
+                        throwable.Name = "BOXSMALL3";
+                    }
+
                 }
             }
+            //}
 
-            if (throwCount == 1 && throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
+            if (throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
             {
                 if (charDirection)
                 {
                     throwableHitbox.X += 4;
 
-                    if (throwableHitbox.X - throwableHitbox.Height > graphics.GraphicsDevice.Viewport.Width)
+                    if (throwableHitbox.X - throwableHitbox.Height > gMan.Position.X + 500)
                         offScreen = true;
                 }
                 else
                 {
                     throwableHitbox.X -= 4;
 
-                    if (throwableHitbox.X + throwableHitbox.Height < 0)
+                    if (throwableHitbox.X + throwableHitbox.Height < gMan.Position.X - 500)
                         offScreen = true;
                 }
             }
 
+        }
+
+        public bool itemDestroyed()
+        {
+            if (throwCount == 2)
+                return true;
+            else
+                return false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
