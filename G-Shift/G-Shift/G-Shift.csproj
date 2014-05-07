@@ -118,7 +118,6 @@
     <Compile Include="Enemy2b.cs" />
     <Compile Include="Enemy3a.cs" />
     <Compile Include="Enemy4a.cs" />
-    <Compile Include="Enemy4b.cs" />
     <Compile Include="EnemyProjectile.cs" />
     <Compile Include="Interactable.cs" />
     <Compile Include="Item.cs" />

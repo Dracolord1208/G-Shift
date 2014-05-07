@@ -98,6 +98,9 @@ namespace G_Shift
         const float LowerBounderyHeight = 150;
         Rectangle healthRectange;
         Rectangle fullHealthRect;
+        Rectangle boss1HealthBar;
+        Rectangle boss1MaxHealthBar;
+
         Rectangle dgs;
         //private Texture2D backgroundTexture;
 
@@ -145,8 +148,8 @@ namespace G_Shift
 
         public Boss1a theBoss1;
         public Vector2 boss1HomePoint;
-        public Rectangle boss1HealthBar;
-        public Rectangle boss1MaxHealthBar;
+        //public Rectangle boss1HealthBar;
+        //public Rectangle boss1MaxHealthBar;
         //public TimeSpan theBoss1spawnTime;
         //public TimeSpan theBoss1checkpoint;
         public Random theBoss1random;
@@ -178,7 +181,11 @@ namespace G_Shift
         Texture2D LifeLeft; 
         Texture2D LifeRight;
         Texture2D RiseRight;
-        Texture2D RiseLeft; 
+        Texture2D RiseLeft;
+
+        public float laserDepth;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -310,7 +317,7 @@ namespace G_Shift
                             10, gMan.maxHealth, 20);
 
             //boss1MaxHealthBar = new Rectangle(500,10,theBoss1.maxHealth,20);
-
+            boss1MaxHealthBar = new Rectangle(500, 25, 500, 20);
             base.Initialize();
         }
 
@@ -327,8 +334,10 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("Map");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest=  Content.Load<Texture2D>("gspritesheattest");
-            baseRectangle = Content.Load<Texture2D>("Rectangle");
-            baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
+            //baseRectangle = Content.Load<Texture2D>("Rectangle");
+            baseRectangle = Content.Load<Texture2D>("RectWhite");
+            //baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
+
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -456,7 +465,7 @@ namespace G_Shift
                 backgroundThread = new Thread(LoadGame);
                 isLoading = true;
 
-                stopMusic();
+              //  stopMusic();
                 //start backgroundthread
                 backgroundThread.Start();
             }
@@ -475,6 +484,9 @@ namespace G_Shift
 
             healthRectange = new Rectangle(10,
                             10, gMan.Health, 20);
+            //boss1HealthBar = new Rectangle();
+            if (bossFlag == true)
+                boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
             //UpdateRR(gameTime);
@@ -1004,6 +1016,19 @@ namespace G_Shift
                 {
                     badGuys4[i].moveRightFlag = true;
                 }
+                //if (badGuys4[i].position.X < gMan.Position.X + gMan.Width - 50 && badGuys4[i].position.X > gMan.Position.X - (badGuys4[i].Width) - 50)
+                //{
+                //    badGuys4[i].holdxPosFlag = true;
+                //}
+                //else if (badGuys4[i].position.X > gMan.Position.X + gMan.Width)
+                //{
+                //    //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
+                //    badGuys4[i].moveLeftFlag = true;
+                //}
+                //else if (badGuys4[i].position.X < gMan.Position.X - badGuys4[i].Width)
+                //{
+                //    badGuys4[i].moveRightFlag = true;
+                //}
 
                 // Adjust Y-directional movement
                 if (badGuys4[i].position.Y + badGuys4[i].Height < gMan.Position.Y + gMan.Height + badGuys4[i].baseHeight && badGuys4[i].position.Y + badGuys4[i].Height > gMan.Position.Y + gMan.Height - badGuys4[i].baseHeight)
@@ -1032,8 +1057,9 @@ namespace G_Shift
                         badGuys4[i].attackLeftRect = new Rectangle((int)badGuys4[i].position.X, (int)badGuys4[i].position.Y, (int)(badGuys4[i].Width * (.25)), badGuys4[i].Height);
                         if (badGuys4[i].attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - badGuys4[i].attackCheckpoint > badGuys4[i].attackTimeSpan)
                         {
+                            //badGuys4[i].animateAttackFlag = true;
                             gMan.Health -= 10;
-                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y-40));
+                            AddExplosion(new Vector2(gMan.StartPosition.X, gMan.Position.Y - 40));
                             gMan.playerStance = G_Shift.Player.Stance.hurt;
                             badGuys4[i].attackCheckpoint = gameTime.TotalGameTime;
                         }
@@ -1059,10 +1085,30 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
-                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+//                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+                // WORKING
+                //if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+                //{
+                //    badGuys4.RemoveAt(i);
+                //    i--;                    
+                //}
+
+                if (badGuys4[i].health <= 0)
                 {
-                    badGuys4.RemoveAt(i);
-                    i--;
+                    if (badGuys4[i].deathFlag == false)
+                        badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
+
+                    badGuys4[i].holdPosFlag = true;
+                    badGuys4[i].attackFlag = false;
+                    //badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
+                    badGuys4[i].deathFlag = true;
+
+                    if (gameTime.TotalGameTime - badGuys4[i].deathCheckpoint > badGuys4[i].deathTimeSpan)
+                    {
+                        badGuys4.RemoveAt(i);
+                        i--;
+                    }
+
                 }
             }
 
@@ -1620,7 +1666,7 @@ namespace G_Shift
 
 
 
-                boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
+              //  boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
                 theBoss1.Update();
@@ -1747,8 +1793,24 @@ namespace G_Shift
                         }
                     }
                 }
-                        }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
-                if (bossFlag)
+             }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
+            for (int i = 0; i < badGuys2.Count; i++)
+            {
+                rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
+                (int)badGuys2[i].position.Y + 150,
+                badGuys2[i].Width - 80,
+                badGuys2[i].Height - 160);
+                // Determine if the two objects collided with each
+                // other
+                if (rectangle1.Intersects(rectangle2))
+                    badGuys2[i].health = 0;
+            }
+
+            if (bossFlag)
                 {
                     if (rectangle1.Intersects(theBoss1.hitBox))
                     {
@@ -1852,13 +1914,21 @@ namespace G_Shift
                     startPos = new Vector2(tempXleft, tempY);
                     eMotion = new Vector2(6f, 0f);
                     //badGuys4[i].texture = enemy1bTexture;
-                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
+               //     badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemy1bTexture, 0f, 0f));
+                    //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f)); // WORKING
+                    badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));  // new
+                    //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+
                 }
                 else
                 {
                     startPos = new Vector2(tempXright, tempY);
                     eMotion = new Vector2(-6f, 0f);
-                    badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+               //     badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+                    //badGuys4.Add(new Enemy4a(158, 87, startPos, eMotion, enemyATexture, 0f, 0f)); // WORKING
+                    badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));  // new
+                    //badGuys4.Add(new Enemy4b(158, 87, startPos, eMotion, enemyATexture, 0f, 0f));
+
                 }
 
 
@@ -1972,7 +2042,7 @@ namespace G_Shift
                 //badGuy4spawnTime = TimeSpan.FromSeconds(1f);
             //}
 
-                boss1MaxHealthBar = new Rectangle(500, 25, theBoss1.maxHealth, 20);
+              //  boss1MaxHealthBar = new Rectangle(500, 25, theBoss1.maxHealth, 20);
                 
 
         }
@@ -2157,13 +2227,22 @@ namespace G_Shift
                     //spriteBatch.Draw(baseRectangle, badGuys4[i].attackRightRect, Color.Green);  // debug purposes
                 }
 
+                Vector2 origin = new Vector2(0, 0);
+
                 if (bossFlag == true)
                 {
                     theBoss1.screenPosition = new Vector2(theBoss1.position.X - translation.X, theBoss1.position.Y);
                     theBoss1.Draw(spriteBatch);
+                    Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
+                    spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                    spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
+
+                    //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                    //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
+
                 }
 
-                Vector2 origin = new Vector2(0, 0);
+                //Vector2 origin = new Vector2(0, 0);
 
                 Vector2 gpos = new Vector2(fullHealthRect.X, fullHealthRect.Y); // position of gMan health bar
                 //spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
