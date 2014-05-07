@@ -378,12 +378,12 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-            punch1 = Content.Load<Song>("Music/weakpunch_1");
-            punch2 = Content.Load<Song>("Music/weakpunch_2");
-            punch3 = Content.Load<Song>("Music/weakpunch_3");
-            timeBomb = Content.Load<Song>("Music/TickingTimeBomb");
-            menuMusic = Content.Load<Song>("Music/MenuBackground");
-            gameMusic = Content.Load<Song>("Music/BattleBackground");
+            punch1 = Content.Load<Song>("weakpunch_1");
+            punch2 = Content.Load<Song>("weakpunch_2");
+            punch3 = Content.Load<Song>("weakpunch_3");
+            timeBomb = Content.Load<Song>("TickingTimeBomb");
+            menuMusic = Content.Load<Song>("MenuBackground");
+            gameMusic = Content.Load<Song>("BattleBackground");
             DeathLeft = Content.Load<Texture2D>("Galager/DEATHLEft");
             DeathRight = Content.Load<Texture2D>("Galager/DEATHRight");
             FallLeft = Content.Load<Texture2D>("Galager/FALLANIMATON");
@@ -539,7 +539,12 @@ namespace G_Shift
                     for (int i = 0; i < allItems.Count; i++)
                     {
                         allItems[i].Update(gMan, Content, graphics);
-                    }
+                    //                 if (gameTime.TotalGameTime - previouslyRemovedObject > removeDestroyedItem && allItems[i].itemDestroyed())
+                    //{
+                    //    previouslyRemovedObject = gameTime.TotalGameTime;
+                    //    allItems.RemoveAt(i);
+                    //}
+   }
 
                     //aCrate.Update(gMan);
                     // Update the gravies
@@ -554,11 +559,6 @@ namespace G_Shift
                     //UpdateRL(gameTime);
                     UpdateDL(gameTime);
                     UpdateDR(gameTime);
-                    if (gameTime.TotalGameTime - previouslyRemovedObject > removeDestroyedItem && allItems[i].itemDestroyed())
-                    {
-                        previouslyRemovedObject = gameTime.TotalGameTime;
-                        allItems.RemoveAt(i);
-                    }
 
                     //spawnEnemies(gameTime);
 
@@ -1759,58 +1759,58 @@ namespace G_Shift
                         // If the player health is less than zero we died
                     }
                 }  
-                            if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
-                {
-                    badGuys4[i].health = 0;
-                }
+            //                if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+            //    {
+            //        badGuys4[i].health = 0;
+            //    }
 
-            }
-            // Do the collision between the player and the gravies
-            for (int i = 0; i < badGuys2.Count; i++)
-            {
-                rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
-                (int)badGuys2[i].position.Y + 150,
-                badGuys2[i].Width - 80,
-                badGuys2[i].Height - 160);
-                enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
-                (int)badGuys2[i].position.Y + 150,
-                badGuys2[i].Width - 80,
-                badGuys2[i].Height - 160);
-                // Determine if the two objects collided with each
-                // other
-                if (rectangle1.Intersects(rectangle2))
-                {
-                    //the player can hit the enemy
-                    if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
-                    {
-                        //the player hit the robot
-                        badGuys2[i].health -= gMan.heavyHit;
-                        //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
-                    }
-                    // If the player health is less than zero we died
-                }
+            //}
+            //// Do the collision between the player and the gravies
+            //for (int i = 0; i < badGuys2.Count; i++)
+            //{
+            //    rectangle2 = new Rectangle((int)badGuys2[i].position.X + 50,
+            //    (int)badGuys2[i].position.Y + 150,
+            //    badGuys2[i].Width - 80,
+            //    badGuys2[i].Height - 160);
+            //    enemy2Rec = new Rectangle((int)badGuys2[i].position.X + 50,
+            //    (int)badGuys2[i].position.Y + 150,
+            //    badGuys2[i].Width - 80,
+            //    badGuys2[i].Height - 160);
+            //    // Determine if the two objects collided with each
+            //    // other
+            //    if (rectangle1.Intersects(rectangle2))
+            //    {
+            //        //the player can hit the enemy
+            //        if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
+            //        {
+            //            //the player hit the robot
+            //            badGuys2[i].health -= gMan.heavyHit;
+            //            //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
+            //        }
+            //        // If the player health is less than zero we died
+            //    }
 
-                if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
-                {
-                    badGuys2[i].health = 0;
-                }
+            //    if (rectangle2.Intersects(allItems[i].itemHitbox()) && allItems[i].itemBeingThrown())
+            //    {
+            //        badGuys2[i].health = 0;
+            //    }
 
-            }
+            //}
 
-            if (bossFlag)
-            {
-                for (int i = 0; i < allItems.Count; i++)
-                {
-                    if (allItems[i].itemBeingThrown())
-                    {
-                        if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
-                        {
-                            theBoss1.health = 0;
-                        }
-                    }
-                }
-                        }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
-                if (bossFlag)
+            //if (bossFlag)
+            //{
+            //    for (int i = 0; i < allItems.Count; i++)
+            //    {
+            //        if (allItems[i].itemBeingThrown())
+            //        {
+            //            if (theBoss1.hitBox.Intersects(allItems[i].itemHitbox()))
+            //            {
+            //                theBoss1.health = 0;
+            //            }
+            //        }
+            //    }
+            //            }    //theBoss1.hitBox; //= new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, theBoss1.Width, theBoss1.Height);
+            //    if (bossFlag)
 
         }
 
