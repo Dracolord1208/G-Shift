@@ -184,6 +184,14 @@ namespace G_Shift
         Texture2D LifeRight;
         Texture2D RiseRight;
         Texture2D RiseLeft;
+         Animation ADeathLeft;
+         Animation ADeathRight;
+         Animation AFallLeft;
+         Animation AFallRight;
+         bool died1;
+         bool died2;
+         bool died3;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -206,13 +214,16 @@ namespace G_Shift
 
             //world declaration
             level = new World(0, Content);
-
+            died1 = false;
             allItems = new List<Item>();
             DeathRightList = new List<Animation>();
             DeathLeftList = new List<Animation>();
             removeDestroyedItem = TimeSpan.FromSeconds(1f);
             previouslyRemovedObject = TimeSpan.Zero;
-
+            ADeathLeft = new Animation();
+            ADeathRight = new Animation();
+            AFallLeft= new Animation();
+            AFallRight= new Animation();
             explosions = new List<Animation>();
             for (int i = 0; i < level.getForUpdate().Count; i++)
             {
@@ -366,7 +377,14 @@ namespace G_Shift
             enemy2bTexture = Content.Load<Texture2D>("mediumRobot1b");
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
             bossATexture = Content.Load<Texture2D>("Boss1a");
-
+            DeathLeft = Content.Load<Texture2D>("Galager/DEATHLEft");
+            DeathRight = Content.Load<Texture2D>("Galager/DEATHRight");
+            FallLeft = Content.Load<Texture2D>("Galager/FALLANIMATON");
+            FallRight = Content.Load<Texture2D>("Galager/FALLANIMATONright");
+            ADeathLeft.Initialize(DeathRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+            ADeathRight.Initialize(DeathLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+            AFallLeft.Initialize(FallLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+            AFallRight.Initialize(FallRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
             levelupTexture = Content.Load<Texture2D>("levelupscreen");
             EndMenuTexture = Content.Load<Texture2D>("endMenu");
             startButton = Content.Load<Texture2D>(@"start");
@@ -381,8 +399,7 @@ namespace G_Shift
             gameMusic = Content.Load<Song>("Music/BattleBackground");
             DeathLeft = Content.Load<Texture2D>("Galager/DEATHLEft");
             DeathRight = Content.Load<Texture2D>("Galager/DEATHRight");
-            FallLeft = Content.Load<Texture2D>("Galager/FALLANIMATON");
-            FallRight = Content.Load<Texture2D>("Galager/FALLANIMATONright");
+
             LifeLeft = Content.Load<Texture2D>("Galager/LIFELEFT");
             LifeRight = Content.Load<Texture2D>("Galager/LIFEright");
             RiseRight = Content.Load<Texture2D>("Galager/LIFTANIMATONright");
@@ -543,6 +560,7 @@ namespace G_Shift
                             allItems.RemoveAt(i);
                         }
                     }
+                    
 
                     //aCrate.Update(gMan);
                     // Update the gravies
@@ -553,23 +571,31 @@ namespace G_Shift
                     //UpdateEnemyProjectiles();
                     UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
-                    //if (gMan.Health <= 0)
-                    //{
-                    //    if (!gMan.facing)
-                    //    {
-                    //        if (DeathLeftList.Count < 1)
-                    //        {
-                    //            AddDL(new Vector2(gMan.StartPosition.X, gMan.Position.Y));
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        if (DeathRightList.Count < 1)
-                    //        {
-                    //            AddDR(new Vector2(gMan.StartPosition.X, gMan.Position.Y));
-                    //        }
-                    //    }
-                    //}
+                    if (gMan.Health <= 0)
+                    {
+                        
+                        if (!gMan.facing)
+                        {
+                            AFallLeft.Update(gameTime);
+                        }
+                        else
+                        {
+                            AFallRight.Update(gameTime);
+                        }
+                        if (died2)
+                        {
+                            if (!gMan.facing)
+                            {
+                                ADeathLeft.Update(gameTime);
+
+                            }
+                            else
+                            {
+                                ADeathRight.Update(gameTime);
+                            }
+                        }
+                        died1 = true;
+                    }
                     //spawnEnemies(gameTime);
 
                     if (currentKeyboardState.IsKeyDown(Keys.D1))
@@ -2063,7 +2089,8 @@ namespace G_Shift
             if (gameState == GameState.Playing)
             {
                 spriteBatch.End();
-
+                if (gMan.Health <= 0)
+                    died1 = true;
                 if (translate)
                     translation = gMan.Position - gMan.StartPosition;
 
@@ -2073,6 +2100,22 @@ namespace G_Shift
 
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
+                if (gMan.Health <= 0&&died1)
+                {
+                    if(gMan.facing)
+                    AFallRight.Draw(spriteBatch, .5f);
+                    else
+                    AFallLeft.Draw(spriteBatch, .5f);
+                    if(AFallRight.Active==false||AFallLeft.Active==false)
+                        died2 = true;
+                }
+                if (died2 )
+                {
+                    if (gMan.facing)
+                            ADeathRight.Draw(spriteBatch, .5f);
+                    else
+                            ADeathLeft.Draw(spriteBatch, .5f);
+                }
 
                 if (bossFlag == true)
                 {
