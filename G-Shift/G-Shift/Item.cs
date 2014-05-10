@@ -165,7 +165,7 @@ namespace G_Shift
             //int xDistance = Math.Abs(throwableHitbox.X - (int)gMan.motion.X);
             //int yDistance = Math.Abs(throwableHitbox.Y - (int)gMan.motion.Y);
 
-            if (playerPosition.Intersects(throwableHitbox) && Keyboard.GetState().IsKeyDown(Keys.X))
+            if (playerPosition.Intersects(throwableHitbox) &&( Keyboard.GetState().IsKeyDown(Keys.X) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X)))
             {
                 //if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 //{
@@ -230,7 +230,7 @@ namespace G_Shift
                 goneUp = true;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.X))
+            if (Keyboard.GetState().IsKeyDown(Keys.X)||GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X))
             {
                 if (canThrow)
                 {
