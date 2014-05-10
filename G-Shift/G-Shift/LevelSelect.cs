@@ -18,6 +18,10 @@ namespace G_Shift
         private Vector2 promptButtonPosition3;
         private Vector2 promptButtonPosition4;
         MouseState mouseState;
+        bool pressed;
+        bool pressed1;
+        bool pressed2;
+        bool pressed3;
         MouseState previousMouseState;
         SpriteFont font;
         private Texture2D exitButton;
@@ -42,6 +46,7 @@ namespace G_Shift
             unlocked = new bool[4] { true, false, false, false };
             levelThatWasChosen = -1;
             selected = true;
+            pressed3 = false;
         }
         public void LoadCont(Texture2D texture,SpriteFont fon,Texture2D badg)
         {
@@ -55,30 +60,45 @@ namespace G_Shift
            
         }
 
-        public  void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState)
+        public  void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState,GamePadState currentGamePadState,GamePadState previousGamePadState)
         {
             selected = true;
-                if (currentKeyboardState.IsKeyDown(Keys.Up) && !previousKeyboardState.IsKeyDown(Keys.Up))
+            currentGamePadState = GamePad.GetState(PlayerIndex.One);
+            previousGamePadState = currentGamePadState;
+            if (currentGamePadState.DPad.Up == ButtonState.Released)
+                pressed = false;
+            if (currentGamePadState.DPad.Down == ButtonState.Released)
+                pressed1 = false;
+            if (currentGamePadState.Buttons.A== ButtonState.Released)
+                pressed3 = true;
+
+            if ((currentKeyboardState.IsKeyDown(Keys.Up) && !previousKeyboardState.IsKeyDown(Keys.Up))||
+                   (currentGamePadState.DPad.Up == ButtonState.Pressed && pressed == false))
                 {
                     choose--;
+                    pressed = true;
                     if (choose > 3)
                         choose = 0;
                     if (choose < 0)
                         choose = 3;
                 }
-                if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down))
+                if (currentKeyboardState.IsKeyDown(Keys.Down) && !previousKeyboardState.IsKeyDown(Keys.Down)||
+                   (currentGamePadState.DPad.Down == ButtonState.Pressed && pressed1 == false))
                 {
                     choose++;
+                    pressed1 = true;
                     if (choose > 3)
                         choose = 0;
                     if (choose < 0)
                         choose = 3;
                 }
-                if (currentKeyboardState.IsKeyDown(Keys.Enter) && !previousKeyboardState.IsKeyDown(Keys.Enter))
+                if (currentKeyboardState.IsKeyDown(Keys.Enter) && !previousKeyboardState.IsKeyDown(Keys.Enter) ||
+                   (currentGamePadState.Buttons.A == ButtonState.Pressed && pressed3 == true))
                 {
                     //level selected
                     if (unlocked[choose] == true)
                     {
+                        pressed2 = true;
                         levelThatWasChosen = choose;
                         selected = false;
                     }
@@ -93,7 +113,7 @@ namespace G_Shift
                     MouseClicked(mouseState.X, mouseState.Y);
                 }
                 previousMouseState = mouseState;
-
+              
         }
 
         void MouseClicked(int x, int y)

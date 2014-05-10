@@ -99,7 +99,7 @@ namespace G_Shift
         public Vector2 galPosition;//= new Vector2((int)Position.X - 85, (int)Position.Y - 200);
         public Rectangle hitBox;
         //public Rectangle hitbox { get; set; }
-
+        //GamePadState previousGamePadState;
         bool isPunching;
         //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
@@ -298,7 +298,7 @@ namespace G_Shift
 
         // Update the player animation
         //public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, bool canMoveUp, bool canMoveDown, List<Item> allItems, World level)
-        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, List<Item> allItems, World level)
+        public void Update(GameTime gameTime, KeyboardState currentKeyboardState, KeyboardState previousKeyboardState, GamePadState currentGamePadState, GamePadState previousGamePadState,List<Item> allItems, World level)
         {
             ismoveing = false;
             AAttack1Right.Position = new Vector2(StartPosition.X, Position.Y);
@@ -348,13 +348,13 @@ namespace G_Shift
             UpdateDL(gameTime);
             UpdateDR(gameTime);
             motion = new Vector2(0, 0);
-            Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
-            Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
+            //Position.X += currentGamePadState.ThumbSticks.Left.X * playerMoveSpeed;
+            //Position.Y -= currentGamePadState.ThumbSticks.Left.Y * playerMoveSpeed;
             //////handGunA.position = new Vector2(position.X + 50, position.Y + 100);
             galPosition = new Vector2((int)Position.X - 85, (int)Position.Y - 200);
             // Use the Keyboard / Dpad
             bool animators = false;
-
+         //   previousGamePadState = currentGamePadState;
             if (AttackRightList.Count == 0)
                 animators = true;
             if (AttackLeftList.Count == 0)
@@ -425,20 +425,9 @@ namespace G_Shift
 
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Z) || currentGamePadState.Buttons.X == ButtonState.Pressed)
-            {
-                //             playerStance = Stance.lightAttack;
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.C) || currentGamePadState.Buttons.Y == ButtonState.Pressed)
-            {
-
-                //                playerStance = Stance.heavyAttack;
-
-            }
-
-            //else
-            if (currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space))
-            {
+            if ((currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space))||
+                 (currentGamePadState.IsButtonDown(Buttons.A) &&  previousGamePadState.Buttons.A != ButtonState.Released))
+            { 
                 if (!facing)
                 {
                     if (AttackRightList.Count < 1)

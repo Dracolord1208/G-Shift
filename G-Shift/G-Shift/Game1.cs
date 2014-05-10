@@ -494,10 +494,11 @@ namespace G_Shift
 
             float moveFactorPerSecond = 400 * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             // Save the previous state of the keyboard and game pad so we can determinesingle key/button presses
-            previousGamePadState = currentGamePadState;
+          
             previousKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
             currentGamePadState = GamePad.GetState(PlayerIndex.One);
+             previousGamePadState = currentGamePadState;
             checkPauseKey(currentKeyboardState, currentGamePadState);
             if (gameState == GameState.Playing)
             {
@@ -530,7 +531,7 @@ namespace G_Shift
                     // Update the collision
                     UpdateCollision();
                     // Update the projectiles
-                    gMan.Update(gameTime, currentKeyboardState, previousKeyboardState, currentGamePadState, allItems, level);
+                    gMan.Update(gameTime, currentKeyboardState, previousKeyboardState, currentGamePadState, previousGamePadState, allItems, level);
 
                     for (int i = 0; i < allItems.Count; i++)
                     {
@@ -645,7 +646,7 @@ namespace G_Shift
 
             if (gameState == GameState.levelSelect)
             {
-                levelselectclass.Update(gameTime, currentKeyboardState, previousKeyboardState);
+                levelselectclass.Update(gameTime, currentKeyboardState, previousKeyboardState,currentGamePadState,previousGamePadState);
                 if (levelselectclass.selected == false)
                 {
                     gameState = GameState.Loading;
