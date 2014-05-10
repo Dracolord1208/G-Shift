@@ -101,6 +101,7 @@ namespace G_Shift
         //public Rectangle hitbox { get; set; }
         //GamePadState previousGamePadState;
         bool isPunching;
+        bool pressed3;
         //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
         List<Animation> AttackRightList;
@@ -260,7 +261,7 @@ namespace G_Shift
             RiseRightList = new List<Animation>();
             DeathRightList = new List<Animation>();
             DeathLeftList = new List<Animation>();
-
+            pressed3 = true;
             //set animation
             fireTime = TimeSpan.FromSeconds(.30f);
             // Set the starting position of the player around the middle of the screen and to the back
@@ -424,10 +425,13 @@ namespace G_Shift
                     Position.Y += playerMoveSpeed;
 
             }
+            if (currentGamePadState.Buttons.A == ButtonState.Released)
+                pressed3 = false;
 
             if ((currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space))||
-                 (currentGamePadState.IsButtonDown(Buttons.A) &&  previousGamePadState.Buttons.A != ButtonState.Released))
-            { 
+                 (currentGamePadState.Buttons.A == ButtonState.Pressed &&pressed3==false))
+            {
+                pressed3 = true;
                 if (!facing)
                 {
                     if (AttackRightList.Count < 1)
