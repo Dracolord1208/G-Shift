@@ -129,13 +129,19 @@ namespace G_Shift
             (int)Position.Y - (int)(FrameHeight * scale), // 2,
             (int)(FrameWidth * scale),
             (int)(FrameHeight * scale));
+
+
+            
         }
-        public void Draw(SpriteBatch spriteBatch,float depth)
+        public void Draw(SpriteBatch spriteBatch,float depth,Vector2 location)
         {
+            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y-280, FrameWidth, FrameHeight);
             // Only draw the animation when we are active
             if (Active)
             {
-                spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color, 0,    Vector2.Zero,   SpriteEffects.None,    depth);
+                Vector2 origin = new Vector2(0, 0);
+                spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color, 0, origin, SpriteEffects.None, (depth));
+                //spriteBatch.Draw(spriteStrip, destinationRect, sourceRect, color, 0,    Vector2.Zero,   SpriteEffects.None,    depth);
             }
         }
     }

@@ -2103,18 +2103,18 @@ namespace G_Shift
                 if (gMan.Health <= 0&&died1)
                 {
                     if(gMan.facing)
-                    AFallRight.Draw(spriteBatch, .5f);
+                    AFallRight.Draw(spriteBatch, .5f,gMan.screenPosition);
                     else
-                    AFallLeft.Draw(spriteBatch, .5f);
+                        AFallLeft.Draw(spriteBatch, .5f, gMan.screenPosition);
                     if(AFallRight.Active==false||AFallLeft.Active==false)
                         died2 = true;
                 }
                 if (died2 )
                 {
                     if (gMan.facing)
-                            ADeathRight.Draw(spriteBatch, .5f);
+                        ADeathRight.Draw(spriteBatch, .5f, gMan.screenPosition);
                     else
-                            ADeathLeft.Draw(spriteBatch, .5f);
+                        ADeathLeft.Draw(spriteBatch, .5f, gMan.screenPosition);
                 }
 
                 if (bossFlag == true)
@@ -2176,16 +2176,8 @@ namespace G_Shift
                 // draw badGuys2
                 for (int i = 0; i < badGuys2.Count; i++)
                 {
-                    /*
-                    if (badGuys2[i].position.Y < gMan.Position.Y)
-                    {
-                        badGuys2[i].depth = .2f;
-                    }
-                    else
-                    {
-                        badGuys2[i].depth = .8f;
-                    }
-                    */
+                
+
                     badGuys2[i].screenPosition = new Vector2(badGuys2[i].position.X - translation.X, badGuys2[i].position.Y);
                     badGuys2[i].Draw(spriteBatch);
                     //      spriteBatch.Draw(backgroundTexture, enemy2Rec, Color.White);
@@ -2199,7 +2191,7 @@ namespace G_Shift
                 gMan.Draw(spriteBatch, .5f);
                 for (int i = 0; i < explosions.Count; i++)
                 {
-                    explosions[i].Draw(spriteBatch, .6f);
+                    explosions[i].Draw(spriteBatch, .6f, gMan.screenPosition);
                 }
                 // draw badGuys4
                 for (int i = 0; i < badGuys4.Count; i++)

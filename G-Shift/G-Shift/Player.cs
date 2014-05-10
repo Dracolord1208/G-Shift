@@ -102,6 +102,7 @@ namespace G_Shift
         //GamePadState previousGamePadState;
         bool isPunching;
         bool pressed3;
+        public Vector2 screenPosition;
         //   float MaxAttackTime=2;
         //Content.RootDirectory = "Content";
         List<Animation> AttackRightList;
@@ -304,6 +305,7 @@ namespace G_Shift
             if (Health > 0)
             {
                 ismoveing = false;
+                screenPosition = new Vector2(StartPosition.X, Position.Y);
                 AAttack1Right.Position = new Vector2(StartPosition.X, Position.Y);
                 AAttack1Left.Position = new Vector2(StartPosition.X, Position.Y);
                 ADeathLeft.Position = new Vector2(StartPosition.X, Position.Y);
@@ -597,6 +599,7 @@ namespace G_Shift
         public void Draw(SpriteBatch spriteBatch, float depth)
         {
             bool animator = true;
+            depth = .7f;
             if (Health > 0)
             {
                 if (AttackRightList.Count != 0)
@@ -612,17 +615,17 @@ namespace G_Shift
                 {
                     if (playerStance == Stance.Standing)
                     {
-                        AStillleft.Draw(spriteBatch, depth);
+                        AStillleft.Draw(spriteBatch, depth,screenPosition);
                     }
                     if (playerStance == Stance.Right || playerStance == Stance.moving)
                     {
                         if (!gun)
                         {
-                            AWalkGunRight.Draw(spriteBatch, depth);
+                            AWalkGunRight.Draw(spriteBatch, depth,screenPosition);
                         }
                         else
                         {
-                            AWalkNoGunRight.Draw(spriteBatch, depth);
+                            AWalkNoGunRight.Draw(spriteBatch, depth,screenPosition);
                         }
                     }
 
@@ -635,7 +638,7 @@ namespace G_Shift
                     {
                         //         AAttack1Right.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackLeftList.Count; i++)
-                            AttackLeftList[i].Draw(spriteBatch, depth);
+                            AttackLeftList[i].Draw(spriteBatch, depth,screenPosition);
                         fire = false;
                     }
                 }
@@ -643,17 +646,17 @@ namespace G_Shift
                 {
                     if (playerStance == Stance.Standing)
                     {
-                        AStillRight.Draw(spriteBatch, depth);
+                        AStillRight.Draw(spriteBatch, depth,screenPosition);
                     }
                     if (playerStance == Stance.Left || playerStance == Stance.moving)
                     {
                         if (!gun)
                         {
-                            AWalkGunLeft.Draw(spriteBatch, depth);
+                            AWalkGunLeft.Draw(spriteBatch, depth,screenPosition);
                         }
                         else
                         {
-                            AWalkNoGunLeft.Draw(spriteBatch, depth);
+                            AWalkNoGunLeft.Draw(spriteBatch, depth,screenPosition);
                         }
                     }
 
@@ -666,7 +669,7 @@ namespace G_Shift
                     {
                         //      AAttack1Left.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackRightList.Count; i++)
-                            AttackRightList[i].Draw(spriteBatch, depth);
+                            AttackRightList[i].Draw(spriteBatch, depth,screenPosition);
                         fire = false;
                     }
                 }
