@@ -192,8 +192,11 @@ namespace G_Shift
          bool died1;
          bool died2;
          bool died3;
-
-        public Game1()
+         bool hitonce1;
+         bool hitonce2;
+         bool hitonce3;
+         bool hitonce4;
+         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -1646,6 +1649,11 @@ namespace G_Shift
         }
         private void UpdateCollision()
         {
+            if (gMan.playerStance == G_Shift.Player.Stance.Standing)
+            {
+                hitonce2 = true;
+                hitonce1 = true;
+            }
             // Use the Rectangle's built-in intersect function to 
             // determine if two objects are overlapping
             Rectangle rectangle1;
@@ -1673,7 +1681,11 @@ namespace G_Shift
                     if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)// && badGuys[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
                         //the player hit the robot
+                        if(hitonce2)
+                        {
                         badGuys4[i].health -= gMan.heavyHit;
+                        hitonce2 = false;
+                        }
                         //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
                     // If the player health is less than zero we died
@@ -1706,7 +1718,11 @@ namespace G_Shift
                     if (gMan.playerStance == G_Shift.Player.Stance.heavyAttack)//&& badGuys2[i].enemyStance == G_Shift.Enemy1a.Stance.Fighting)
                     {
                         //the player hit the robot
-                        badGuys2[i].health -= gMan.heavyHit;
+                        if (hitonce1)
+                        {
+                            badGuys2[i].health -= gMan.heavyHit;
+                            hitonce1 = false;
+                        }
                         //badGuys[i].enemyStance = G_Shift.Enemy1a.Stance.Hurt;
                     }
                     // If the player health is less than zero we died
