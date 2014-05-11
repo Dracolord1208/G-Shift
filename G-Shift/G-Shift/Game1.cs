@@ -58,6 +58,7 @@ namespace G_Shift
         List<EnemyProjectile> enemyProjectiles;
         TimeSpan fireTime;
         TimeSpan fireTimeEnemy;
+        bool once = true;
         private GameState gameState;
         MouseState mouseState;
         MouseState previousMouseState;
@@ -381,10 +382,7 @@ namespace G_Shift
             DeathRight = Content.Load<Texture2D>("Galager/DEATHRight");
             FallLeft = Content.Load<Texture2D>("Galager/FALLANIMATON");
             FallRight = Content.Load<Texture2D>("Galager/FALLANIMATONright");
-            ADeathLeft.Initialize(DeathRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
-            ADeathRight.Initialize(DeathLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
-            AFallLeft.Initialize(FallLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
-            AFallRight.Initialize(FallRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+
             levelupTexture = Content.Load<Texture2D>("levelupscreen");
             EndMenuTexture = Content.Load<Texture2D>("endMenu");
             startButton = Content.Load<Texture2D>(@"start");
@@ -533,19 +531,7 @@ namespace G_Shift
                     {
                         //  scrollPosition += moveFactorPerSecond;
                     }
-                    // PlayMusic(gameMusic);
-                    //      MediaPlayer.Resume();
-                    //Update the player
-                    //UpdatePlayer(gameTime);
 
-                    // gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
-
-                    //gMan.Update(gameTime,currentKeyboardState, previousKeyboardState,currentGamePadState, aCrate.getUpMove(), aCrate.getDownMove(), level);
-
-                    //aCrate.Update(gMan);
-                    // Update the gravies
-                    //UpdateEnemies(gameTime);
-                    // Update the collision
                     UpdateCollision();
                     // Update the projectiles
                     gMan.Update(gameTime, currentKeyboardState, previousKeyboardState, currentGamePadState, previousGamePadState, allItems, level);
@@ -562,19 +548,19 @@ namespace G_Shift
                     }
                     
 
-                    //aCrate.Update(gMan);
-                    // Update the gravies
-                    //UpdateEnemies(gameTime);
-                    // Update the collision
-                    // Update the projectiles
-                    // Update the enemy projectiles
-                    //UpdateEnemyProjectiles();
                     UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
                     if (gMan.Health <= 0)
                     {
-                        
-                        if (!gMan.facing)
+                        if (once)
+                        {
+                            ADeathLeft.Initialize(DeathRight, new Vector2(gMan.Position.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+                            ADeathRight.Initialize(DeathLeft, new Vector2(gMan.Position.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+                            AFallLeft.Initialize(FallLeft, new Vector2(gMan.Position.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+                            AFallRight.Initialize(FallRight, new Vector2(gMan.Position.X, gMan.Position.Y), 225, 250, 8, 160, Color.White, 1f, false);
+                            once = false;
+                        }
+                            if (!gMan.facing)
                         {
                             AFallLeft.Update(gameTime);
                         }
@@ -687,40 +673,6 @@ namespace G_Shift
             base.Update(gameTime);
         }
 
-        //private void UpdateRL(GameTime gameTime)
-        //{
-        //    for (int i = RiseReftList.Count - 1; i >= 0; i--)
-        //    {
-        //        RiseReftList[i].Update(gameTime);
-        //        if (RiseReftList[i].Active == false)
-        //        {
-        //            RiseReftList.RemoveAt(i);
-        //        }
-        //    }
-        //}
-        //private void AddRL(Vector2 position)
-        //{
-        //    Animation explosion = new Animation();
-        //    explosion.Initialize(RiseLeft, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-        //    RiseReftList.Add(explosion);
-        //}
-        //private void UpdateRR(GameTime gameTime)
-        //{
-        //    for (int i = RiseRightList.Count - 1; i >= 0; i--)
-        //    {
-        //        RiseRightList[i].Update(gameTime);
-        //        if (RiseRightList[i].Active == false)
-        //        {
-        //            RiseRightList.RemoveAt(i);
-        //        }
-        //    }
-        //}
-        //private void AddRR(Vector2 position)
-        //{
-        //    Animation explosion = new Animation();
-        //    explosion.Initialize(RiseRight, new Vector2(gMan.StartPosition.X, gMan.Position.Y), 225, 250, 8, 60, Color.White, 1f, false);
-        //    RiseRightList.Add(explosion);
-        //}
         private void UpdateDL(GameTime gameTime)
         {
             for (int i = DeathLeftList.Count - 1; i >= 0; i--)

@@ -374,7 +374,7 @@ namespace G_Shift
                     animators = true;
 
                 if ((currentKeyboardState.IsKeyDown(Keys.Left) || currentKeyboardState.IsKeyDown(Keys.A) || currentKeyboardState.IsKeyDown(Keys.J) ||
-                currentGamePadState.DPad.Left == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C))
+                currentGamePadState.DPad.Left == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C) && pressed3 == false)
                 {
                     if (animators)
                         Position.X -= playerMoveSpeed;
@@ -382,7 +382,7 @@ namespace G_Shift
                     playerStance = Stance.Left;
                 }
                 if ((currentKeyboardState.IsKeyDown(Keys.Right) || currentKeyboardState.IsKeyDown(Keys.D) || currentKeyboardState.IsKeyDown(Keys.L) ||
-                currentGamePadState.DPad.Right == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C))
+                currentGamePadState.DPad.Right == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C) && pressed3 == false)
                 {
                     if (animators)
                         Position.X += playerMoveSpeed;
@@ -393,7 +393,7 @@ namespace G_Shift
                 canMoveUp = true;
 
                 if ((currentKeyboardState.IsKeyDown(Keys.Up) || currentKeyboardState.IsKeyDown(Keys.W) || currentKeyboardState.IsKeyDown(Keys.I) ||
-                    currentGamePadState.DPad.Up == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C))
+                    currentGamePadState.DPad.Up == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C) && pressed3 == false)
                 {
                     ismoveing = true;
                     playerStance = Stance.moving;
@@ -413,7 +413,7 @@ namespace G_Shift
                 canMoveDown = true;
 
                 if ((currentKeyboardState.IsKeyDown(Keys.Down) || currentKeyboardState.IsKeyDown(Keys.S) || currentKeyboardState.IsKeyDown(Keys.K) ||
-                currentGamePadState.DPad.Down == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C))
+                currentGamePadState.DPad.Down == ButtonState.Pressed) && !previousKeyboardState.IsKeyDown(Keys.C)&&pressed3==false)
                 {
                     ismoveing = true;
                     playerStance = Stance.moving;
@@ -599,7 +599,7 @@ namespace G_Shift
         public void Draw(SpriteBatch spriteBatch, float depth)
         {
             bool animator = true;
-            depth = .7f;
+            depth = .4f;
             if (Health > 0)
             {
                 if (AttackRightList.Count != 0)
