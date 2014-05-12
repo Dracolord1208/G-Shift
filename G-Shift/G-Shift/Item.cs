@@ -57,7 +57,7 @@ namespace G_Shift
 
             if (throwable.Name.CompareTo("BOXSMALL1") == 0)
             {
-                throwableHitbox = new Rectangle(0, 0, 50, 100);
+                throwableHitbox = new Rectangle(0, 0, 130, 165);
             }
             else if (throwable.Name.CompareTo("barrel") == 0)
             {
@@ -367,26 +367,29 @@ namespace G_Shift
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //if (turnNinetyDegrees)
-            //{
-            //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
-            //}
-            //else
-            spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, 0, new Vector2(0,0), SpriteEffects.None, 1);
-            //spriteBatch.Draw(throwable, throwableHitbox, Color.White);
-            spriteBatch.Draw(throwable, bottomPlayerHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
-            spriteBatch.Draw(throwable, bottomObjectHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
-            //spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
-            //spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
-            /*spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
-            spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
-            spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
-            spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
-            //spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);*/
-            //spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
-            //spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
-            //spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
-            //spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);
+            ////if (turnNinetyDegrees)
+            ////{
+            ////spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
+            ////}
+            ////else
+            //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, 0, new Vector2(0,0), SpriteEffects.None, 1);
+            ////spriteBatch.Draw(throwable, throwableHitbox, Color.White);
+            //spriteBatch.Draw(throwable, bottomPlayerHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
+            //spriteBatch.Draw(throwable, bottomObjectHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
+            ////spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
+            ////spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
+            ///*spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
+            //spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
+            //spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
+            //spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
+            ////spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);*/
+            ////spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
+            ////spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
+            ////spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
+            ////spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);
+                        Vector2 origin = new Vector2(0, 0);
+            spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, 0, origin, SpriteEffects.None, 1);
+
         }
     }
 }
