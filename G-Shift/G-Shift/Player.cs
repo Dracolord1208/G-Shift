@@ -67,7 +67,7 @@ namespace G_Shift
         }
         */
         float WaitTimeToShowCard = 0;
-
+        SoundEffect gunshot;
         public int depth { get; set; }
         // Initialize the player
         public Animation AStillleft; public Animation AStillRight;
@@ -86,6 +86,8 @@ namespace G_Shift
         Texture2D WalkGunLeft; public Animation AWalkGunLeft;
         Texture2D WalkGunRight; public Animation AWalkGunRight;
         bool fire = false;
+        bool hitonce;
+        bool shotonce;
         Texture2D HurtLeft; Texture2D HurtRight;
         public Animation AHurtLeft; public Animation AHurtRight;
         public int heavyHit = 5;
@@ -111,7 +113,7 @@ namespace G_Shift
         List<Animation> RiseRightList;
         List<Animation> DeathRightList;
         List<Animation> DeathLeftList;
-
+        SoundEffect hitbyrobot;
         private void UpdateAR(GameTime gameTime)
         {
             for (int i = AttackRightList.Count - 1; i >= 0; i--)
@@ -234,6 +236,9 @@ namespace G_Shift
             WalkGunRight = content.Load<Texture2D>("Galager/WALKINGWITHGUNRight1");
             HurtLeft = content.Load<Texture2D>("Galager/hurtleft");
             HurtRight = content.Load<Texture2D>("Galager/hurtright");
+            gunshot = content.Load<SoundEffect>("Music/Skorpion-Kibblesbob-1109158827");
+            hitbyrobot = content.Load<SoundEffect>("Music/punch_or_whack_-Vladimir-403040765");
+
             AHurtLeft.Initialize(HurtRight, galPosition, 225, 225, 1, 60, Color.White, 1f, true);
             AHurtRight.Initialize(HurtLeft, galPosition, 225, 225, 1, 60, Color.White, 1f, true);
             AAttack1Right.Initialize(Attack1Left, galPosition, 225, 250, 8, 90, Color.White, 1f, true);
@@ -437,6 +442,7 @@ namespace G_Shift
                      (currentGamePadState.Buttons.A == ButtonState.Pressed && pressed3 == false))
                 {
                     pressed3 = true;
+
                     if (!facing)
                     {
                         if (AttackRightList.Count < 1)
@@ -533,6 +539,11 @@ namespace G_Shift
         }
         public void StanceMoves(GameTime gameTime)
         {
+            if (playerStance == Stance.hurt&&hitonce)
+            {
+                hitbyrobot.Play();
+                hitonce = false;
+            }
             ADeathLeft.Update(gameTime);
             ADeathRight.Update(gameTime);
             AFallLeft.Update(gameTime);
@@ -545,7 +556,10 @@ namespace G_Shift
             {
                 if (playerStance == Stance.Standing)
                 {
+                    hitonce = true;
+                    shotonce = true;
                     AStillleft.Update(gameTime);
+
                 }
                 if (playerStance == Stance.Right || playerStance == Stance.moving)
                 {
@@ -639,7 +653,12 @@ namespace G_Shift
                         //         AAttack1Right.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackLeftList.Count; i++)
                             AttackLeftList[i].Draw(spriteBatch, depth,screenPosition);
-                        fire = false;
+                                  if (shotonce)
+                        {
+                            gunshot.Play();
+                            shotonce = false;
+                        }              fire = false;
+
                     }
                 }
                 else
@@ -670,6 +689,11 @@ namespace G_Shift
                         //      AAttack1Left.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackRightList.Count; i++)
                             AttackRightList[i].Draw(spriteBatch, depth,screenPosition);
+                        if (shotonce)
+                        {
+                            gunshot.Play();
+                            shotonce = false;
+                        }
                         fire = false;
                     }
                 }

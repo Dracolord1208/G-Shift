@@ -171,6 +171,8 @@ namespace G_Shift
         Song timeBomb;
         Song menuMusic;
         Song gameMusic;
+       
+
         bool playSong;
         List<Animation> DeathRightList;
         List<Animation> DeathLeftList;
@@ -373,7 +375,6 @@ namespace G_Shift
             enemyCTexture = Content.Load<Texture2D>("gunEnemy 3a");
             */
             explosionTexture = Content.Load<Texture2D>("explosion");
-
 
             enemyATexture = Content.Load<Texture2D>("smallRobot1a");
             enemy1bTexture = Content.Load<Texture2D>("smallRobot1b");
