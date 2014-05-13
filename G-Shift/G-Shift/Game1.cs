@@ -164,6 +164,11 @@ namespace G_Shift
         int amountOfFightingEnemies=0;
         LevelSelect levelselectclass;
 
+        //public ParticleEngineSparks sparksEngine;
+        public List<ParticleEngineSparks> sparksEngines;
+        public int sparksEnginesMax;
+        public List<Texture2D> sparksTextures;
+
         public float laserDepth;
 
         public Game1()
@@ -296,6 +301,10 @@ namespace G_Shift
             //boss1MaxHealthBar = new Rectangle(500,10,theBoss1.maxHealth,20);
             boss1MaxHealthBar = new Rectangle(500, 25, 500, 20);
 
+            sparksEngines = new List<ParticleEngineSparks>();
+            sparksTextures = new List<Texture2D>();
+            sparksEnginesMax = 2;
+
             base.Initialize();
         }
 
@@ -350,6 +359,10 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
+
+            
+            sparksTextures.Add(Content.Load<Texture2D>("sparks1a"));
+            sparksTextures.Add(Content.Load<Texture2D>("sparks2a"));
 
 
         }
@@ -1218,6 +1231,39 @@ namespace G_Shift
                         boss1HomePoint = new Vector2(SCREEN_WIDTH - 300, SCREEN_HEIGHT * .5f);
                         //boss1HomePoint = new Vector2(800, 350);
 
+                        // this might not work as planned !
+                        //for(int i = sparksEngines.Count;  i < 2; i++)
+                        //{
+                        //    //ParticleEngineSparks temp = new ParticleEngineSparks(sparksTextures, new Vector2(400, 240));
+                        //    ParticleEngineSparks temp = new ParticleEngineSparks(sparksTextures, theBoss1.position);
+                        //    //particleEngine = new ParticleEngine(textures, new Vector2(400, 240));
+                        //    sparksEngines.Add(temp);
+                        //}
+                        if(sparksEnginesMax < 4)
+                        {
+                            //sparksEngines.Add(new ParticleEngineSparks(sparksTextures, theBoss1.position));
+
+                            ParticleEngineSparks temp = new ParticleEngineSparks(sparksTextures, theBoss1.position);
+                            sparksEngines.Add(temp);
+
+                            sparksEnginesMax++;
+                        }
+                        if (sparksEnginesMax > 2)
+                        {
+                            for (int i = 0; i < sparksEngines.Count; i++)
+                            {
+                                //sparksEngines[i].EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+                                Vector2 emitterPos = new Vector2(theBoss1.position.X+150, theBoss1.position.Y+100);
+                                Vector2 emitterPos2 = new Vector2(theBoss1.position.X + 250, theBoss1.position.Y + 300);
+                                //sparksEngines[i].EmitterLocation = theBoss1.position;
+                                if(i == 0)
+                                    sparksEngines[i].EmitterLocation = emitterPos;
+                                if(i == 1)
+                                    sparksEngines[i].EmitterLocation = emitterPos2;
+                                sparksEngines[i].Update();
+                            }
+                        }
+
                         // Adjust X-directional movement
                         if (theBoss1.holdxPosFlag == false && theBoss1.holdPosFlag == false)
                         {
@@ -1422,111 +1468,13 @@ namespace G_Shift
 
                         }
                          */ // removing normal attack while healthLow == true
+
+
+
+                        // ***************************
                     }   // end of if(healthLow == true)
 
                 } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
-
-
-                // prepare to enable.. replace above code
-                //************************************************************
-                //****************************
-                /*
-                if (theBoss1.stance == Boss1a.Stance.Wait)
-                {
-                    theBoss1.holdPosFlag = true;
-                }
-                else if (theBoss1.stance == Boss1a.Stance.Attack)
-                {
-                    //theBoss1.holdPosFlag = true;
-
-                    // this will negate the above if from firing again.. 
-                    // .. maybe not.. 
-                    //theBoss1.holdyPosFlag = false;
-
-                    if (theBoss1.isRightFlag == true)
-                    {
-                        //attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
-                        theBoss1.attackLeftRect = new Rectangle((int)theBoss1.position.X, (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-                        //if (theBoss1.attackLeftRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                        if (theBoss1.attackLeftRect.Intersects(hitbase))
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                        }
-                    }
-                    else
-                    {
-                        //attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
-                        theBoss1.attackRightRect = new Rectangle((int)(theBoss1.position.X + theBoss1.Width * (.75)), (int)theBoss1.position.Y, (int)(theBoss1.Width * (.25)), theBoss1.Height);
-
-                        //if (theBoss1.attackRightRect.Intersects(hitbase) && gameTime.TotalGameTime - theBoss1.attackCheckpoint > theBoss1.attackTimeSpan)
-                        if (theBoss1.attackRightRect.Intersects(hitbase))
-                        {
-                            gMan.Health -= 10;
-                            gMan.playerStance = G_Shift.Player.Stance.hurt;
-                            //badGuys4[i].stance = G_Shift.Enemy4a.Stance.Attack;
-                            //theBoss1.attackCheckpoint = gameTime.TotalGameTime;
-                        }
-                    }
-
-
-                    if (gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.sawBladeAttackTime)
-                    {
-                        theBoss1.lastAttackTime = gameTime.TotalGameTime;  // end of attack
-
-                        theBoss1.stance = Boss1a.Stance.Wait;
-                        theBoss1.lastDecisionTime = gameTime.TotalGameTime;
-                    }
-                }
-                else if (theBoss1.stance == Boss1a.Stance.Move)
-                {
-                    // if close enough to hit.. hold xPos
-                    if (theBoss1.position.X < gMan.Position.X + gMan.Width && theBoss1.position.X > gMan.Position.X - (theBoss1.Width))
-                    {
-                        theBoss1.holdxPosFlag = true;
-                    }
-                    else if (theBoss1.position.X > gMan.Position.X + gMan.Width)
-                    {
-                        //badGuys4[i].velocity = new Vector2(-5f, badGuys4[i].velocity.Y);
-                        theBoss1.moveLeftFlag = true;
-                    }
-                    else if (theBoss1.position.X < gMan.Position.X - theBoss1.Width)
-                    {
-                        theBoss1.moveRightFlag = true;
-                    }
-
-                    // Adjust Y-directional movement
-                    // if close enough to hit.. hold yPos
-                    if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height + theBoss1.baseHeight && theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
-                    {
-                        theBoss1.holdyPosFlag = true;
-                    }
-                    else if (theBoss1.position.Y + theBoss1.Height > gMan.Position.Y + gMan.Height + theBoss1.baseHeight)
-                    {
-                        theBoss1.moveUpFlag = true;
-                    }
-                    else if (theBoss1.position.Y + theBoss1.Height < gMan.Position.Y + gMan.Height - theBoss1.baseHeight)
-                    {
-                        theBoss1.moveDownFlag = true;
-                    }
-
-                    // go into attack stance if holding still
-                    if (theBoss1.holdxPosFlag == true && theBoss1.holdyPosFlag == true && gameTime.TotalGameTime - theBoss1.lastAttackTime > theBoss1.minimumAttackTime)
-                    {
-                        theBoss1.attackFlag = true;
-                        theBoss1.stance = Boss1a.Stance.Attack;
-                        theBoss1.lastDecisionTime = gameTime.TotalGameTime;
-                        theBoss1.lastAttackTime = gameTime.TotalGameTime;
-                    }
-                }
-                */
-                //*******************************************
-                //***********************************************************************
-
-
-
-                //boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
                 theBoss1.Update();
@@ -1919,6 +1867,14 @@ namespace G_Shift
                 {
                     //translate = false;
 
+                    //if (sparksEnginesMax > 2)
+                    //{
+                    //    for (int i = 0; i < sparksEngines.Count; i++)
+                    //    {
+                    //        sparksEngines[i].Draw(spriteBatch);
+                    //    }
+                    //}
+
                     if (theBoss1.laserOn == true)
                     {               
                         /*
@@ -1955,8 +1911,6 @@ namespace G_Shift
                             spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                             //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
                         
-                        //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
-                        //spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                     }
                 }
                 else
@@ -2024,7 +1978,17 @@ namespace G_Shift
 
                     //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
-                    
+
+
+                    // depths works, translationd doesn't
+                    //if (sparksEnginesMax > 2)
+                    //{
+                    //    for (int i = 0; i < sparksEngines.Count; i++)
+                    //    {
+                    //        sparksEngines[i].Draw(spriteBatch);
+                    //    }
+                    //}
+
                 }
 
                 //Vector2 origin = new Vector2(0, 0);
@@ -2044,6 +2008,13 @@ namespace G_Shift
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);
 
+            //if(sparksEnginesMax > 2)
+            //{
+            //    for (int i = 0; i < sparksEngines.Count; i++)
+            //    {
+            //        sparksEngines[i].Draw(spriteBatch);
+            //    }
+            //}
 
 
             //spriteBatch.Draw(baseRectangle, gMan.hitBox, Color.Red);  // debug purposes

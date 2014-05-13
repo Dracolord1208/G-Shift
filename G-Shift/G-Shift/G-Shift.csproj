@@ -123,6 +123,8 @@
     <Compile Include="Interactable.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="LevelSelect.cs" />
+    <Compile Include="Particle.cs" />
+    <Compile Include="ParticleEngineSparks.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
