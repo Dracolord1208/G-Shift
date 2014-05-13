@@ -73,7 +73,7 @@ namespace G_Shift
         bool isLoading;
         bool finishend;
         bool endbool;
-        public bool translate = true;
+        public static bool translate = true;
         public Vector2 translation;
         //Interactable gMan;
         Texture2D gManTest;

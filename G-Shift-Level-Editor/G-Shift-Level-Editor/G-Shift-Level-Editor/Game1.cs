@@ -25,6 +25,7 @@ namespace G_Shift_Level_Editor
         struct BattleEvent
         {
             public List<Item> locs;
+            public float loc;
         }
 
         struct Item
@@ -215,7 +216,7 @@ namespace G_Shift_Level_Editor
             else
             {
                 if (kState.IsKeyDown(Keys.E) &&
-                    prevKeyboardState.IsKeyDown(Keys.E))
+                    prevKeyboardState.IsKeyUp(Keys.E))
                 {
                     BattleEvent temp = new BattleEvent();
                     temp.locs = new List<Item>();
@@ -324,6 +325,16 @@ namespace G_Shift_Level_Editor
                     {
                         s += "Item " + item.loc.X + " " + item.loc.Y +
                             " " + item.name + Environment.NewLine;
+                    }
+
+                    foreach (BattleEvent bEvent in battleEvents)
+                    {
+                        s += "Battle " + bEvent.loc + " " + bEvent.locs.Count + " ";
+                        foreach (Item item in bEvent.locs)
+                        {
+                            s += item.name + " ";
+                        }
+                        s += Environment.NewLine;
                     }
 
                     File.WriteAllText("level.txt", s);
