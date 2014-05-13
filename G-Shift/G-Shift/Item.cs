@@ -44,6 +44,7 @@ namespace G_Shift
         bool inAir;
         int throwCount;
         Vector2 speed;
+        SoundEffect boxbreak;
         bool canThrow;
 
         public void initialize(ContentManager Content, string name)
@@ -120,7 +121,10 @@ namespace G_Shift
         {
             return canMoveDown;
         }
-
+        public void setsound(SoundEffect b)
+        {
+            boxbreak = b;
+        }
         public void Collision()
         {
 
@@ -169,7 +173,7 @@ namespace G_Shift
             //int xDistance = Math.Abs(throwableHitbox.X - (int)gMan.motion.X);
             //int yDistance = Math.Abs(throwableHitbox.Y - (int)gMan.motion.Y);
 
-            if (playerPosition.Intersects(throwableHitbox) && Keyboard.GetState().IsKeyDown(Keys.X))
+            if (playerPosition.Intersects(throwableHitbox) && (Keyboard.GetState().IsKeyDown(Keys.X) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X)))
             {
                 //if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 //{
@@ -234,7 +238,7 @@ namespace G_Shift
                 goneUp = true;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.X))
+            if (Keyboard.GetState().IsKeyDown(Keys.X)|| GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X))
             {
                 if (canThrow)
                 {
@@ -315,7 +319,10 @@ namespace G_Shift
                     inAir = false;
 
                     if (throwable.Name.CompareTo("barrel2") != 0)
-                        throwCount++;
+                    {
+                        throwCount++;                    //sound
+                        boxbreak.Play();
+                    }
 
                     speed.Y = 0;
                 }
@@ -341,14 +348,14 @@ namespace G_Shift
             {
                 if (charDirection)
                 {
-                    throwableHitbox.X += 4;
+                    throwableHitbox.X += 5;
 
                     if (throwableHitbox.X - throwableHitbox.Height > gMan.Position.X + 500)
                         offScreen = true;
                 }
                 else
                 {
-                    throwableHitbox.X -= 4;
+                    throwableHitbox.X -= 5;
 
                     if (throwableHitbox.X + throwableHitbox.Height < gMan.Position.X - 500)
                         offScreen = true;

@@ -544,6 +544,18 @@ namespace G_Shift
                 hitbyrobot.Play();
                 hitonce = false;
             }
+
+
+
+            if (playerStance == Stance.heavyAttack && shotonce)
+            {
+                gunshot.Play();
+                shotonce = false;
+            }        
+
+
+
+
             ADeathLeft.Update(gameTime);
             ADeathRight.Update(gameTime);
             AFallLeft.Update(gameTime);
@@ -582,6 +594,8 @@ namespace G_Shift
             {
                 if (playerStance == Stance.Standing)
                 {
+                    hitonce = true;
+                    shotonce = true;
                     AStillRight.Update(gameTime);
                 }
                 if (playerStance == Stance.Left || playerStance == Stance.moving)
@@ -653,11 +667,8 @@ namespace G_Shift
                         //         AAttack1Right.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackLeftList.Count; i++)
                             AttackLeftList[i].Draw(spriteBatch, depth,screenPosition);
-                                  if (shotonce)
-                        {
-                            gunshot.Play();
-                            shotonce = false;
-                        }              fire = false;
+    
+                        fire = false;
 
                     }
                 }
@@ -689,11 +700,7 @@ namespace G_Shift
                         //      AAttack1Left.Draw(spriteBatch, depth);
                         for (int i = 0; i < AttackRightList.Count; i++)
                             AttackRightList[i].Draw(spriteBatch, depth,screenPosition);
-                        if (shotonce)
-                        {
-                            gunshot.Play();
-                            shotonce = false;
-                        }
+
                         fire = false;
                     }
                 }

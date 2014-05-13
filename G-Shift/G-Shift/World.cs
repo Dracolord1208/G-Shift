@@ -16,13 +16,16 @@ using System.Timers;
 namespace G_Shift
 {
     class World
-    {
+    {           
+        SoundEffect boxbreak;
+
         public struct Track
         {
             public Vector2 topLeft;
             public Vector2 topRight;
             public Vector2 botLeft;
             public Vector2 botRight;
+
             /*public bool direction1;
             public bool direction2;*/
         }
@@ -36,6 +39,7 @@ namespace G_Shift
             items = new List<Item>();
             tracks = new List<Track>();
             StreamReader file = new StreamReader("level.txt");
+            boxbreak = Content.Load<SoundEffect>("Music/Glass_Break-stephan_schutze-958181291");
 
             string s = file.ReadToEnd();
             string[] data = s.Split(new string[] { " ", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -102,6 +106,7 @@ namespace G_Shift
         {
             foreach (Item item in items)
             {
+                item.setsound(boxbreak);
                 item.Draw(sBatch);
             }
         }
