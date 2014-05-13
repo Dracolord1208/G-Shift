@@ -103,10 +103,10 @@ namespace G_Shift
         private AnimatedSprite moveLeftAnimation;
         private AnimatedSprite moveRightAnimation;
 
-        
+
 
         public enum Stance
-        {                        
+        {
             Wait,
             Move,
             Attack,
@@ -162,9 +162,9 @@ namespace G_Shift
             baseHeight = 20;
 
             baseRect = new Rectangle((int)position.X, (int)position.Y + Height - 15, Width, 30);
-            attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width*(.25)), Height);
+            attackLeftRect = new Rectangle((int)position.X, (int)position.Y, (int)(Width * (.25)), Height);
             //attackRightRect = new Rectangle((int)position.X + Width - (int)(Width * (.25)), (int)position.Y, (int)(Width * (.25)), Height);
-            attackRightRect = new Rectangle((int)(position.X + Width*(.75)), (int)position.Y, (int)(Width * (.25)), Height);
+            attackRightRect = new Rectangle((int)(position.X + Width * (.75)), (int)position.Y, (int)(Width * (.25)), Height);
 
             //spriteSheet = Content.Load<Texture2D>("robotSmallSheet1a");
             //moveAnimation = new AnimatedSprite();
@@ -181,12 +181,12 @@ namespace G_Shift
             //spriteSheet = content.Load<Texture2D>("robotSmallSheet1a");   // Working!!
             //moveAnimation = new AnimatedSprite(spriteSheet, 7, 5);
 
-            
+
             spriteSheetmoveRight = content.Load<Texture2D>("robotSmallSheet3b");
             spriteSheetmoveLeft = content.Load<Texture2D>("robotSmallSheet3a");
             moveLeftAnimation = new AnimatedSprite(spriteSheetmoveLeft, 7, 5);
             moveRightAnimation = new AnimatedSprite(spriteSheetmoveRight, 7, 5);
-            
+
         }
 
         //(Update v.2)

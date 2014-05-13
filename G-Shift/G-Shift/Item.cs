@@ -30,7 +30,7 @@ namespace G_Shift
         bool goUp;
         bool inIfStatement;
         bool stillIntersects;
-        bool spacePressed;
+        bool xPressed;
         bool goneUp;
         bool top;
         bool bottom;
@@ -44,6 +44,8 @@ namespace G_Shift
         bool inAir;
         int throwCount;
         Vector2 speed;
+        SoundEffect boxbreak;
+        bool canThrow;
 
         public void initialize(ContentManager Content, string name)
         {
@@ -54,13 +56,17 @@ namespace G_Shift
             baseRectangle = Content.Load<Texture2D>("Rectangle");
             //throwableHitbox = new Rectangle(0, 0, throwable.Width, throwable.Height);
 
-            if (throwable.Name.CompareTo("crate") == 0)
+            if (throwable.Name.CompareTo("BOXSMALL1") == 0)
             {
-                throwableHitbox = new Rectangle(0, 0, 50, 100);
+                throwableHitbox = new Rectangle(0, 0, 130, 165);
             }
             else if (throwable.Name.CompareTo("barrel") == 0)
             {
                 throwableHitbox = new Rectangle(0, 0, 100, 100);
+            }
+            else if (throwable.Name.CompareTo("BOXLARGE1") == 0)
+            {
+                throwableHitbox = new Rectangle(0, 0, 225, 250);
             }
             else
                 throwableHitbox = new Rectangle(0, 0, throwable.Width, throwable.Height);
@@ -72,7 +78,7 @@ namespace G_Shift
             goUp = false;
             inIfStatement = false;
             stillIntersects = false;
-            spacePressed = false;
+            xPressed = false;
             goneUp = false;
             top = false;
             bottom = false;
@@ -84,15 +90,26 @@ namespace G_Shift
             offScreen = false;
             charDirection = false;
             inAir = false;
+            canThrow = false;
             throwCount = 0;
 
-            speed = new Vector2(10, 20);
+            speed = new Vector2(25, 0);
         }
 
         public void setItemPosition(Vector2 position)
         {
             throwableHitbox.X = (int)position.X;
             throwableHitbox.Y = (int)position.Y;
+        }
+
+        public Rectangle itemHitbox()
+        {
+            return throwableHitbox;
+        }
+
+        public bool itemBeingThrown()
+        {
+            return inAir;
         }
 
         public bool getUpMove()
@@ -104,7 +121,10 @@ namespace G_Shift
         {
             return canMoveDown;
         }
-
+        public void setsound(SoundEffect b)
+        {
+            boxbreak = b;
+        }
         public void Collision()
         {
 
@@ -153,7 +173,7 @@ namespace G_Shift
             //int xDistance = Math.Abs(throwableHitbox.X - (int)gMan.motion.X);
             //int yDistance = Math.Abs(throwableHitbox.Y - (int)gMan.motion.Y);
 
-            if (playerPosition.Intersects(throwableHitbox) && Keyboard.GetState().IsKeyDown(Keys.X))
+            if (playerPosition.Intersects(throwableHitbox) && (Keyboard.GetState().IsKeyDown(Keys.X) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X)))
             {
                 //if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 //{
@@ -167,45 +187,79 @@ namespace G_Shift
 
                 if (throwable.Name.CompareTo("BOXLARGE1") == 0)
                 {
-                    gMan.Position.X = throwableHitbox.X;
-                    gMan.Position.Y = throwableHitbox.Y;
+                    gMan.Position.X = throwableHitbox.X + 100;
+                    gMan.Position.Y = throwableHitbox.Y + 250;
                 }
                 else
                 {
                     throwableHitbox.X = (int)gMan.Position.X + 10;
                     throwableHitbox.Y = (int)gMan.Position.Y - 300;
                     pickedUp = true;
-                    spacePressed = false;
+                    xPressed = false;
                     stillIntersects = true;
                     inAir = false;
+                    canThrow = false;
                 }
                 //}
 
 
             }
 
-            if (pickedUp && !spacePressed)
+            if (pickedUp && !xPressed)
             {
-                throwableHitbox.X = (int)gMan.Position.X + 10;
-                throwableHitbox.Y = (int)gMan.Position.Y - 300;
+                charDirection = gMan.getDirection();
+
+                if (charDirection)
+                {
+                    if (throwable.Name.CompareTo("barrel2") == 0)
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 200;
+                    }
+                    else
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 250;
+                    }
+                }
+                else
+                {
+                    if (throwable.Name.CompareTo("barrel2") == 0)
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X - 100;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 200;
+                    }
+                    else
+                    {
+                        throwableHitbox.X = (int)gMan.Position.X - 100;
+                        throwableHitbox.Y = (int)gMan.Position.Y - 250;
+                    }
+                }
                 goneUp = true;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (Keyboard.GetState().IsKeyDown(Keys.X)|| GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.X))
             {
-                if (throwable.Name.CompareTo("BOXLARGE1") != 0)
+                if (canThrow)
                 {
-                    goUp = true;
-                    stillIntersects = false;
-                    spacePressed = true;
-                    charDirection = gMan.getDirection();
+                    if (throwable.Name.CompareTo("BOXLARGE1") != 0)
+                    {
+                        goUp = true;
+                        stillIntersects = false;
+                        xPressed = true;
+                        //charDirection = gMan.getDirection();
+                        canThrow = false;
+                    }
                 }
             }
+            else
+                canThrow = true;
 
-            if (goUp && pickedUp && spacePressed)
+            if (goUp && pickedUp && xPressed)
             {
                 //if (throwableHitbox.Y > 100 && goneUp)
-                if (speed.Y > 1 && goneUp)
+                //if (speed.Y > 1 && goneUp)
+                /*if (goneUp)
                 {
 
                     // if (!gMan.getDirection())
@@ -229,90 +283,120 @@ namespace G_Shift
                 }
                 else
                 {
-                    goneUp = false;
-                    //if (throwableHitbox.Y < 350)
-                    if (speed.Y < 30)
+                    goneUp = false;*/
+                //if (throwableHitbox.Y < 350)
+                if (speed.Y < 15)
+                {
+
+
+                    //if (!gMan.getDirection())
+
+                    if (charDirection)
                     {
-
-
-                        //if (!gMan.getDirection())
-
-                        if (charDirection)
-                        {
-                            throwableHitbox.X += (int)speed.X;
-                            throwableHitbox.Y += (int)speed.Y;
-                            inIfStatement = true;
-                            speed.Y++;
-                        }
-                        else
-                        {
-                            throwableHitbox.X -= (int)speed.X;
-                            throwableHitbox.Y += (int)speed.Y;
-                            //inIfStatement = true;
-                            speed.Y++;
-                        }
-
-                        //throwableHitbox.X += (int)speed.X;
-                        //throwableHitbox.Y += (int)speed.Y;
-                        //speed.Y++;
-                        inAir = true;
+                        throwableHitbox.X += (int)speed.X;
+                        throwableHitbox.Y += (int)speed.Y;
+                        inIfStatement = true;
+                        speed.Y++;
                     }
                     else
                     {
-                        goUp = false;
-                        pickedUp = false;
-                        spacePressed = false;
-                        inAir = false;
-                        throwCount++;
-                        speed.Y = 20;
+                        throwableHitbox.X -= (int)speed.X;
+                        throwableHitbox.Y += (int)speed.Y;
+                        //inIfStatement = true;
+                        speed.Y++;
                     }
 
-                    //if (throwCount == 1 && throwable.Name.CompareTo("barrel2") != 0)
-                    //{
-                        //throwable = content.Load<Texture2D>("laser");
-                    //}
+                    //throwableHitbox.X += (int)speed.X;
+                    //throwableHitbox.Y += (int)speed.Y;
+                    //speed.Y++;
+                    inAir = true;
+                }
+                else
+                {
+                    goUp = false;
+                    pickedUp = false;
+                    xPressed = false;
+                    inAir = false;
+
+                    if (throwable.Name.CompareTo("barrel2") != 0)
+                    {
+                        throwCount++;                    //sound
+                        boxbreak.Play();
+                    }
+
+                    speed.Y = 0;
+                }
+
+                if (throwable.Name.CompareTo("BOXSMALL1") == 0 || throwable.Name.CompareTo("BOXSMALL2") == 0)
+                {
+                    if (throwCount == 1)
+                    {
+                        throwable = content.Load<Texture2D>("BOXSMALL2");
+                        throwable.Name = "BOXSMALL2";
+                    }
+                    else if (throwCount == 2)
+                    {
+                        throwable = content.Load<Texture2D>("BOXSMALL3");
+                        throwable.Name = "BOXSMALL3";
+                    }
+
                 }
             }
+            //}
 
-            if (throwCount == 1 && throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
+            if (throwable.Name.CompareTo("barrel2") == 0 && !offScreen)
             {
                 if (charDirection)
                 {
-                    throwableHitbox.X += 4;
+                    throwableHitbox.X += 5;
 
-                    if (throwableHitbox.X - throwableHitbox.Height > graphics.GraphicsDevice.Viewport.Width)
+                    if (throwableHitbox.X - throwableHitbox.Height > gMan.Position.X + 500)
                         offScreen = true;
                 }
                 else
                 {
-                    throwableHitbox.X -= 4;
+                    throwableHitbox.X -= 5;
 
-                    if (throwableHitbox.X + throwableHitbox.Height < 0)
+                    if (throwableHitbox.X + throwableHitbox.Height < gMan.Position.X - 500)
                         offScreen = true;
                 }
             }
 
         }
 
+        public bool itemDestroyed()
+        {
+            if (throwCount == 2)
+                return true;
+            else
+                return false;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            //if (turnNinetyDegrees)
-            //{
-            //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
-            //}
-            //else
-            spriteBatch.Draw(throwable, throwableHitbox, Color.White);
-            /*spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
-            spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
-            spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
-            spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
-            spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
-            spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
-            //spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);*/
-            //spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
-            //spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
-            //spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
-            //spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);
+            ////if (turnNinetyDegrees)
+            ////{
+            ////spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, angle, new Vector2(throwableHitbox.X, throwableHitbox.Y), SpriteEffects.None, 0);
+            ////}
+            ////else
+            //spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, 0, new Vector2(0,0), SpriteEffects.None, 1);
+            ////spriteBatch.Draw(throwable, throwableHitbox, Color.White);
+            //spriteBatch.Draw(throwable, bottomPlayerHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
+            //spriteBatch.Draw(throwable, bottomObjectHitbox, null, Color.White, 0, new Vector2(0, 0), SpriteEffects.None, 1);
+            ////spriteBatch.Draw(baseRectangle, bottomPlayerHitbox, Color.Red);
+            ////spriteBatch.Draw(baseRectangle, bottomObjectHitbox, Color.Blue);
+            ///*spriteBatch.DrawString(font, "xPosition: " + playerPosition.X, Vector2.Zero, Color.White);
+            //spriteBatch.DrawString(font, "yPosition: " + playerPosition.Y, new Vector2(0, 30), Color.White);
+            //spriteBatch.DrawString(font, "objectX: " + objectPositionX, new Vector2(0, 60), Color.White);
+            //spriteBatch.DrawString(font, "objectY: " + objectPositionY, new Vector2(0, 90), Color.White);
+            ////spriteBatch.DrawString(font, "up: " + goUp, new Vector2(0, 110), Color.White);*/
+            ////spriteBatch.DrawString(font, "if: " + inIfStatement, new Vector2(0, 130), Color.White);
+            ////spriteBatch.DrawString(font, "intersects: " + stillIntersects, new Vector2(0, 160), Color.White);
+            ////spriteBatch.DrawString(font, "pushUp: " + canMoveUp, new Vector2(0, 180), Color.White);
+            ////spriteBatch.DrawString(font, "pushDown: " + canMoveDown, new Vector2(0, 200), Color.White);
+                        Vector2 origin = new Vector2(0, 0);
+            spriteBatch.Draw(throwable, throwableHitbox, null, Color.White, 0, origin, SpriteEffects.None, 1);
+
         }
     }
 }

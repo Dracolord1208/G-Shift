@@ -25,6 +25,7 @@ namespace G_Shift_Level_Editor
         struct BattleEvent
         {
             public List<Item> locs;
+            public float loc;
         }
 
         struct Item
@@ -129,7 +130,7 @@ namespace G_Shift_Level_Editor
 
             MenuBox tempMenu = new MenuBox();
 
-            tempMenu.img = Content.Load<Texture2D>("crate");
+            tempMenu.img = Content.Load<Texture2D>("BOXSMALL1");
             tempMenu.rect = new Rectangle(0, 0, 40, 40);
             menuChoices.Add(tempMenu);
 
@@ -137,12 +138,16 @@ namespace G_Shift_Level_Editor
             tempMenu.rect = new Rectangle(40, 0, 40, 40);
             menuChoices.Add(tempMenu);
 
-            tempMenu.img = Content.Load<Texture2D>("SmallBot");
+            tempMenu.img = Content.Load<Texture2D>("BOXLARGE1");
             tempMenu.rect = new Rectangle(80, 0, 40, 40);
             menuChoices.Add(tempMenu);
 
-            tempMenu.img = Content.Load<Texture2D>("MediumBot");
+            tempMenu.img = Content.Load<Texture2D>("SmallBot");
             tempMenu.rect = new Rectangle(120, 0, 40, 40);
+            menuChoices.Add(tempMenu);
+
+            tempMenu.img = Content.Load<Texture2D>("MediumBot");
+            tempMenu.rect = new Rectangle(160, 0, 40, 40);
             menuChoices.Add(tempMenu);
 
             // TODO: use this.Content to load your game content here
@@ -211,7 +216,7 @@ namespace G_Shift_Level_Editor
             else
             {
                 if (kState.IsKeyDown(Keys.E) &&
-                    prevKeyboardState.IsKeyDown(Keys.E))
+                    prevKeyboardState.IsKeyUp(Keys.E))
                 {
                     BattleEvent temp = new BattleEvent();
                     temp.locs = new List<Item>();
@@ -264,7 +269,7 @@ namespace G_Shift_Level_Editor
                     {
                         itemDrag = true;
                         tempItem.loc = new Vector2(mState.X, mState.Y);
-                        tempItem.name = "crate";
+                        tempItem.name = "BOXSMALL1";
                     }
                     else
                         if (mState.X <= 80 && mState.X > 40)
@@ -273,8 +278,14 @@ namespace G_Shift_Level_Editor
                             tempItem.loc = new Vector2(mState.X, mState.Y);
                             tempItem.name = "barrel";
                         }
+                        else if (mState.X <= 120 && mState.X > 80)
+                        {
+                            itemDrag = true;
+                            tempItem.loc = new Vector2(mState.X, mState.Y);
+                            tempItem.name = "BOXLARGE1";
+                        }
                         else
-                            if (mState.X <= 120 && mState.X > 80 && battleEvents.Count > 0)
+                            if (mState.X <= 160 && mState.X > 120 && battleEvents.Count > 0)
                             {
                                 itemDrag = true;
                                 isEnemy = true;
@@ -282,7 +293,7 @@ namespace G_Shift_Level_Editor
                                 tempItem.name = "SmallBot";
                             }
                             else
-                                if (mState.X <= 160 && mState.X > 120 && battleEvents.Count > 0)
+                                if (mState.X <= 200 && mState.X > 160 && battleEvents.Count > 0)
                                 {
                                     itemDrag = true;
                                     isEnemy = true;
@@ -314,6 +325,16 @@ namespace G_Shift_Level_Editor
                     {
                         s += "Item " + item.loc.X + " " + item.loc.Y +
                             " " + item.name + Environment.NewLine;
+                    }
+
+                    foreach (BattleEvent bEvent in battleEvents)
+                    {
+                        s += "Battle " + bEvent.loc + " " + bEvent.locs.Count + " ";
+                        foreach (Item item in bEvent.locs)
+                        {
+                            s += item.name + " ";
+                        }
+                        s += Environment.NewLine;
                     }
 
                     File.WriteAllText("level.txt", s);
@@ -414,7 +435,7 @@ namespace G_Shift_Level_Editor
 
             foreach (Item item in items)
             {
-                if(item.name == "crate")
+                if(item.name == "BOXSMALL1")
                 {
                     spriteBatch.Draw(menuChoices[0].img, item.loc, Color.White);
                 }
@@ -422,6 +443,11 @@ namespace G_Shift_Level_Editor
                 if (item.name == "barrel")
                 {
                     spriteBatch.Draw(menuChoices[1].img, item.loc, Color.White);
+                }
+                else
+                if (item.name == "BOXLARGE1")
+                {
+                    spriteBatch.Draw(menuChoices[2].img, item.loc, Color.White);
                 }
             }
 
@@ -436,12 +462,12 @@ namespace G_Shift_Level_Editor
                 {
                     if (item.name == "SmallBot")
                     {
-                        spriteBatch.Draw(menuChoices[2].img, item.loc, Color.White);
+                        spriteBatch.Draw(menuChoices[3].img, item.loc, Color.White);
                     }
                     else
                     if (item.name == "MediumBot")
                     {
-                        spriteBatch.Draw(menuChoices[3].img, item.loc, Color.White);
+                        spriteBatch.Draw(menuChoices[4].img, item.loc, Color.White);
                     }
                 }
             }
@@ -457,7 +483,7 @@ namespace G_Shift_Level_Editor
 
             if (itemDrag)
             {
-                if(tempItem.name == "crate")
+                if(tempItem.name == "BOXSMALL1")
                 {
                     spriteBatch.Draw(menuChoices[0].img, tempItem.loc, Color.White);
                 }
@@ -465,13 +491,17 @@ namespace G_Shift_Level_Editor
                 {
                     spriteBatch.Draw(menuChoices[1].img, tempItem.loc, Color.White);
                 }
-                if (tempItem.name == "SmallBot")
+                if (tempItem.name == "BOXLARGE1")
                 {
                     spriteBatch.Draw(menuChoices[2].img, tempItem.loc, Color.White);
                 }
-                if (tempItem.name == "MediumBot")
+                if (tempItem.name == "SmallBot")
                 {
                     spriteBatch.Draw(menuChoices[3].img, tempItem.loc, Color.White);
+                }
+                if (tempItem.name == "MediumBot")
+                {
+                    spriteBatch.Draw(menuChoices[4].img, tempItem.loc, Color.White);
                 }
             }
 

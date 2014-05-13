@@ -218,8 +218,32 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="robotSmallSheet2a.png">
+      <Name>robotSmallSheet2a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="robotSmallSheet2b.png">
+      <Name>robotSmallSheet2b</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="barrel2.png">
       <Name>barrel2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="medSheet2a.png">
+      <Name>medSheet2a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="medSheet2b.png">
+      <Name>medSheet2b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -242,6 +266,20 @@
     </Compile>
     <Compile Include="start.png">
       <Name>start</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BossSheet1c.png">
+      <Name>BossSheet1c</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BossSheet1cRight.png">
+      <Name>BossSheet1cRight</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -423,6 +461,50 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Galager\hurtleft.png">
+      <Name>hurtleft</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Galager\hurtright.png">
+      <Name>hurtright</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Music\BattleBackground.wma">
+      <Name>BattleBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\MenuBackground.wma">
+      <Name>MenuBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\TickingTimeBomb.wma">
+      <Name>TickingTimeBomb</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_1.wma">
+      <Name>weakpunch_1</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_2.wma">
+      <Name>weakpunch_2</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="Music\weakpunch_3.wma">
+      <Name>weakpunch_3</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="RectWhite.png">
       <Name>RectWhite</Name>
       <Importer>TextureImporter</Importer>
@@ -430,27 +512,35 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="robotSmallSheet3a.png">
-      <Name>robotSmallSheet3a</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="BattleBackground.wma">
+      <Name>BattleBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="robotSmallSheet3b.png">
-      <Name>robotSmallSheet3b</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="MenuBackground.wma">
+      <Name>MenuBackground</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="medSheet3a.png">
-      <Name>medSheet3a</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="TickingTimeBomb.wma">
+      <Name>TickingTimeBomb</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="medSheet3b.png">
-      <Name>medSheet3b</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
+    <Compile Include="weakpunch_1.wma">
+      <Name>weakpunch_1</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="weakpunch_2.wma">
+      <Name>weakpunch_2</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
+    <Compile Include="weakpunch_3.wma">
+      <Name>weakpunch_3</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -464,32 +554,26 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="smallMoveSheet2a.png">
-      <Name>smallMoveSheet2a</Name>
+    <Compile Include="medSheet3a.png">
+      <Name>medSheet3a</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="smallMoveSheet2b.png">
-      <Name>smallMoveSheet2b</Name>
+    <Compile Include="medSheet3b.png">
+      <Name>medSheet3b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="smallMoveSheet3a.png">
-      <Name>smallMoveSheet3a</Name>
+    <Compile Include="robotSmallSheet3a.png">
+      <Name>robotSmallSheet3a</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="smallMoveSheet3b.png">
-      <Name>smallMoveSheet3b</Name>
+    <Compile Include="robotSmallSheet3b.png">
+      <Name>robotSmallSheet3b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="smallAttackSheet2a.png">
       <Name>smallAttackSheet2a</Name>
       <Importer>TextureImporter</Importer>
@@ -500,8 +584,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="smallAttackSheet3a.png">
       <Name>smallAttackSheet3a</Name>
       <Importer>TextureImporter</Importer>
@@ -512,8 +594,11 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="smallDeathSheet1a.png">
+      <Name>smallDeathSheet1a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="smallDeathSheet2a.png">
       <Name>smallDeathSheet2a</Name>
       <Importer>TextureImporter</Importer>
@@ -523,6 +608,67 @@
       <Name>smallDeathSheet2b</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallMoveSheet2a.png">
+      <Name>smallMoveSheet2a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallMoveSheet2b.png">
+      <Name>smallMoveSheet2b</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallMoveSheet3a.png">
+      <Name>smallMoveSheet3a</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallMoveSheet3b.png">
+      <Name>smallMoveSheet3b</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallRobot1c.png">
+      <Name>smallRobot1c</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="smallRobot1d.png">
+      <Name>smallRobot1d</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="WALKINGGUN.png">
+      <Name>WALKINGGUN</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="WALKINGWITHGUNLEFT.png">
+      <Name>WALKINGWITHGUNLEFT</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Music\punch_or_whack_-Vladimir-403040765.wav">
+      <Name>punch_or_whack_-Vladimir-403040765</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Music\Skorpion-Kibblesbob-1109158827.wav">
+      <Name>Skorpion-Kibblesbob-1109158827</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Music\Glass_Break-stephan_schutze-958181291.wav">
+      <Name>Glass_Break-stephan_schutze-958181291</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
