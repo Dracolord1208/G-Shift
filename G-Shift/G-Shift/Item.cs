@@ -247,7 +247,7 @@ namespace G_Shift
                         goUp = true;
                         stillIntersects = false;
                         xPressed = true;
-                        charDirection = gMan.getDirection();
+                        //charDirection = gMan.getDirection();
                         canThrow = false;
                     }
                 }
