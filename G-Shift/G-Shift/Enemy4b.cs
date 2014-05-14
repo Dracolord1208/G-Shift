@@ -235,7 +235,7 @@ namespace G_Shift
         //(Update v.2)
         public void Update()
         {
-            ttl--;
+            //ttl--;
             position += velocity;
 
             //depth = position.Y * .01f;

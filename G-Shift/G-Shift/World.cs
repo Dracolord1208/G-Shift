@@ -117,8 +117,6 @@ namespace G_Shift
                         if (data[x] == "MediumBot")
                             temp.medEnemies++;
                     }
-                    Console.WriteLine(temp.smallEnemies);
-                    Console.WriteLine(temp.medEnemies);
                     locs.Add(temp.loc);
                     medEnemies.Add(temp.medEnemies);
                     smallEnemies.Add(temp.smallEnemies);

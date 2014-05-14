@@ -1,3 +1,12 @@
+/*********************************************************
+ * Josh Picarazzi
+ * David Velez
+ * Brandon Nichols
+ * Antonio Gomez
+ * 
+ * Gallaghers Shift
+ *********************************************************/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -618,8 +627,26 @@ namespace G_Shift
                             }
                         }
 
-                    if (currentBattleEvent != -1)
+                    if (currentBattleEvent != -1 &&
+                        currentBattleEvent != 99)
                         CheckBattleEnd(gameTime);
+
+                    if (currentBattleEvent == -1 && 
+                        translation.X + SCREEN_WIDTH > level.level[level.level.Count - 1].Right)
+                        StartBossBattle(gameTime);
+
+                    if (currentBattleEvent == 99)
+                    {
+                        if (theBoss1.health <= 0)
+                        {
+                           // gameState = GameState.StartMenu;
+                            level = new World(0, Content);
+                            currentBattleEvent = -1;
+                            gMan.Position = gMan.StartPosition;
+                            translate = true;
+                            this.Exit();
+                        }
+                    }
 
                     UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
@@ -766,16 +793,18 @@ namespace G_Shift
         {
             if (level.smallEnemies[currentBattleEvent] != 0)
             {
+                int prevSmallBot = badGuys4.Count;
                 spawnSmallRobot1(gameTime);
-                level.smallEnemies[currentBattleEvent]--;
-                Console.WriteLine(level.smallEnemies[currentBattleEvent]);
+                if(prevSmallBot < badGuys4.Count)
+                    level.smallEnemies[currentBattleEvent]--;
             }
 
             if (level.medEnemies[currentBattleEvent] != 0)
             {
+                int prevMedBot = badGuys2.Count;
                 spawnMedRobot1(gameTime);
-                level.medEnemies[currentBattleEvent]--;
-                Console.WriteLine(level.medEnemies[currentBattleEvent]);
+                if(prevMedBot < badGuys2.Count)
+                    level.medEnemies[currentBattleEvent]--;
             }
 
             if (badGuys2.Count + badGuys4.Count == 0)
@@ -786,6 +815,13 @@ namespace G_Shift
                 level.smallEnemies.RemoveAt(currentBattleEvent);
                 currentBattleEvent = -1;
             }
+        }
+
+        public void StartBossBattle(GameTime gameTime)
+        {
+            spawntheBoss1();
+            currentBattleEvent = 99;
+            translate = false;
         }
 
         private void AddFR(Vector2 position)
@@ -1496,8 +1532,8 @@ namespace G_Shift
                     else if (theBoss1.healthLow == true)
                     {
                         //boss1HomePoint = new Vector2(gMan.Position.X + 200, gMan.Position.Y);
-                        //boss1HomePoint = new Vector2(SCREEN_WIDTH-200, SCREEN_HEIGHT*.5f);
-                        boss1HomePoint = new Vector2(SCREEN_WIDTH - 300, SCREEN_HEIGHT * .5f);
+                        //boss1HomePoint = new Vector2(SCREEN_WIDTH-300, SCREEN_HEIGHT*.5f);
+                        boss1HomePoint = new Vector2(translation.X + SCREEN_WIDTH - 300, SCREEN_HEIGHT * .5f);
                         //boss1HomePoint = new Vector2(800, 350);
 
                         // this might not work as planned !
@@ -2218,13 +2254,17 @@ namespace G_Shift
 
                 spriteBatch.Draw(backgroundTexture, -backgroundPos, Color.White);
                 level.Draw(spriteBatch);
+                spriteBatch.End();
+
+                spriteBatch.Begin();
+
                 if (gMan.Health <= 0)
                 {
                     if (gMan.facing)
                     {
                         for (int i = 0; i < FallRightList.Count; i++)
                         {
-                           FallRightList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
+                           FallRightList[i].Draw(spriteBatch, 1f, gMan.Position);
                            if (FallRightList[i].Active == false)
                                died2 = true;
                         }
@@ -2233,7 +2273,7 @@ namespace G_Shift
                     {
                         for (int i = 0; i < FallLeftList.Count; i++)
                         {
-                            FallLeftList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
+                            FallLeftList[i].Draw(spriteBatch, 1f, gMan.Position);
                             if (FallLeftList[i].Active == false)
                                 died2 = true;
                         }
@@ -2244,34 +2284,21 @@ namespace G_Shift
                         {
                             for (int i = 0; i < FallRightList1.Count; i++)
                             {
-                                FallRightList1[i].Draw(spriteBatch, 1f, gMan.screenPosition);
+                                FallRightList1[i].Draw(spriteBatch, 1f, gMan.Position);
                             }
                         }
                         else
                         {
                             for (int i = 0; i < FallLeftList1.Count; i++)
                             {
-                                FallLeftList1[i].Draw(spriteBatch, 1f, gMan.screenPosition);
+                                FallLeftList1[i].Draw(spriteBatch, 1f, gMan.Position);
                             }
                         }
                     }
-                    //if (gMan.facing)
-                    //{
-                    // for (int i = 0; i < DeathLeftList.Count; i++)
-                    //    {
-                    //        DeathLeftList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    for (int i = 0; i < DeathRightList.Count; i++)
-                    //    {
-                    //        DeathRightList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
-                    //    }   
-                    //}
-                 //   spriteBatch.DrawString(font, "Continue with Fire' ", gMan.Position, Color.White,0, Vector2.Zero ,0f,SpriteEffects.None,1f);
                     }
-                 
+
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(-translation.X, 0, 0));
 
 
                 if (bossFlag == true)
