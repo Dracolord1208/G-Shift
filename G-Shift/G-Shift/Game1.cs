@@ -2255,16 +2255,16 @@ namespace G_Shift
                     Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
                     spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
                     //Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
                     //spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
 
 
-=======
+//=======
                 }
->>>>>>> 1cb2a3ab09677258707931bc275b415af79034c5
+//>>>>>>> 1cb2a3ab09677258707931bc275b415af79034c5
                     //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
 //<<<<< HEAD
