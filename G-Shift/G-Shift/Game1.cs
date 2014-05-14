@@ -165,14 +165,14 @@ namespace G_Shift
         public Rectangle enemy2Rec;
         int amountOfFightingEnemies = 0;
         LevelSelect levelselectclass;
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
         //public ParticleEngineSparks sparksEngine;
         public List<ParticleEngineSparks> sparksEngines;
         public int sparksEnginesMax;
         public List<Texture2D> sparksTextures;
 
-=======
+//=======
         Song punch1;
         Song punch2;
         Song punch3;
@@ -186,7 +186,7 @@ namespace G_Shift
         List<Animation> DeathLeftList;
         List<Animation> FallLeftList;
         List<Animation> FallRightList;
->>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
+//>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
         public float laserDepth;
         Texture2D DeathLeft;
         Texture2D DeathRight;
@@ -408,13 +408,13 @@ namespace G_Shift
             //exitButton = Content.Load<Texture2D>(@"exit");
             //load the loading screen
             loadingScreen = Content.Load<Texture2D>(@"loading");
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
             
             sparksTextures.Add(Content.Load<Texture2D>("sparks1a"));
             sparksTextures.Add(Content.Load<Texture2D>("sparks2a"));
 
-=======
+//=======
             punch1 = Content.Load<Song>("Music/weakpunch_1");
             punch2 = Content.Load<Song>("Music/weakpunch_2");
             punch3 = Content.Load<Song>("Music/weakpunch_3");
@@ -429,7 +429,7 @@ namespace G_Shift
             RiseRight = Content.Load<Texture2D>("Galager/LIFTANIMATONright");
             RiseLeft = Content.Load<Texture2D>("Galager/LIFTANIMATON");
             PlayMusic(menuMusic);
->>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
+//>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
 
         }
 
@@ -1609,20 +1609,20 @@ namespace G_Shift
                         }
 <<<<<<< HEAD
                          */ // removing normal attack while healthLow == true
-=======
-                         */
+//=======
+  //                       */
                         // removing normal attack while healthLow == true
                     }   // end of if(healthLow == true)
 
                 } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
->>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
+//>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
 
 
 
-                        // ***************************
-                    }   // end of if(healthLow == true)
+                ////        // ***************************
+                ////    }   // end of if(healthLow == true)
 
-                } // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
+                ////} // end of:  if (theBoss1.stance != Boss1a.Stance.Wait)
 
 
                 theBoss1.Update();
@@ -2161,15 +2161,15 @@ namespace G_Shift
                             spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Salmon, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
                         else
                             spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
-<<<<<<< HEAD
+//<<<<<<< HEAD
                             //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
                         
-=======
-                        //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
+//=======
+//                        //spriteBatch.Draw(baseRectangle2, theBoss1.laserBeam, sourceRectangle, Color.Red, 0, tempVec, SpriteEffects.None, (0.1f) * (laserDepth));
 
-                        //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
-                        //spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
->>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
+//                        //spriteBatch.Draw(baseRectangle, theBoss1.laserBeam, Color.Red);
+//                        //spriteBatch.Draw(baseRectangle, theBoss1.laserCurrentPos, theBoss1.laserBeam, Color.Red, 0, tempVec, 1, SpriteEffects.None, (0.1f) * (laserDepth));
+//>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
                     }
                 }
                 else
@@ -2229,7 +2229,7 @@ namespace G_Shift
 
                     //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
-<<<<<<< HEAD
+//<<<<< HEAD
 
 
                     // depths works, translationd doesn't
@@ -2242,10 +2242,10 @@ namespace G_Shift
                     //}
 
                 }
-=======
->>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
+//=======
+//>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
 
-                }
+                //}
 
                 Vector2 gpos = new Vector2(fullHealthRect.X, fullHealthRect.Y); // position of gMan health bar
                 //spriteBatch.Draw(baseRectangle, fullHealthRect, Color.Red);
