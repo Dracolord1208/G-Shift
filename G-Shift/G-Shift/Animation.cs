@@ -135,7 +135,16 @@ namespace G_Shift
         }
         public void Draw(SpriteBatch spriteBatch,float depth,Vector2 location)
         {
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y-280, FrameWidth, FrameHeight);
+            if(Game1.translate)
+                destinationRect = new Rectangle((int)Position.X - (int)(FrameWidth * scale) / 2,
+           (int)Position.Y - (int)(FrameHeight * scale), // 2,
+           (int)(FrameWidth * scale),
+           (int)(FrameHeight * scale));
+            else
+                destinationRect = new Rectangle(((int)location.X - (int)Game1.translation.X) - (int)(FrameWidth * scale) / 2,
+           (int)Position.Y - (int)(FrameHeight * scale), // 2,
+           (int)(FrameWidth * scale),
+           (int)(FrameHeight * scale));
             // Only draw the animation when we are active
             if (Active)
             {

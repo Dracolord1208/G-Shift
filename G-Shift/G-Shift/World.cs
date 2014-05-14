@@ -31,20 +31,26 @@ namespace G_Shift
         }
         public struct BattleEvent
         {
-            public List<Enemy2b> MedEnemies;
-            public List<Enemy4b> SmallEnemies;
-            public float loc;
+            public int medEnemies;
+            public int smallEnemies;
+            public int loc;
         }
 
         public List<Track> tracks;
         public List<Rectangle> level;
         public List<Item> items;
+        public List<int> locs;
+        public List<int> medEnemies;
+        public List<int> smallEnemies;
 
         public World(int lvlNum, ContentManager Content)
         {
             level = new List<Rectangle>();
             items = new List<Item>();
             tracks = new List<Track>();
+            locs = new List<int>();
+            medEnemies = new List<int>();
+            smallEnemies = new List<int>();
             string s1 = "level" + lvlNum + ".txt";
             StreamReader file = new StreamReader("level.txt");
             boxbreak = Content.Load<SoundEffect>("Music/Glass_Break-stephan_schutze-958181291");
@@ -98,9 +104,24 @@ namespace G_Shift
 
                     tracks.Add(track);
                 }
-                if (data[x] == "Event")
+                if (data[x] == "Battle")
                 {
-
+                    BattleEvent temp = new BattleEvent();
+                    temp.loc = Convert.ToInt32(data[++x]);
+                    int num = Convert.ToInt32(data[++x]);
+                    for (int y = 0; y < num; y++)
+                    {
+                        x++;
+                        if (data[x] == "SmallBot")
+                            temp.smallEnemies++;
+                        if (data[x] == "MediumBot")
+                            temp.medEnemies++;
+                    }
+                    Console.WriteLine(temp.smallEnemies);
+                    Console.WriteLine(temp.medEnemies);
+                    locs.Add(temp.loc);
+                    medEnemies.Add(temp.medEnemies);
+                    smallEnemies.Add(temp.smallEnemies);
                 }
                 if (data[x] == "/*")
                 {
