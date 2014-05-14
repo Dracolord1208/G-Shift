@@ -436,8 +436,7 @@ namespace G_Shift
                 }
                 if (currentGamePadState.Buttons.A == ButtonState.Released)
                     pressed3 = false;
-                if (currentGamePadState.Buttons.B == ButtonState.Pressed)
-                    Health = 50;
+
                 if ((currentKeyboardState.IsKeyDown(Keys.Space) && !previousKeyboardState.IsKeyDown(Keys.Space)) ||
                      (currentGamePadState.Buttons.A == ButtonState.Pressed && pressed3 == false))
                 {

@@ -2269,7 +2269,7 @@ namespace G_Shift
                     //        DeathRightList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
                     //    }   
                     //}
-                    spriteBatch.DrawString(font, "Continue with Fire' ", gMan.Position, Color.White,0, Vector2.Zero ,0f,SpriteEffects.None,1f);
+                 //   spriteBatch.DrawString(font, "Continue with Fire' ", gMan.Position, Color.White,0, Vector2.Zero ,0f,SpriteEffects.None,1f);
                     }
                  
 
