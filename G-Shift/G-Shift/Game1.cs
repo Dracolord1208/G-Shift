@@ -369,8 +369,9 @@ namespace G_Shift
             backgroundTexture = Content.Load<Texture2D>("Map");
             backgroundTexture2 = Content.Load<Texture2D>("backgroundB");
             gManTest = Content.Load<Texture2D>("gspritesheattest");
-            baseRectangle = Content.Load<Texture2D>("Rectangle");
-            baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
+            //baseRectangle = Content.Load<Texture2D>("Rectangle");
+            baseRectangle = Content.Load<Texture2D>("RectWhite");
+            //baseRectangle2 = Content.Load<Texture2D>("RectangleRed");
             //enemy2Rec;
             gManTexture = Content.Load<Texture2D>("gallagher_sprite_12");
             gunATexture = Content.Load<Texture2D>("handGun 2a");
@@ -413,6 +414,8 @@ namespace G_Shift
             
             sparksTextures.Add(Content.Load<Texture2D>("sparks1a"));
             sparksTextures.Add(Content.Load<Texture2D>("sparks2a"));
+            //sparksTextures.Add(Content.Load<Texture2D>("sparks1b"));
+            //sparksTextures.Add(Content.Load<Texture2D>("sparks2b"));
 
 //=======
             punch1 = Content.Load<Song>("Music/weakpunch_1");
@@ -532,6 +535,9 @@ namespace G_Shift
 
             healthRectange = new Rectangle(10,
                             10, gMan.Health, 20);
+
+            if (bossFlag == true)
+                boss1HealthBar = new Rectangle(500, 25, theBoss1.health, 20);
 
 
             //UpdateRR(gameTime);
@@ -1122,10 +1128,27 @@ namespace G_Shift
 
                 badGuys4[i].Update();
 
-                if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+                //if (badGuys4[i].ttl <= 0 || badGuys4[i].health <= 0)
+                //{
+                //    badGuys4.RemoveAt(i);
+                //    i--;
+                //}
+
+                if (badGuys4[i].health <= 0)
                 {
-                    badGuys4.RemoveAt(i);
-                    i--;
+                    if (badGuys4[i].deathFlag == false)
+                        badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
+
+                    badGuys4[i].holdPosFlag = true;
+                    badGuys4[i].attackFlag = false;
+                    //badGuys4[i].deathCheckpoint = gameTime.TotalGameTime;
+                    badGuys4[i].deathFlag = true;
+
+                    if (gameTime.TotalGameTime - badGuys4[i].deathCheckpoint > badGuys4[i].deathTimeSpan)
+                    {
+                        badGuys4.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
 
@@ -1397,8 +1420,10 @@ namespace G_Shift
                             for (int i = 0; i < sparksEngines.Count; i++)
                             {
                                 //sparksEngines[i].EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                                Vector2 emitterPos = new Vector2(theBoss1.position.X+150, theBoss1.position.Y+100);
-                                Vector2 emitterPos2 = new Vector2(theBoss1.position.X + 250, theBoss1.position.Y + 300);
+                                //Vector2 emitterPos = new Vector2(theBoss1.position.X+150, theBoss1.position.Y+100);   // WORKING
+                                //Vector2 emitterPos2 = new Vector2(theBoss1.position.X + 250, theBoss1.position.Y + 300); //WORKING
+                                Vector2 emitterPos = new Vector2(theBoss1.position.X + 270, theBoss1.position.Y);
+                                Vector2 emitterPos2 = new Vector2(theBoss1.position.X + 225, theBoss1.position.Y + 275);
                                 //sparksEngines[i].EmitterLocation = theBoss1.position;
                                 if(i == 0)
                                     sparksEngines[i].EmitterLocation = emitterPos;
@@ -2123,13 +2148,13 @@ namespace G_Shift
                 {
                     //translate = false;
 
-                    //if (sparksEnginesMax > 2)
-                    //{
-                    //    for (int i = 0; i < sparksEngines.Count; i++)
-                    //    {
-                    //        sparksEngines[i].Draw(spriteBatch);
-                    //    }
-                    //}
+                    if (sparksEnginesMax > 2)
+                    {
+                        for (int i = 0; i < sparksEngines.Count; i++)
+                        {
+                            sparksEngines[i].Draw(spriteBatch);
+                        }
+                    }
 
                     if (theBoss1.laserOn == true)
                     {
@@ -2224,13 +2249,22 @@ namespace G_Shift
 
                 if (bossFlag == true)
                 {
-                    theBoss1.screenPosition = new Vector2(theBoss1.position.X - translation.X, theBoss1.position.Y);
+                    theBoss1.screenPosition = new Vector2(theBoss1.position.X - translation.X, theBoss1.position.Y);                    
                     theBoss1.Draw(spriteBatch);
 
                     Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
                     spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
+<<<<<<< HEAD
+
+                    //Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
+                    //spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
+                    //spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
+
+
+=======
                 }
+>>>>>>> 1cb2a3ab09677258707931bc275b415af79034c5
                     //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
 //<<<<< HEAD
@@ -2268,7 +2302,7 @@ namespace G_Shift
             //spriteBatch.Draw(EnemyTexture, enemy1.rect, Color.White);
             //mainWeapon.Draw(spriteBatch);
 
-            //if(sparksEnginesMax > 2)
+            //if (sparksEnginesMax > 2)
             //{
             //    for (int i = 0; i < sparksEngines.Count; i++)
             //    {

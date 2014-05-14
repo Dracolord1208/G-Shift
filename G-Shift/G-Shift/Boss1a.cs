@@ -128,8 +128,8 @@ namespace G_Shift
 
         public Boss1a(int width, int height, Vector2 pos, Vector2 vel, Texture2D tex, float theta, float thetaV)
         {
-            //health = 500;
-            health = 160;
+            health = 500;
+            //health = 160;
             maxHealth = 500;
             Height = height;
             Width = width;
@@ -445,17 +445,33 @@ namespace G_Shift
             Rectangle sourceRectangle = new Rectangle(0, 0, Width, Height);
             Vector2 origin = new Vector2(Width / 2, Height / 2);  // .. rotating in place
 
+            Color tempColor = new Color(255,155,155);
+
             //Working!!
             //spriteBatch.Draw(texture, position, sourceRectangle, color, angle, origin, 1, SpriteEffects.None, 0.1f * depth);
             if (ContentLoadedFlag == true)
             {
-                if (isRightFlag == true)
+                if (health > maxHealth * .33f)
                 {
-                    moveRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    if (isRightFlag == true)
+                    {
+                        moveRightAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
+                    else
+                    {
+                        moveLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    }
                 }
                 else
                 {
-                    moveLeftAnimation.Draw(spriteBatch, screenPosition, Color.White, depth);
+                    if (isRightFlag == true)
+                    {
+                        moveRightAnimation.Draw(spriteBatch, screenPosition, tempColor, depth);
+                    }
+                    else
+                    {
+                        moveLeftAnimation.Draw(spriteBatch, screenPosition, tempColor, depth);
+                    }
                 }
             }
         }
