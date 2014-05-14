@@ -517,7 +517,7 @@ namespace G_Shift
                 isLoading = true;
 
                 stopMusic();
-              //  PlayMusic(gameMusic);
+               PlayMusic(gameMusic);
                 //start backgroundthread
                 gMan.Health = 500;
                 once = true;
@@ -593,7 +593,7 @@ namespace G_Shift
                     if (gMan.Health <= 0)
                     {
                         if (currentKeyboardState.IsKeyDown(Keys.Space) ||
-                            currentGamePadState.Buttons.A == ButtonState.Pressed)
+                            currentGamePadState.Buttons.B == ButtonState.Pressed)
                         {
                             gameState = GameState.levelSelect;
                         }
