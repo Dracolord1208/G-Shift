@@ -2106,13 +2106,13 @@ namespace G_Shift
                         }
                     }
                     else
-                    {
+                     
                         for (int i = 0; i < DeathLeftList.Count; i++)
                         {
                             DeathLeftList[i].Draw(spriteBatch, 1f, gMan.screenPosition);
                         }
                     }
-                 }
+                 
 
 
                 if (bossFlag == true)
@@ -2226,7 +2226,7 @@ namespace G_Shift
                     Vector2 pos = new Vector2(boss1MaxHealthBar.X, boss1MaxHealthBar.Y);
                     spriteBatch.Draw(baseRectangle, pos, boss1MaxHealthBar, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     spriteBatch.Draw(baseRectangle, pos, boss1HealthBar, Color.Blue, 0, origin, 1, SpriteEffects.None, 0.99f);
-
+                }
                     //spriteBatch.Draw(baseRectangle, pos, fullHealthRect, Color.Red, 0, origin, 1, SpriteEffects.None, 0.98f);
                     //spriteBatch.Draw(baseRectangle, pos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
 //<<<<< HEAD
@@ -2241,7 +2241,7 @@ namespace G_Shift
                     //    }
                     //}
 
-                }
+            //    }
 //=======
 //>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
 
@@ -2255,7 +2255,7 @@ namespace G_Shift
                 spriteBatch.Draw(baseRectangle, gpos, healthRectange, Color.Green, 0, origin, 1, SpriteEffects.None, 0.99f);
 
 
-
+        
 
             }
             if (gameState == GameState.levelSelect)
