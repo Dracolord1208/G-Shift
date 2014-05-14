@@ -663,7 +663,10 @@ namespace G_Shift
                     if (playerStance == Stance.hurt)
                     {
                         //AHurtLeft.Draw(spriteBatch, depth);
-                        spriteBatch.Draw(HurtRight, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
+                        if(!Game1.translate)
+                            spriteBatch.Draw(HurtRight, new Vector2(Position.X - Game1.translation.X - 100, Position.Y - 225), Color.White);
+                        else
+                            spriteBatch.Draw(HurtRight, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
                     }
                     if (playerStance == Stance.heavyAttack || fire == true)
                     {
@@ -696,7 +699,10 @@ namespace G_Shift
                     if (playerStance == Stance.hurt)
                     {
                         //AHurtRight.Draw(spriteBatch, depth); ;
-                        spriteBatch.Draw(HurtLeft, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
+                        if (!Game1.translate)
+                            spriteBatch.Draw(HurtLeft, new Vector2(Position.X - Game1.translation.X - 100, Position.Y - 225), Color.White);
+                        else
+                            spriteBatch.Draw(HurtLeft, new Vector2(StartPosition.X - 100, Position.Y - 225), Color.White);
                     }
                     if (playerStance == Stance.heavyAttack || fire == true)
                     {
