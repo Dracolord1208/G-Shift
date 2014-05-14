@@ -124,7 +124,6 @@ namespace G_Shift
             startPosition = pos;
             position = pos;
             velocity = vel;
-            texture = tex;
             angle = theta;
             angularVelocity = thetaV;
             rect = new Rectangle((int)position.X, (int)position.Y, (int)Width, (int)Height);

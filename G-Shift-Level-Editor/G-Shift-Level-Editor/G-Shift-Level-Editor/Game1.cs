@@ -220,6 +220,7 @@ namespace G_Shift_Level_Editor
                 {
                     BattleEvent temp = new BattleEvent();
                     temp.locs = new List<Item>();
+                    temp.loc = translation.X;
                     battleEvents.Add(temp);
 
                     Rectangle rect = new Rectangle();

@@ -639,6 +639,9 @@ namespace G_Shift
                     animator = false;
                 }
                 animator = true;
+
+                screenPosition = Position;
+
                 if (facing)
                 {
                     if (playerStance == Stance.Standing)

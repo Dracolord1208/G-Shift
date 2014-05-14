@@ -74,7 +74,8 @@ namespace G_Shift
         bool finishend;
         bool endbool;
         public static bool translate = true;
-        public Vector2 translation;
+        public static Vector2 translation;
+        public int currentBattleEvent = -1;
         //Interactable gMan;
         Texture2D gManTest;
         Texture2D gManTexture;
@@ -132,6 +133,7 @@ namespace G_Shift
         public TimeSpan badGuy2spawnTime;
         public TimeSpan badGuy2checkpoint;
         public Random badGuy2random;
+
         public List<Enemy3a> badGuys3;  // enemies
         public TimeSpan badGuy3spawnTime;
         public TimeSpan badGuy3checkpoint;
@@ -604,6 +606,20 @@ namespace G_Shift
                         }
                     }
 
+                    if(currentBattleEvent == -1)
+                        for (int x = 0; x < level.locs.Count; x++)
+                        {
+                            if (level.locs[x] - translation.X > -5 &&
+                                level.locs[x] - translation.X < 5)
+                            {
+                                currentBattleEvent = x;
+                                translate = false;
+                                break;
+                            }
+                        }
+
+                    if (currentBattleEvent != -1)
+                        CheckBattleEnd(gameTime);
 
                     UpdateExplosions(gameTime);
                     UpdateEnemies(gameTime);
@@ -652,6 +668,10 @@ namespace G_Shift
                             }
                     }
                     //spawnEnemies(gameTime);
+
+                    if (previousKeyboardState.IsKeyUp(Keys.P) &&
+                        currentKeyboardState.IsKeyDown(Keys.P))
+                        translate = !translate;
 
                     if (currentKeyboardState.IsKeyDown(Keys.D1))
                     {
@@ -741,6 +761,33 @@ namespace G_Shift
 
             base.Update(gameTime);
         }
+
+        public void CheckBattleEnd(GameTime gameTime)
+        {
+            if (level.smallEnemies[currentBattleEvent] != 0)
+            {
+                spawnSmallRobot1(gameTime);
+                level.smallEnemies[currentBattleEvent]--;
+                Console.WriteLine(level.smallEnemies[currentBattleEvent]);
+            }
+
+            if (level.medEnemies[currentBattleEvent] != 0)
+            {
+                spawnMedRobot1(gameTime);
+                level.medEnemies[currentBattleEvent]--;
+                Console.WriteLine(level.medEnemies[currentBattleEvent]);
+            }
+
+            if (badGuys2.Count + badGuys4.Count == 0)
+            {
+                translate = true;
+                level.locs.RemoveAt(currentBattleEvent);
+                level.medEnemies.RemoveAt(currentBattleEvent);
+                level.smallEnemies.RemoveAt(currentBattleEvent);
+                currentBattleEvent = -1;
+            }
+        }
+
         private void AddFR(Vector2 position)
         {
             Animation explosion = new Animation();
@@ -2284,8 +2331,7 @@ namespace G_Shift
 //>>>>>>> ba7f25548f171b75bbb7912949f0cbdc006e6574
                     }
                 }
-                else
-                    translate = true;
+                
 
                 spriteBatch.End();
 
